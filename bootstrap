@@ -1,0 +1,8 @@
+#!/bin/bash
+cd $(dirname $(type -p "$0"))
+
+if [ ! -d bootstrapped/Catch ]; then
+    url=https://github.com/philsquared/Catch.git
+    echo "Downloading the Catch Unit Testing Framework ($url)."
+    git clone $url bootstrapped/Catch
+fi
