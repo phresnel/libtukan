@@ -9,8 +9,7 @@
 
 namespace gaudy {
 
-    bool rel_equal (float lhs, float rhs,
-                    float max_rel_diff=std::numeric_limits<float>::epsilon())
+    bool rel_equal (float lhs, float rhs, float max_rel_diff=std::numeric_limits<float>::epsilon())
     {
         // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
 
@@ -31,13 +30,64 @@ namespace gaudy {
     //----------------------------------------------------------------------------------------------
     struct Nanometer {
         constexpr explicit Nanometer (float nm=0) noexcept : nm_(nm) {}
-        constexpr operator float() noexcept { return nm_; }
+        constexpr explicit operator float() noexcept { return nm_; }
     private:
         float nm_;
     };
 
-    inline constexpr Nanometer operator"" _nm (long double nm)        noexcept { return Nanometer(nm); }
-    inline constexpr Nanometer operator"" _nm (unsigned long long nm) noexcept { return Nanometer(nm); }
+    // relation
+    constexpr bool operator== (Nanometer lhs, Nanometer rhs) noexcept {
+        return static_cast<float>(lhs) == static_cast<float>(rhs);
+    }
+    constexpr bool operator!= (Nanometer lhs, Nanometer rhs) noexcept {
+        return !(lhs == rhs);
+    }
+    bool rel_equal (Nanometer lhs, Nanometer rhs,
+                    float max_rel_diff=std::numeric_limits<float>::epsilon())
+    {
+        return rel_equal (static_cast<float>(lhs), static_cast<float>(rhs), max_rel_diff);
+    }
+
+    constexpr bool operator> (Nanometer lhs, Nanometer rhs) noexcept {
+        return static_cast<float>(lhs) > static_cast<float>(rhs);
+    }
+    constexpr bool operator< (Nanometer lhs, Nanometer rhs) noexcept {
+        return static_cast<float>(lhs) < static_cast<float>(rhs);
+    }
+    constexpr bool operator>= (Nanometer lhs, Nanometer rhs) noexcept {
+        return static_cast<float>(lhs) >= static_cast<float>(rhs);
+    }
+    constexpr bool operator<= (Nanometer lhs, Nanometer rhs) noexcept {
+        return static_cast<float>(lhs) <= static_cast<float>(rhs);
+    }
+
+    // arithmetic
+    constexpr Nanometer operator+ (Nanometer rhs) noexcept {
+        return rhs;
+    }
+    constexpr Nanometer operator- (Nanometer rhs) noexcept {
+        return Nanometer(-static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator+ (Nanometer lhs, Nanometer rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) + static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator- (Nanometer lhs, Nanometer rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) - static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator* (Nanometer lhs, Nanometer rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) * static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator/ (Nanometer lhs, Nanometer rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) / static_cast<float>(rhs));
+    }
+
+    // literals ------------------------------------------------------------------------------------
+    inline constexpr Nanometer operator"" _nm (long double nm) noexcept {
+        return Nanometer(nm);
+    }
+    inline constexpr Nanometer operator"" _nm (unsigned long long nm) noexcept {
+        return Nanometer(nm);
+    }
 
 
 
@@ -84,9 +134,9 @@ namespace gaudy {
         bool empty() const { return 0==size(); }
 
         SpectrumSample  operator[] (size_t i) const noexcept {
-            float f = (i / static_cast<float>(size()-1));
+            Nanometer f = Nanometer(i) / Nanometer(size()-1);
             f = lambda_min_ + f*(lambda_max_-lambda_min_);
-            return SpectrumSample(Nanometer(f), bins_[i]);
+            return SpectrumSample(f, bins_[i]);
         }
 
         SpectrumSample  at (size_t i) const {
@@ -101,11 +151,11 @@ namespace gaudy {
             if (f == 0.0) return SpectrumSample(lambda_min(), bins_[0]);
             if (f == 1.0) return SpectrumSample(lambda_max(), bins_[size()-1]);
 
-            float g = lambda_min_ + f*(lambda_max_-lambda_min_);
+            Nanometer g = lambda_min_ + Nanometer(f)*(lambda_max_-lambda_min_);
             int i = f*static_cast<float>(size()-1);
 
             float frac = f - static_cast<int>(f);
-            return SpectrumSample(Nanometer(g), bins_[i]*(1-frac) + bins_[i+1]*frac);
+            return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
         }
 
     private:
@@ -147,6 +197,16 @@ TEST_CASE("/internal", "RGB to HSV conversion")
 {
     using namespace gaudy;
 
+    REQUIRE(1_nm == 1_nm);
+    REQUIRE(1_nm != 2_nm);
+    REQUIRE(rel_equal(1_nm, 1_nm));
+    REQUIRE((1_nm - 1_nm) == 0_nm);
+    REQUIRE((1_nm + 1_nm) == 2_nm);
+    REQUIRE((1_nm * 2_nm) == 2_nm);
+    REQUIRE((1_nm / 2_nm) == 0.5_nm);
+    REQUIRE(-(-1_nm) == 1_nm);
+    REQUIRE(+1_nm == 1_nm);
+
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
 
     REQUIRE(400_nm == spec.lambda_min());
@@ -176,8 +236,6 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE(spec(0.75)  == SpectrumSample(700_nm,   1.75f));
     REQUIRE(rel_equal (spec(0.999), SpectrumSample(799.6_nm, 1.999f)));
     REQUIRE(spec(1)     == SpectrumSample(800_nm,   2.0f));
-
-    std::cerr << spec << std::endl;
 }
 
 
