@@ -158,6 +158,21 @@ namespace gaudy {
             return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
         }
 
+        SpectrumSample operator() (Nanometer g) const {
+            if (g<lambda_min_) throw std::logic_error("passed value < lambda_min to "
+                                                      "Spectrum::operator()(Nanometer)");
+            if (g>lambda_max_) throw std::logic_error("passed value > lambda_max to "
+                                                      "Spectrum::operator()(Nanometer)");
+            if (g == lambda_min_) return SpectrumSample(lambda_min(), bins_[0]);
+            if (g == lambda_max_) return SpectrumSample(lambda_max(), bins_[size()-1]);
+
+            float f = static_cast<float>((g - lambda_min_) / (lambda_max_-lambda_min_));
+            int i = f*static_cast<float>(size()-1);
+
+            float frac = f - static_cast<int>(f);
+            return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
+        }
+
     private:
         Nanometer lambda_min_, lambda_max_;
         std::valarray<float> bins_;
@@ -227,6 +242,13 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE_THROWS(spec(-0.01));
     REQUIRE_THROWS(spec(1.01));
 
+    REQUIRE_NOTHROW(spec(400_nm));
+    REQUIRE_NOTHROW(spec(400.1_nm));
+    REQUIRE_NOTHROW(spec(800_nm));
+    REQUIRE_THROWS(spec(399.9_nm));
+    REQUIRE_THROWS(spec(800.1_nm));
+    REQUIRE_THROWS(spec(-1_nm));
+
     REQUIRE(spec[0] == SpectrumSample(400_nm, 1.0f));
     REQUIRE(spec[1] == SpectrumSample(800_nm, 2.0f));
 
@@ -236,6 +258,13 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE(spec(0.75)  == SpectrumSample(700_nm,   1.75f));
     REQUIRE(rel_equal (spec(0.999), SpectrumSample(799.6_nm, 1.999f)));
     REQUIRE(spec(1)     == SpectrumSample(800_nm,   2.0f));
+
+    REQUIRE(spec(400_nm)   == SpectrumSample(400_nm,   1.0f));
+    REQUIRE(spec(500_nm)   == SpectrumSample(500_nm,   1.25f));
+    REQUIRE(spec(600_nm)   == SpectrumSample(600_nm,   1.5f));
+    REQUIRE(spec(700_nm)   == SpectrumSample(700_nm,   1.75f));
+    REQUIRE(spec(799.6_nm) == SpectrumSample(799.6_nm, 1.999f));
+    REQUIRE(spec(800_nm)   == SpectrumSample(800_nm,   2.0f));
 }
 
 
