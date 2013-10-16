@@ -92,6 +92,24 @@ namespace gaudy {
 
 
     //----------------------------------------------------------------------------------------------
+    // Interval
+    //----------------------------------------------------------------------------------------------
+    template <typename T>
+    class Interval {
+    public:
+        constexpr Interval(T min, T max) :
+            min_(min<=max?min:throw std::out_of_range("Interval::min must be <= Interval::max")),
+            max_(max)
+        {}
+        constexpr T min() noexcept { return min_; }
+        constexpr T max() noexcept { return max_; }
+    private:
+        T min_, max_;
+    };
+
+
+
+    //----------------------------------------------------------------------------------------------
     // Spectrum
     // TODO: noexcept, constexpr
     //----------------------------------------------------------------------------------------------
@@ -173,6 +191,7 @@ namespace gaudy {
             return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
         }
 
+
     private:
         Nanometer lambda_min_, lambda_max_;
         std::valarray<float> bins_;
@@ -221,6 +240,13 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE((1_nm / 2_nm) == 0.5_nm);
     REQUIRE(-(-1_nm) == 1_nm);
     REQUIRE(+1_nm == 1_nm);
+
+    REQUIRE_THROWS(Interval<float>(1,0));
+    REQUIRE_NOTHROW(Interval<float>(1,1));
+    REQUIRE_NOTHROW(Interval<float>(-1,1));
+    REQUIRE_THROWS(Interval<Nanometer>(1_nm,0_nm));
+    REQUIRE_NOTHROW(Interval<Nanometer>(1_nm,1_nm));
+    REQUIRE_NOTHROW(Interval<Nanometer>(-1_nm,1_nm));
 
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
 
