@@ -5,8 +5,24 @@
 #include <vector>
 #include <valarray>
 #include <iostream>
+#include <stdexcept>
 
 namespace gaudy {
+
+    bool rel_equal (float lhs, float rhs,
+                    float max_rel_diff=std::numeric_limits<float>::epsilon())
+    {
+        // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+
+        // Calculate the difference.
+        float diff = fabs(lhs - rhs);
+        lhs = fabs(lhs);
+        rhs = fabs(rhs);
+        // Find the largest
+        float largest = (rhs > lhs) ? rhs : lhs;
+
+        return diff <= largest * max_rel_diff;
+    }
 
 
 
@@ -42,6 +58,12 @@ namespace gaudy {
     bool operator!= (SpectrumSample const &lhs, SpectrumSample const &rhs) {
         return !(lhs == rhs);
     }
+    bool rel_equal(SpectrumSample const &lhs, SpectrumSample const &rhs,
+                   float max_rel_diff=std::numeric_limits<float>::epsilon())
+    {
+        return rel_equal(lhs.amplitude, rhs.amplitude, max_rel_diff)
+            && rel_equal(lhs.wavelength, rhs.wavelength, max_rel_diff);
+    }
 
 
     class Spectrum {
@@ -60,10 +82,30 @@ namespace gaudy {
 
         size_t size() const { return bins_.size(); }
         bool empty() const { return 0==size(); }
-        SpectrumSample  operator[] (size_t i) const {
+
+        SpectrumSample  operator[] (size_t i) const noexcept {
             float f = (i / static_cast<float>(size()-1));
             f = lambda_min_ + f*(lambda_max_-lambda_min_);
             return SpectrumSample(Nanometer(f), bins_[i]);
+        }
+
+        SpectrumSample  at (size_t i) const {
+            if (i < std::numeric_limits<size_t>::min() || i>=size())
+                throw std::out_of_range("passed value outside range to Spectrum::at(size_t)");
+            return (*this)[i];
+        }
+
+        SpectrumSample operator() (float f) const {
+            if (f<0) throw std::logic_error("passed value < 0 to Spectrum::operator()(float)");
+            if (f>1) throw std::logic_error("passed value > 1 to Spectrum::operator()(float)");
+            if (f == 0.0) return SpectrumSample(lambda_min(), bins_[0]);
+            if (f == 1.0) return SpectrumSample(lambda_max(), bins_[size()-1]);
+
+            float g = lambda_min_ + f*(lambda_max_-lambda_min_);
+            int i = f*static_cast<float>(size()-1);
+
+            float frac = f - static_cast<int>(f);
+            return SpectrumSample(Nanometer(g), bins_[i]*(1-frac) + bins_[i+1]*frac);
         }
 
     private:
@@ -96,11 +138,6 @@ namespace gaudy {
 
 namespace gaudy { namespace detail {
 
-    /*void interpolate (float lambda_min, float lambda_max, std::vector<float> source,
-                      float target_lambda_min, float target_lambda_max, std::vector<float> &target)
-    {
-    }*/
-
 } }
 
 
@@ -112,8 +149,33 @@ TEST_CASE("/internal", "RGB to HSV conversion")
 
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
 
+    REQUIRE(400_nm == spec.lambda_min());
+    REQUIRE(800_nm == spec.lambda_max());
+
+    REQUIRE_FALSE(spec.empty());
+    REQUIRE(spec.size() == 2);
+
+    REQUIRE_THROWS(spec.at(-1));
+    REQUIRE_NOTHROW(spec.at(0));
+    REQUIRE_NOTHROW(spec.at(1));
+    REQUIRE_THROWS(spec.at(2));
+    REQUIRE_THROWS(spec.at(3));
+
+    REQUIRE_NOTHROW(spec(0));
+    REQUIRE_NOTHROW(spec(1));
+    REQUIRE_THROWS(spec(1.01));
+    REQUIRE_THROWS(spec(-0.01));
+    REQUIRE_THROWS(spec(1.01));
+
     REQUIRE(spec[0] == SpectrumSample(400_nm, 1.0f));
     REQUIRE(spec[1] == SpectrumSample(800_nm, 2.0f));
+
+    REQUIRE(spec(0)     == SpectrumSample(400_nm,   1.0f));
+    REQUIRE(spec(0.25)  == SpectrumSample(500_nm,   1.25f));
+    REQUIRE(spec(0.5)   == SpectrumSample(600_nm,   1.5f));
+    REQUIRE(spec(0.75)  == SpectrumSample(700_nm,   1.75f));
+    REQUIRE(rel_equal (spec(0.999), SpectrumSample(799.6_nm, 1.999f)));
+    REQUIRE(spec(1)     == SpectrumSample(800_nm,   2.0f));
 
     std::cerr << spec << std::endl;
 }
@@ -126,6 +188,7 @@ int unit_tests(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
+
     if (argc >= 2 && argv[1]==std::string("test")) {
         // Short circuit the CLI arguments.
         argc -= 2;
