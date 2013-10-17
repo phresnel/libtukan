@@ -226,15 +226,10 @@ namespace gaudy {
             if (r.min() == r.max())
                 return (*this)(r.min());
 
-            auto avg = [](Interval<float> const &i, SpectrumSample A, SpectrumSample B) {
-                auto avg_ = [](Interval<float> const &i, float A, float B)
-                {
-                    return 0.5*(A*(1-i.min()) + B*i.min())
-                         + 0.5*(A*(1-i.max()) + B*i.max());
-                };
-
-                return SpectrumSample(Nanometer(avg_(i, (float)A.wavelength, (float)B.wavelength)),
-                                      avg_(i, A.amplitude, B.amplitude));
+            auto avg = [](Interval<float> const &i, float A, float B)
+            {
+                return 0.5*(A*(1-i.min()) + B*i.min())
+                     + 0.5*(A*(1-i.max()) + B*i.max());
             };
 
             int min_i = r.min() * (size()-1);
@@ -255,15 +250,14 @@ namespace gaudy {
                                               (overlap_global->max()-bin_global.min())/delta);
 
                 float area = length(*overlap_global);
-                auto S = avg(overlap_local, (*this)[i], (*this)[i+1]);
-                ret.amplitude  = ret.amplitude + S.amplitude * area;
-                ret.wavelength = ret.wavelength + S.wavelength * Nanometer(area);
+                auto local_avg_amp = avg(overlap_local, bins_[i], bins_[i+1]);
+                ret.amplitude  = ret.amplitude + local_avg_amp * area;
                 weight_total += area;
 
             } while (i++ != max_i);
 
             ret.amplitude = ret.amplitude / weight_total;
-            ret.wavelength = ret.wavelength / Nanometer(weight_total);
+            ret.wavelength = Nanometer(avg(r, float(lambda_min_), float(lambda_max_)));
 
             return ret;
         }
