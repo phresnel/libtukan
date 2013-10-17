@@ -6,8 +6,10 @@
 #include <valarray>
 #include <iostream>
 #include <stdexcept>
+#include <boost/optional.hpp>
 
 namespace gaudy {
+    using boost::optional;
 
     bool rel_equal (float lhs, float rhs, float max_rel_diff=std::numeric_limits<float>::epsilon())
     {
@@ -107,6 +109,34 @@ namespace gaudy {
         T min_, max_;
     };
 
+    template <typename T>
+    inline constexpr
+    bool operator== (Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
+        return lhs.min()==rhs.min() && lhs.max()==rhs.max();
+    }
+
+    template <typename T>
+    inline constexpr
+    bool operator!= (Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
+        return !(lhs==rhs);
+    }
+
+    template <typename T>
+    inline constexpr
+    T length(Interval<T> const &i) noexcept {
+        return i.max() - i.min();
+    }
+
+    template <typename T>
+    inline
+    optional<Interval<T>> intersection(Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
+        using std::min; using std::max;
+        T l = max(lhs.min(), rhs.min()),
+          r = min(lhs.max(), rhs.max());
+        if (l>r) return optional<Interval<T>>();
+        return Interval<T>(l,r);
+    }
+
 
 
     //----------------------------------------------------------------------------------------------
@@ -172,7 +202,9 @@ namespace gaudy {
             Nanometer g = lambda_min_ + Nanometer(f)*(lambda_max_-lambda_min_);
             int i = f*static_cast<float>(size()-1);
 
-            float frac = f - static_cast<int>(f);
+            float frac = (f-bin_min(i)) / (bin_min(i+1)-bin_min(i));
+            if (size_t(i+1) >= size()) // TODO: can this happen?
+                    throw std::logic_error("crap");
             return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
         }
 
@@ -181,20 +213,69 @@ namespace gaudy {
                                                       "Spectrum::operator()(Nanometer)");
             if (g>lambda_max_) throw std::logic_error("passed value > lambda_max to "
                                                       "Spectrum::operator()(Nanometer)");
-            if (g == lambda_min_) return SpectrumSample(lambda_min(), bins_[0]);
-            if (g == lambda_max_) return SpectrumSample(lambda_max(), bins_[size()-1]);
 
             float f = static_cast<float>((g - lambda_min_) / (lambda_max_-lambda_min_));
-            int i = f*static_cast<float>(size()-1);
-
-            float frac = f - static_cast<int>(f);
-            return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
+            return (*this)(f);
         }
 
+        SpectrumSample operator() (Interval<float> r) const {
+            if (r.min()<0) throw std::logic_error("passed value < 0 to "
+                                                  "Spectrum::operator()(Interval<float>)");
+            if (r.max()>1) throw std::logic_error("passed value > 1 to "
+                                                  "Spectrum::operator()(Interval<float>)");
+            if (r.min() == r.max())
+                return (*this)(r.min());
+
+            auto avg = [](Interval<float> const &i, SpectrumSample A, SpectrumSample B) {
+                auto avg_ = [](Interval<float> const &i, float A, float B)
+                {
+                    return 0.5*(A*(1-i.min()) + B*i.min())
+                         + 0.5*(A*(1-i.max()) + B*i.max());
+                };
+
+                return SpectrumSample(Nanometer(avg_(i, (float)A.wavelength, (float)B.wavelength)),
+                                      avg_(i, A.amplitude, B.amplitude));
+            };
+
+            int min_i = r.min() * (size()-1);
+            int max_i = r.max() * (size()-1);
+
+            const auto delta = float(1)/(size()-1);
+            float weight_total = 0;
+            SpectrumSample ret;
+
+            auto i = min_i;
+            do {
+                Interval<float> bin_global (i*delta, i*delta+delta);
+                auto overlap_global = intersection(bin_global, r);
+                if (!overlap_global) continue;
+
+                // translate the spectrum-space overlap-interval to bin-space
+                Interval<float> overlap_local((overlap_global->min()-bin_global.min())/delta,
+                                              (overlap_global->max()-bin_global.min())/delta);
+
+                float area = length(*overlap_global);
+                auto S = avg(overlap_local, (*this)[i], (*this)[i+1]);
+                ret.amplitude  = ret.amplitude + S.amplitude * area;
+                ret.wavelength = ret.wavelength + S.wavelength * Nanometer(area);
+                weight_total += area;
+
+            } while (i++ != max_i);
+
+            ret.amplitude = ret.amplitude / weight_total;
+            ret.wavelength = ret.wavelength / Nanometer(weight_total);
+
+            return ret;
+        }
 
     private:
         Nanometer lambda_min_, lambda_max_;
         std::valarray<float> bins_;
+
+        float bin_min(int index) const noexcept {
+            float f = index / float(size()-1);
+            return f;
+        }
     };
 
 
@@ -227,6 +308,11 @@ namespace gaudy { namespace detail {
 
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
+
+bool is_nan_or_infinity (float f) {
+    return (f != f) || (f==1.0f/0.0f) || (f==-1.0f/0.0f);
+}
+
 TEST_CASE("/internal", "RGB to HSV conversion")
 {
     using namespace gaudy;
@@ -247,6 +333,20 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE_THROWS(Interval<Nanometer>(1_nm,0_nm));
     REQUIRE_NOTHROW(Interval<Nanometer>(1_nm,1_nm));
     REQUIRE_NOTHROW(Interval<Nanometer>(-1_nm,1_nm));
+
+    REQUIRE(optional<Interval<float>>() == intersection(Interval<float>(0,1), Interval<float>(2,3)));
+    REQUIRE(optional<Interval<float>>() == intersection(Interval<float>(3,4), Interval<float>(1,2)));
+    REQUIRE(Interval<float>(1,2) == intersection(Interval<float>(1,2), Interval<float>(0,4)));
+    REQUIRE(Interval<float>(0,2) == intersection(Interval<float>(0,2), Interval<float>(0,4)));
+    REQUIRE(Interval<float>(-4,-3) == intersection(Interval<float>(-5,-3), Interval<float>(-4,-2)));
+
+    REQUIRE(Interval<float>(1,2) == Interval<float>(1,2));
+    REQUIRE_FALSE(Interval<float>(1.5,2) == Interval<float>(1,2));
+    REQUIRE(Interval<float>(1.5,2) != Interval<float>(1,2));
+    REQUIRE_FALSE(Interval<float>(1,2) != Interval<float>(1,2));
+
+    REQUIRE(length(Interval<float>(1,2)) == 1);
+    REQUIRE(length(Interval<float>(-1,1)) == 2);
 
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
 
@@ -275,6 +375,13 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE_THROWS(spec(800.1_nm));
     REQUIRE_THROWS(spec(-1_nm));
 
+    REQUIRE_NOTHROW(spec(Interval<float>(0,1)));
+    REQUIRE_NOTHROW(spec(Interval<float>(0,0)));
+    REQUIRE_NOTHROW(spec(Interval<float>(1,1)));
+    REQUIRE_THROWS(spec(Interval<float>(-0.001,1)));
+    REQUIRE_THROWS(spec(Interval<float>(-2,-1)));
+    REQUIRE_THROWS(spec(Interval<float>(1,2)));
+
     REQUIRE(spec[0] == SpectrumSample(400_nm, 1.0f));
     REQUIRE(spec[1] == SpectrumSample(800_nm, 2.0f));
 
@@ -291,6 +398,56 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE(spec(700_nm)   == SpectrumSample(700_nm,   1.75f));
     REQUIRE(spec(799.6_nm) == SpectrumSample(799.6_nm, 1.999f));
     REQUIRE(spec(800_nm)   == SpectrumSample(800_nm,   2.0f));
+
+    REQUIRE(spec(Interval<float>(0,1)) == SpectrumSample(600_nm, 1.5f));
+    REQUIRE(spec(Interval<float>(0.5,1)) == SpectrumSample(700_nm, 1.75f));
+    REQUIRE(spec(Interval<float>(0.75,1)) == SpectrumSample(750_nm, 1.875f));
+
+
+    spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2, 9}));
+    REQUIRE_FALSE(is_nan_or_infinity(spec(Interval<float>(0, 0.001)).amplitude));
+    REQUIRE_FALSE(is_nan_or_infinity(spec(Interval<float>(0, 0)).amplitude));
+    REQUIRE_FALSE(is_nan_or_infinity(spec(Interval<float>(0.2, 0.2)).amplitude));
+    REQUIRE_FALSE(is_nan_or_infinity(spec(Interval<float>(1, 1)).amplitude));
+
+    REQUIRE(spec(0)    == SpectrumSample(400_nm, 1));
+    REQUIRE(spec(0.25) == SpectrumSample(500_nm, 1.5));
+    REQUIRE(spec(0.5)  == SpectrumSample(600_nm, 2));
+    REQUIRE(spec(0.75) == SpectrumSample(700_nm, 5.5));
+    REQUIRE(spec(1)    == SpectrumSample(800_nm, 9));
+
+    REQUIRE(spec(400_nm) == SpectrumSample(400_nm, 1));
+    REQUIRE(spec(600_nm) == SpectrumSample(600_nm, 2));
+    REQUIRE(spec(800_nm) == SpectrumSample(800_nm, 9));
+
+    REQUIRE(spec(Interval<float>(0   , 0   )) == SpectrumSample(400_nm, 1  ));
+    REQUIRE(spec(Interval<float>(0   , 0.5 )) == SpectrumSample(500_nm, 1.5));
+    REQUIRE(rel_equal(spec(Interval<float>(0   , 1  )), SpectrumSample(600_nm, 3.5)));
+    REQUIRE(spec(Interval<float>(0.5 , 1   )) == SpectrumSample(700_nm, 5.5));
+    REQUIRE(spec(Interval<float>(0.75, 1   )) == SpectrumSample(750_nm, 7.25));
+    REQUIRE(spec(Interval<float>(1   , 1   )) == SpectrumSample(800_nm, 9  ));
+    REQUIRE(spec(Interval<float>(0   , 0.25)) == SpectrumSample(450_nm, 1.25));
+    REQUIRE(spec(Interval<float>(0.25, 1   )) == SpectrumSample(650_nm, 4.25));
+
+    spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2, 9, 3, 7}));
+    REQUIRE(spec(0)     == SpectrumSample(400_nm, 1));
+    REQUIRE(spec(0.125) == SpectrumSample(450_nm, 1.5));
+    REQUIRE(spec(0.25)  == SpectrumSample(500_nm, 2));
+    REQUIRE(spec(0.5)   == SpectrumSample(600_nm, 9));
+    REQUIRE(spec(0.75)  == SpectrumSample(700_nm, 3));
+    REQUIRE(spec(0.875) == SpectrumSample(750_nm, 5));
+    REQUIRE(spec(1)     == SpectrumSample(800_nm, 7));
+
+    REQUIRE(spec(400_nm) == SpectrumSample(400_nm, 1));
+    REQUIRE(spec(600_nm) == SpectrumSample(600_nm, 9));
+    REQUIRE(spec(800_nm) == SpectrumSample(800_nm, 7));
+
+    REQUIRE(spec(Interval<float>(0    , 0  )) == SpectrumSample(400_nm, 1  ));
+    REQUIRE(spec(Interval<float>(0    , 0.5)) == SpectrumSample(500_nm, 3.5));
+    REQUIRE(spec(Interval<float>(0    , 1  )) == SpectrumSample(600_nm, 4.5));
+    REQUIRE(rel_equal(spec(Interval<float>(0.5, 1  )), SpectrumSample(700_nm, 5.5)));
+    REQUIRE(spec(Interval<float>(1    , 1  )) == SpectrumSample(800_nm, 7  ));
+    REQUIRE(rel_equal(spec(Interval<float>(0.125, 1  )), SpectrumSample(625_nm, 4.964285714)));
 }
 
 
