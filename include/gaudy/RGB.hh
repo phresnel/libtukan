@@ -34,9 +34,8 @@ namespace gaudy {
     // relation
     constexpr bool operator== (RGB const &lhs, RGB const &rhs) noexcept;
     constexpr bool operator!= (RGB const &lhs, RGB const &rhs) noexcept;
-    inline bool rel_equal (RGB const &lhs, RGB const &rhs,
-                           float max_rel_diff=std::numeric_limits<float>::epsilon()
-                          ) noexcept;
+    constexpr bool rel_equal (RGB const &lhs, RGB const &rhs,
+                              float max_rel_diff=std::numeric_limits<float>::epsilon() ) noexcept;
 
     // arithmetics
     constexpr RGB operator+ (RGB const &lhs, RGB const &rhs) noexcept;
@@ -126,7 +125,7 @@ namespace gaudy {
     constexpr bool operator!= (RGB const &lhs, RGB const &rhs) noexcept {
         return !(lhs == rhs);
     }
-    inline bool rel_equal (RGB const &lhs, RGB const &rhs, float max_rel_diff) noexcept
+    constexpr bool rel_equal (RGB const &lhs, RGB const &rhs, float max_rel_diff) noexcept
     {
         return rel_equal (lhs.r, rhs.r, max_rel_diff)
             && rel_equal (lhs.g, rhs.g, max_rel_diff)

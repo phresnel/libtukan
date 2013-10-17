@@ -35,9 +35,9 @@ namespace gaudy {
     constexpr inline bool operator!= (Nanometer lhs, Nanometer rhs) noexcept {
         return !(lhs == rhs);
     }
-    inline bool rel_equal (Nanometer lhs, Nanometer rhs,
-                           float max_rel_diff=std::numeric_limits<float>::epsilon()
-                          ) noexcept
+    constexpr bool rel_equal (Nanometer lhs, Nanometer rhs,
+                              float max_rel_diff=std::numeric_limits<float>::epsilon()
+                             ) noexcept
     {
         return rel_equal (static_cast<float>(lhs), static_cast<float>(rhs), max_rel_diff);
     }

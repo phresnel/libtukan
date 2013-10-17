@@ -30,7 +30,7 @@ namespace gaudy {
         return !(lhs == rhs);
     }
 
-    inline bool rel_equal(SpectrumSample const &lhs, SpectrumSample const &rhs,
+    constexpr bool rel_equal(SpectrumSample const &lhs, SpectrumSample const &rhs,
                           float max_rel_diff=std::numeric_limits<float>::epsilon()
                          ) noexcept
     {

@@ -9,22 +9,25 @@
 
 namespace gaudy {
 
-    inline
+    namespace detail {
+        constexpr
+        bool rel_equal(float lhs, float rhs, float max_rel_diff,
+                       float diff, float largest)
+        {
+            return diff <= largest * max_rel_diff;
+        }
+    }
+
+    constexpr
     bool rel_equal (float lhs, float rhs,
                     float max_rel_diff=std::numeric_limits<float>::epsilon()
                    ) noexcept
     {
         using std::fabs;
         // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
-
-        // Calculate the difference.
-        float diff = fabs(lhs - rhs);
-        lhs = fabs(lhs);
-        rhs = fabs(rhs);
-        // Find the largest
-        float largest = (rhs > lhs) ? rhs : lhs;
-
-        return diff <= largest * max_rel_diff;
+        return detail::rel_equal(fabs(lhs), fabs(rhs), max_rel_diff,
+                                 fabs(lhs - rhs), (rhs > lhs) ? rhs : lhs
+                                );
     }
 }
 
