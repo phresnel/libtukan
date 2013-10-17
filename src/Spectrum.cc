@@ -64,8 +64,8 @@ TEST_CASE("gaudy/Spectrum", "Spectrum Tests")
 
     SECTION("Indexing, scalar interpolation, interval interpolation (1)")
     {
-        REQUIRE(spec[0] == SpectrumSample(400_nm, 1.0f));
-        REQUIRE(spec[1] == SpectrumSample(800_nm, 2.0f));
+        REQUIRE(spec[0] == 1.0f);
+        REQUIRE(spec[1] == 2.0f);
 
         REQUIRE(spec(0)     == SpectrumSample(400_nm,   1.0f));
         REQUIRE(spec(0.25)  == SpectrumSample(500_nm,   1.25f));
@@ -89,9 +89,9 @@ TEST_CASE("gaudy/Spectrum", "Spectrum Tests")
     spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2, 9}));
     SECTION("Indexing, scalar interpolation, interval interpolation (2)")
     {
-        REQUIRE(spec[0] == SpectrumSample(400_nm, 1.0f));
-        REQUIRE(spec[1] == SpectrumSample(600_nm, 2.0f));
-        REQUIRE(spec[2] == SpectrumSample(800_nm, 9.0f));
+        REQUIRE(spec[0] == 1.0f);
+        REQUIRE(spec[1] == 2.0f);
+        REQUIRE(spec[2] == 9.0f);
 
         REQUIRE(spec(0)    == SpectrumSample(400_nm, 1));
         REQUIRE(spec(0.25) == SpectrumSample(500_nm, 1.5));
@@ -116,11 +116,11 @@ TEST_CASE("gaudy/Spectrum", "Spectrum Tests")
     spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2, 9, 3, 7}));
     SECTION("Indexing, scalar interpolation, interval interpolation (2)")
     {
-        REQUIRE(spec[0] == SpectrumSample(400_nm, 1.0f));
-        REQUIRE(spec[1] == SpectrumSample(500_nm, 2.0f));
-        REQUIRE(spec[2] == SpectrumSample(600_nm, 9.0f));
-        REQUIRE(spec[3] == SpectrumSample(700_nm, 3.0f));
-        REQUIRE(spec[4] == SpectrumSample(800_nm, 7.0f));
+        REQUIRE(spec[0] == 1.0f);
+        REQUIRE(spec[1] == 2.0f);
+        REQUIRE(spec[2] == 9.0f);
+        REQUIRE(spec[3] == 3.0f);
+        REQUIRE(spec[4] == 7.0f);
 
         REQUIRE(spec(0)     == SpectrumSample(400_nm, 1));
         REQUIRE(spec(0.125) == SpectrumSample(450_nm, 1.5));

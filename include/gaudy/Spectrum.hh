@@ -42,8 +42,8 @@ namespace gaudy {
         size_t size() const ;
         bool empty() const ;
 
-        SpectrumSample operator[] (size_t i) const noexcept ;
-        SpectrumSample  at (size_t i) const ;
+        float operator[] (size_t i) const noexcept ;
+        float at (size_t i) const ;
 
         SpectrumSample operator() (float f)           const ;
         SpectrumSample operator() (Nanometer g)       const ;
@@ -117,14 +117,12 @@ namespace gaudy {
     }
 
 
-    inline SpectrumSample Spectrum::operator[] (size_t i) const noexcept {
-        Nanometer f = Nanometer(i) / Nanometer(size()-1);
-        f = lambda_min_ + f*(lambda_max_-lambda_min_);
-        return SpectrumSample(f, bins_[i]);
+    inline float Spectrum::operator [](size_t i) const noexcept {
+        return bins_[i];
     }
 
 
-    inline SpectrumSample Spectrum::at (size_t i) const {
+    inline float Spectrum::at(size_t i) const {
         if (i < std::numeric_limits<size_t>::min() || i>=size())
             throw std::out_of_range("passed value outside range to Spectrum::at(size_t)");
         return (*this)[i];
