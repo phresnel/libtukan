@@ -52,11 +52,6 @@ namespace gaudy {
     private:
         Nanometer lambda_min_, lambda_max_;
         std::valarray<float> bins_;
-
-        float bin_min_wavelength(int index) const noexcept {
-            float f = index / float(size()-1);
-            return f;
-        }
     };
 
 
@@ -129,16 +124,19 @@ namespace gaudy {
     }
 
 
-    inline SpectrumSample Spectrum::operator() (float f) const {
+    inline SpectrumSample Spectrum::operator() (float f) const
+    {
         if (f<0) throw std::logic_error("passed value < 0 to Spectrum::operator()(float)");
         if (f>1) throw std::logic_error("passed value > 1 to Spectrum::operator()(float)");
         if (f == 0.0) return SpectrumSample(lambda_min(), bins_[0]);
         if (f == 1.0) return SpectrumSample(lambda_max(), bins_[size()-1]);
 
         Nanometer g = lambda_min_ + Nanometer(f)*(lambda_max_-lambda_min_);
-        int i = f*static_cast<float>(size()-1);
 
-        float frac = (f-bin_min_wavelength(i)) / (bin_min_wavelength(i+1)-bin_min_wavelength(i));
+        const int i = f*static_cast<float>(size()-1);
+        const Interval<float> bin_interval (i / float(size()-1), (1+i) / float(size()-1));
+
+        float frac = (f-bin_interval.min()) / (bin_interval.max()-bin_interval.min());
         if (size_t(i+1) >= size()) // TODO: can this happen?
                 throw std::logic_error("crap");
         return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
