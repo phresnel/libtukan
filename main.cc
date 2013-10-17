@@ -4,6 +4,7 @@
 
 
 #include "gaudy/Nanometer.hh"
+#include "gaudy/Interval.hh"
 #include "gaudy/rel_equal.hh"
 
 #include <vector>
@@ -11,12 +12,9 @@
 #include <iostream>
 #include <stdexcept>
 #include <tuple>
-#include <boost/optional.hpp>
-
 
 
 namespace gaudy {
-    using boost::optional;
     using std::get;
     using std::tuple;
     using std::make_tuple;
@@ -25,52 +23,6 @@ namespace gaudy {
 
 
 namespace gaudy {
-    //----------------------------------------------------------------------------------------------
-    // Interval
-    //----------------------------------------------------------------------------------------------
-    template <typename T>
-    class Interval {
-    public:
-        constexpr Interval(T min, T max) :
-            min_(min<=max?min:throw std::out_of_range("Interval::min must be <= Interval::max")),
-            max_(max)
-        {}
-        constexpr T min() noexcept { return min_; }
-        constexpr T max() noexcept { return max_; }
-    private:
-        T min_, max_;
-    };
-
-    template <typename T>
-    inline constexpr
-    bool operator== (Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
-        return lhs.min()==rhs.min() && lhs.max()==rhs.max();
-    }
-
-    template <typename T>
-    inline constexpr
-    bool operator!= (Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
-        return !(lhs==rhs);
-    }
-
-    template <typename T>
-    inline constexpr
-    T length(Interval<T> const &i) noexcept {
-        return i.max() - i.min();
-    }
-
-    template <typename T>
-    inline
-    optional<Interval<T>> intersection(Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
-        using std::min; using std::max;
-        T l = max(lhs.min(), rhs.min()),
-          r = min(lhs.max(), rhs.max());
-        if (l>r) return optional<Interval<T>>();
-        return Interval<T>(l,r);
-    }
-
-
-
     //----------------------------------------------------------------------------------------------
     // Spectrum
     // TODO: noexcept, constexpr
@@ -271,53 +223,6 @@ TEST_CASE("/internal", "RGB to HSV conversion")
 {
     using namespace gaudy;
 
-    REQUIRE(1_nm == 1_nm);
-    REQUIRE(1_nm != 2_nm);
-    REQUIRE(rel_equal(1_nm, 1_nm));
-    REQUIRE((1_nm - 1_nm) == 0_nm);
-    REQUIRE((1_nm + 1_nm) == 2_nm);
-    REQUIRE((1_nm * 2_nm) == 2_nm);
-    REQUIRE((1_nm / 2_nm) == 0.5_nm);
-    REQUIRE((1_nm - 1) == 0_nm);
-    REQUIRE((1_nm + 1) == 2_nm);
-    REQUIRE((1_nm * 2) == 2_nm);
-    REQUIRE((1_nm / 2) == 0.5_nm);
-    REQUIRE((1 - 1_nm) == 0_nm);
-    REQUIRE((1 + 1_nm) == 2_nm);
-    REQUIRE((1 * 2_nm) == 2_nm);
-    REQUIRE((1 / 2_nm) == 0.5_nm);
-    REQUIRE((1_nm -= 1_nm) == 0_nm);
-    REQUIRE((1_nm += 1_nm) == 2_nm);
-    REQUIRE((1_nm *= 2_nm) == 2_nm);
-    REQUIRE((1_nm /= 2_nm) == 0.5_nm);
-    REQUIRE((1_nm -= 1) == 0_nm);
-    REQUIRE((1_nm += 1) == 2_nm);
-    REQUIRE((1_nm *= 2) == 2_nm);
-    REQUIRE((1_nm /= 2) == 0.5_nm);
-    REQUIRE(-(-1_nm) == 1_nm);
-    REQUIRE(+1_nm == 1_nm);
-
-    REQUIRE_THROWS(Interval<float>(1,0));
-    REQUIRE_NOTHROW(Interval<float>(1,1));
-    REQUIRE_NOTHROW(Interval<float>(-1,1));
-    REQUIRE_THROWS(Interval<Nanometer>(1_nm,0_nm));
-    REQUIRE_NOTHROW(Interval<Nanometer>(1_nm,1_nm));
-    REQUIRE_NOTHROW(Interval<Nanometer>(-1_nm,1_nm));
-
-    REQUIRE(optional<Interval<float>>() == intersection(Interval<float>(0,1), Interval<float>(2,3)));
-    REQUIRE(optional<Interval<float>>() == intersection(Interval<float>(3,4), Interval<float>(1,2)));
-    REQUIRE(Interval<float>(1,2) == intersection(Interval<float>(1,2), Interval<float>(0,4)));
-    REQUIRE(Interval<float>(0,2) == intersection(Interval<float>(0,2), Interval<float>(0,4)));
-    REQUIRE(Interval<float>(-4,-3) == intersection(Interval<float>(-5,-3), Interval<float>(-4,-2)));
-
-    REQUIRE(Interval<float>(1,2) == Interval<float>(1,2));
-    REQUIRE_FALSE(Interval<float>(1.5,2) == Interval<float>(1,2));
-    REQUIRE(Interval<float>(1.5,2) != Interval<float>(1,2));
-    REQUIRE_FALSE(Interval<float>(1,2) != Interval<float>(1,2));
-
-    REQUIRE(length(Interval<float>(1,2)) == 1);
-    REQUIRE(length(Interval<float>(-1,1)) == 2);
-
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
 
     REQUIRE(400_nm == spec.lambda_min());
@@ -422,26 +327,7 @@ TEST_CASE("/internal", "RGB to HSV conversion")
 
 
 
-int unit_tests(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     // see also https://github.com/philsquared/Catch/blob/master/docs/own-main.md
     return Catch::Session().run(argc, argv);
-}
-
-int main(int argc, char *argv[]) {
-
-    if (argc >= 2 && argv[1]==std::string("test")) {
-        // Short circuit the CLI arguments.
-        argc -= 2;
-        argv += 2;
-        std::vector<std::string> args;
-        args.push_back("gaudy test");
-        while (*argv != 0) {
-            args.push_back(*argv);
-            ++argv;
-        }
-        std::vector<char*> args_c_str;
-        for (auto &s : args)
-            args_c_str.emplace_back(const_cast<char*>(s.c_str()));
-        return unit_tests(args_c_str.size(), &args_c_str[0]);
-    }
 }

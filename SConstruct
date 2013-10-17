@@ -5,9 +5,11 @@ env = Environment(CPPPATH = ['.', 'bootstrapped/Catch/include/', 'include'],
                   CPPFLAGS=""
                   )
 
-gaudy = env.Program(target='gaudy',
+gaudy = env.Program(target='unit_tests',
                     source=['main.cc',
-                            'src/Nanometer.cc'],
+                            'src/Nanometer.cc',
+                            'src/Interval.cc'
+                           ],
                     LIBS=['gomp']
                     )
 
@@ -19,5 +21,5 @@ def PhonyTarget(target, action):
                         BUILDERS = { 'phony' : Builder(action = action) })
     AlwaysBuild(phony.phony(target = target, source = 'SConstruct'))
 
-PhonyTarget('test', './gaudy test')
+PhonyTarget('test', './unit_tests')
 Depends('test', gaudy)
