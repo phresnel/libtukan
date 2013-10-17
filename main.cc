@@ -37,6 +37,16 @@ namespace gaudy {
     struct Nanometer {
         constexpr explicit Nanometer (float nm=0) noexcept : nm_(nm) {}
         constexpr explicit operator float() noexcept { return nm_; }
+
+        Nanometer& operator+= (Nanometer rhs) noexcept { nm_+=rhs.nm_; return *this; }
+        Nanometer& operator-= (Nanometer rhs) noexcept { nm_-=rhs.nm_; return *this; }
+        Nanometer& operator*= (Nanometer rhs) noexcept { nm_*=rhs.nm_; return *this; }
+        Nanometer& operator/= (Nanometer rhs) noexcept { nm_/=rhs.nm_; return *this; }
+
+        Nanometer& operator+= (float rhs) noexcept { nm_+=rhs; return *this; }
+        Nanometer& operator-= (float rhs) noexcept { nm_-=rhs; return *this; }
+        Nanometer& operator*= (float rhs) noexcept { nm_*=rhs; return *this; }
+        Nanometer& operator/= (float rhs) noexcept { nm_/=rhs; return *this; }
     private:
         float nm_;
     };
@@ -74,17 +84,45 @@ namespace gaudy {
     constexpr Nanometer operator- (Nanometer rhs) noexcept {
         return Nanometer(-static_cast<float>(rhs));
     }
+
     constexpr Nanometer operator+ (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) + static_cast<float>(rhs));
     }
+    constexpr Nanometer operator+ (float lhs, Nanometer rhs) noexcept {
+        return Nanometer(lhs + static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator+ (Nanometer lhs, float rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) + rhs);
+    }
+
     constexpr Nanometer operator- (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) - static_cast<float>(rhs));
     }
+    constexpr Nanometer operator- (float lhs, Nanometer rhs) noexcept {
+        return Nanometer(lhs - static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator- (Nanometer lhs, float rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) - rhs);
+    }
+
     constexpr Nanometer operator* (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) * static_cast<float>(rhs));
     }
+    constexpr Nanometer operator* (float lhs, Nanometer rhs) noexcept {
+        return Nanometer(lhs * static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator* (Nanometer lhs, float rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) * rhs);
+    }
+
     constexpr Nanometer operator/ (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) / static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator/ (float lhs, Nanometer rhs) noexcept {
+        return Nanometer(lhs / static_cast<float>(rhs));
+    }
+    constexpr Nanometer operator/ (Nanometer lhs, float rhs) noexcept {
+        return Nanometer(static_cast<float>(lhs) / rhs);
     }
 
     // literals ------------------------------------------------------------------------------------
@@ -233,15 +271,15 @@ namespace gaudy {
                 return (*this)(r.min());
             }
 
+            auto avg = [](Interval<float> const &i, float A, float B)
+            {
+                return 0.5*(A*(1-i.min()) + B*i.min())
+                        + 0.5*(A*(1-i.max()) + B*i.max());
+            };
+
             const auto delta = float(1)/(size()-1);
             auto bin_average = [&delta, &r, &avg, this] (int bin)
             {
-                auto avg = [](Interval<float> const &i, float A, float B)
-                {
-                    return 0.5*(A*(1-i.min()) + B*i.min())
-                         + 0.5*(A*(1-i.max()) + B*i.max());
-                };
-
                 const Interval<float> bin_global (bin*delta, bin*delta+delta);
                 const auto overlap_global = intersection(bin_global, r);
                 //if (!overlap_global)
@@ -272,27 +310,27 @@ namespace gaudy {
             // First bin:
             {
                 auto ba = bin_average(min_i);
-                ret.amplitude  = ret.amplitude + get<1>(ba) * get<0>(ba);
-                weight_total += get<0>(ba);
+                ret.amplitude += get<1>(ba) * get<0>(ba);
+                weight_total  += get<0>(ba);
             }
 
             // Second bin (if there's only one bin in the interval, we already have it):
             if (min_i != max_i)
             {
                 auto ba = bin_average(max_i);
-                ret.amplitude  = ret.amplitude + get<1>(ba) * get<0>(ba);
-                weight_total += get<0>(ba);
+                ret.amplitude += get<1>(ba) * get<0>(ba);
+                weight_total  += get<0>(ba);
             }
 
             // Inner bins with known weight (we could solely use the bin_average() function,
             //                               but this is less performant)
             for (auto i=min_i+1; i<max_i; ++i) {
                 auto ba = bins_[i]*0.5f + bins_[i+1]*0.5f;
-                ret.amplitude  = ret.amplitude + ba * delta;
-                weight_total += delta;
+                ret.amplitude += ba * delta;
+                weight_total  += delta;
             }
 
-            ret.amplitude = ret.amplitude / weight_total;
+            ret.amplitude /= weight_total;
             ret.wavelength = Nanometer(avg(r, float(lambda_min_), float(lambda_max_)));
 
             return ret;
@@ -354,6 +392,22 @@ TEST_CASE("/internal", "RGB to HSV conversion")
     REQUIRE((1_nm + 1_nm) == 2_nm);
     REQUIRE((1_nm * 2_nm) == 2_nm);
     REQUIRE((1_nm / 2_nm) == 0.5_nm);
+    REQUIRE((1_nm - 1) == 0_nm);
+    REQUIRE((1_nm + 1) == 2_nm);
+    REQUIRE((1_nm * 2) == 2_nm);
+    REQUIRE((1_nm / 2) == 0.5_nm);
+    REQUIRE((1 - 1_nm) == 0_nm);
+    REQUIRE((1 + 1_nm) == 2_nm);
+    REQUIRE((1 * 2_nm) == 2_nm);
+    REQUIRE((1 / 2_nm) == 0.5_nm);
+    REQUIRE((1_nm -= 1_nm) == 0_nm);
+    REQUIRE((1_nm += 1_nm) == 2_nm);
+    REQUIRE((1_nm *= 2_nm) == 2_nm);
+    REQUIRE((1_nm /= 2_nm) == 0.5_nm);
+    REQUIRE((1_nm -= 1) == 0_nm);
+    REQUIRE((1_nm += 1) == 2_nm);
+    REQUIRE((1_nm *= 2) == 2_nm);
+    REQUIRE((1_nm /= 2) == 0.5_nm);
     REQUIRE(-(-1_nm) == 1_nm);
     REQUIRE(+1_nm == 1_nm);
 
