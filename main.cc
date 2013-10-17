@@ -6,10 +6,14 @@
 #include <valarray>
 #include <iostream>
 #include <stdexcept>
+#include <tuple>
 #include <boost/optional.hpp>
 
 namespace gaudy {
     using boost::optional;
+    using std::get;
+    using std::tuple;
+    using std::make_tuple;
 
     bool rel_equal (float lhs, float rhs, float max_rel_diff=std::numeric_limits<float>::epsilon())
     {
@@ -232,28 +236,35 @@ namespace gaudy {
                      + 0.5*(A*(1-i.max()) + B*i.max());
             };
 
-            int min_i = r.min() * (size()-1);
-            int max_i = r.max() * (size()-1);
-
-            const auto delta = float(1)/(size()-1);
-            float weight_total = 0;
-            SpectrumSample ret;
-
-            auto i = min_i;
-            do {
-                Interval<float> bin_global (i*delta, i*delta+delta);
+            auto delta = float(1)/(size()-1);
+            auto bin_average = [&delta, &r, &avg, this] (int bin)
+            {
+                Interval<float> bin_global (bin*delta, bin*delta+delta);
                 auto overlap_global = intersection(bin_global, r);
-                if (!overlap_global) continue;
+                if (!overlap_global)
+                    throw std::logic_error("in SpectrumSample::operator()(Interval)");
 
                 // translate the spectrum-space overlap-interval to bin-space
                 Interval<float> overlap_local((overlap_global->min()-bin_global.min())/delta,
                                               (overlap_global->max()-bin_global.min())/delta);
 
                 float area = length(*overlap_global);
-                auto local_avg_amp = avg(overlap_local, bins_[i], bins_[i+1]);
-                ret.amplitude  = ret.amplitude + local_avg_amp * area;
-                weight_total += area;
+                auto local_avg_amp = avg(overlap_local, bins_[bin], bins_[bin+1]);
 
+                return make_tuple(area, local_avg_amp);
+            };
+
+            int min_i = r.min() * (size()-1);
+            int max_i = r.max() * (size()-1);
+
+            float weight_total = 0;
+            SpectrumSample ret;
+
+            auto i = min_i;
+            do {
+                auto ba = bin_average(i);
+                ret.amplitude  = ret.amplitude + get<1>(ba) * get<0>(ba);
+                weight_total += get<0>(ba);
             } while (i++ != max_i);
 
             ret.amplitude = ret.amplitude / weight_total;
