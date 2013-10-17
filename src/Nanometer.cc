@@ -5,7 +5,7 @@
 #include "gaudy/Nanometer.hh"
 #include "catch.hpp"
 
-TEST_CASE("/internal", "RGB to HSV conversion")
+TEST_CASE("gaudy/Nanometer", "Nanometer tests")
 {
     using namespace gaudy;
 

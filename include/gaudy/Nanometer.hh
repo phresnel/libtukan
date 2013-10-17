@@ -29,76 +29,76 @@ namespace gaudy {
     };
 
     // relation
-    constexpr bool operator== (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline bool operator== (Nanometer lhs, Nanometer rhs) noexcept {
         return static_cast<float>(lhs) == static_cast<float>(rhs);
     }
-    constexpr bool operator!= (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline bool operator!= (Nanometer lhs, Nanometer rhs) noexcept {
         return !(lhs == rhs);
     }
-    bool rel_equal (Nanometer lhs, Nanometer rhs,
+    inline bool rel_equal (Nanometer lhs, Nanometer rhs,
                     float max_rel_diff=std::numeric_limits<float>::epsilon())
     {
         return rel_equal (static_cast<float>(lhs), static_cast<float>(rhs), max_rel_diff);
     }
 
-    constexpr bool operator> (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline bool operator> (Nanometer lhs, Nanometer rhs) noexcept {
         return static_cast<float>(lhs) > static_cast<float>(rhs);
     }
-    constexpr bool operator< (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline bool operator< (Nanometer lhs, Nanometer rhs) noexcept {
         return static_cast<float>(lhs) < static_cast<float>(rhs);
     }
-    constexpr bool operator>= (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline bool operator>= (Nanometer lhs, Nanometer rhs) noexcept {
         return static_cast<float>(lhs) >= static_cast<float>(rhs);
     }
-    constexpr bool operator<= (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline bool operator<= (Nanometer lhs, Nanometer rhs) noexcept {
         return static_cast<float>(lhs) <= static_cast<float>(rhs);
     }
 
     // arithmetic
-    constexpr Nanometer operator+ (Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator+ (Nanometer rhs) noexcept {
         return rhs;
     }
-    constexpr Nanometer operator- (Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator- (Nanometer rhs) noexcept {
         return Nanometer(-static_cast<float>(rhs));
     }
 
-    constexpr Nanometer operator+ (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator+ (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) + static_cast<float>(rhs));
     }
-    constexpr Nanometer operator+ (float lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator+ (float lhs, Nanometer rhs) noexcept {
         return Nanometer(lhs + static_cast<float>(rhs));
     }
-    constexpr Nanometer operator+ (Nanometer lhs, float rhs) noexcept {
+    constexpr inline Nanometer operator+ (Nanometer lhs, float rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) + rhs);
     }
 
-    constexpr Nanometer operator- (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator- (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) - static_cast<float>(rhs));
     }
-    constexpr Nanometer operator- (float lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator- (float lhs, Nanometer rhs) noexcept {
         return Nanometer(lhs - static_cast<float>(rhs));
     }
-    constexpr Nanometer operator- (Nanometer lhs, float rhs) noexcept {
+    constexpr inline Nanometer operator- (Nanometer lhs, float rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) - rhs);
     }
 
-    constexpr Nanometer operator* (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator* (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) * static_cast<float>(rhs));
     }
-    constexpr Nanometer operator* (float lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator* (float lhs, Nanometer rhs) noexcept {
         return Nanometer(lhs * static_cast<float>(rhs));
     }
-    constexpr Nanometer operator* (Nanometer lhs, float rhs) noexcept {
+    constexpr inline Nanometer operator* (Nanometer lhs, float rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) * rhs);
     }
 
-    constexpr Nanometer operator/ (Nanometer lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator/ (Nanometer lhs, Nanometer rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) / static_cast<float>(rhs));
     }
-    constexpr Nanometer operator/ (float lhs, Nanometer rhs) noexcept {
+    constexpr inline Nanometer operator/ (float lhs, Nanometer rhs) noexcept {
         return Nanometer(lhs / static_cast<float>(rhs));
     }
-    constexpr Nanometer operator/ (Nanometer lhs, float rhs) noexcept {
+    constexpr inline Nanometer operator/ (Nanometer lhs, float rhs) noexcept {
         return Nanometer(static_cast<float>(lhs) / rhs);
     }
 

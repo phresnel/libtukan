@@ -259,10 +259,6 @@ namespace gaudy {
     }
 }
 
-namespace gaudy { namespace detail {
-
-} }
-
 
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
