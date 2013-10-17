@@ -31,7 +31,8 @@ namespace gaudy {
     }
 
     inline bool rel_equal(SpectrumSample const &lhs, SpectrumSample const &rhs,
-                          float max_rel_diff=std::numeric_limits<float>::epsilon())
+                          float max_rel_diff=std::numeric_limits<float>::epsilon()
+                         ) noexcept
     {
         return rel_equal(lhs.amplitude, rhs.amplitude, max_rel_diff)
             && rel_equal(lhs.wavelength, rhs.wavelength, max_rel_diff);

@@ -10,7 +10,9 @@
 namespace gaudy {
 
     inline
-    bool rel_equal (float lhs, float rhs, float max_rel_diff=std::numeric_limits<float>::epsilon())
+    bool rel_equal (float lhs, float rhs,
+                    float max_rel_diff=std::numeric_limits<float>::epsilon()
+                   ) noexcept
     {
         using std::fabs;
         // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
