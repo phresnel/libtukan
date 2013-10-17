@@ -1,7 +1,7 @@
 Execute('./bootstrap')
 
 env = Environment(CPPPATH = ['.', 'bootstrapped/Catch/include/', 'include'],
-                  CXXFLAGS = "-std=c++0x -Wall -O3 -ffast-math -march=native -msse2 -fopenmp ",
+                  CXXFLAGS = "-std=c++11 -Wall -fopenmp ",
                   CPPFLAGS=""
                   )
 
@@ -9,7 +9,8 @@ gaudy = env.Program(target='unit_tests',
                     source=['main.cc',
                             'src/Nanometer.cc',
                             'src/Interval.cc',
-                            'src/Spectrum.cc'
+                            'src/Spectrum.cc',
+                            'src/RGB.cc'
                            ],
                     LIBS=['gomp']
                     )

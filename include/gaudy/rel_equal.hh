@@ -5,6 +5,7 @@
 #define REL_EQUAL_HH_INCLUDED_20131017
 
 #include <cmath>
+#include <limits>
 
 namespace gaudy {
 
