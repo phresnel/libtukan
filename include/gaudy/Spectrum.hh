@@ -45,10 +45,6 @@ namespace gaudy {
         float operator[] (size_t i) const noexcept ;
         float at (size_t i) const ;
 
-        SpectrumSample operator() (float f)           const ;
-        SpectrumSample operator() (Nanometer g)       const ;
-        SpectrumSample operator() (Interval<float> r) const ;
-
     private:
         Nanometer lambda_min_, lambda_max_;
         std::valarray<float> bins_;
@@ -56,6 +52,21 @@ namespace gaudy {
 
 
 
+    //----------------------------------------------------------------------------------------------
+    // LinearInterpolator
+    //----------------------------------------------------------------------------------------------
+    struct LinearInterpolator {
+
+        LinearInterpolator (Spectrum const &spec) : spec(&spec) {}
+
+        SpectrumSample operator() (Interval<float> r) const ;
+        SpectrumSample operator() (float f)           const ;
+        SpectrumSample operator() (Nanometer g)       const ;
+
+    private:
+
+        Spectrum const *spec;
+    };
 
 
 
@@ -124,37 +135,38 @@ namespace gaudy {
     }
 
 
-    inline SpectrumSample Spectrum::operator() (float f) const
+
+    inline SpectrumSample LinearInterpolator::operator() (float f) const
     {
         if (f<0) throw std::logic_error("passed value < 0 to Spectrum::operator()(float)");
         if (f>1) throw std::logic_error("passed value > 1 to Spectrum::operator()(float)");
-        if (f == 0.0) return SpectrumSample(lambda_min(), bins_[0]);
-        if (f == 1.0) return SpectrumSample(lambda_max(), bins_[size()-1]);
+        if (f == 0.0) return SpectrumSample(spec->lambda_min(), (*spec)[0]);
+        if (f == 1.0) return SpectrumSample(spec->lambda_max(), (*spec)[(*spec).size()-1]);
 
-        Nanometer g = lambda_min_ + Nanometer(f)*(lambda_max_-lambda_min_);
+        Nanometer g = (*spec).lambda_min() + Nanometer(f)*((*spec).lambda_max() - (*spec).lambda_min());
 
-        const int i = f*static_cast<float>(size()-1);
-        const Interval<float> bin_interval (i / float(size()-1), (1+i) / float(size()-1));
+        const int i = f*static_cast<float>((*spec).size()-1);
+        const Interval<float> bin_interval (i / float((*spec).size()-1), (1+i) / float((*spec).size()-1));
 
         float frac = (f-bin_interval.min) / (bin_interval.max-bin_interval.min);
-        if (size_t(i+1) >= size()) // TODO: can this happen?
+        if (size_t(i+1) >= (*spec).size()) // TODO: can this happen?
                 throw std::logic_error("crap");
-        return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
+        return SpectrumSample(g, (*spec)[i]*(1-frac) + (*spec)[i+1]*frac);
     }
 
 
-    inline SpectrumSample Spectrum::operator() (Nanometer g) const {
-        if (g<lambda_min_) throw std::logic_error("passed value < lambda_min to "
+    inline SpectrumSample LinearInterpolator::operator() (Nanometer g) const {
+        if (g<(*spec).lambda_min()) throw std::logic_error("passed value < lambda_min to "
                                                   "Spectrum::operator()(Nanometer)");
-        if (g>lambda_max_) throw std::logic_error("passed value > lambda_max to "
+        if (g>(*spec).lambda_max()) throw std::logic_error("passed value > lambda_max to "
                                                   "Spectrum::operator()(Nanometer)");
 
-        float f = static_cast<float>((g - lambda_min_) / (lambda_max_-lambda_min_));
+        float f = static_cast<float>((g - (*spec).lambda_min()) / ((*spec).lambda_max()-(*spec).lambda_min()));
         return (*this)(f);
     }
 
 
-    inline SpectrumSample Spectrum::operator() (Interval<float> r) const {
+    inline SpectrumSample LinearInterpolator::operator() (Interval<float> r) const {
         if (r.min<0) throw std::logic_error("passed value < 0 to "
                                               "Spectrum::operator()(Interval<float>)");
         if (r.max>1) throw std::logic_error("passed value > 1 to "
@@ -168,10 +180,10 @@ namespace gaudy {
         auto avg = [](Interval<float> const &i, float A, float B)
         {
             return 0.5*(A*(1-i.min) + B*i.min)
-                    + 0.5*(A*(1-i.max) + B*i.max);
+                 + 0.5*(A*(1-i.max) + B*i.max);
         };
 
-        const auto delta = float(1)/(size()-1);
+        const auto delta = float(1)/(spec->size()-1);
         auto bin_average = [&delta, &r, &avg, this] (int bin)
         {
             const Interval<float> bin_global (bin*delta, bin*delta+delta);
@@ -184,12 +196,12 @@ namespace gaudy {
                                                 (overlap_global->max - bin_global.min)/delta);
 
             const auto weight = length(*overlap_global);
-            const auto local_avg_amplitude = avg(overlap_local, bins_[bin], bins_[bin+1]);
+            const auto local_avg_amplitude = avg(overlap_local, (*spec)[bin], (*spec)[bin+1]);
             return make_tuple(weight, local_avg_amplitude);
         };
 
-        const int min_i = r.min * (size()-1);
-        const int max_i = r.max * (size()-1);
+        const int min_i = r.min * (spec->size()-1);
+        const int max_i = r.max * (spec->size()-1);
 
         float weight_total = 0;
         SpectrumSample ret;
@@ -219,13 +231,13 @@ namespace gaudy {
         // Inner bins with known weight (we could solely use the bin_average() function,
         //                               but this is less performant)
         for (auto i=min_i+1; i<max_i; ++i) {
-            auto ba = bins_[i]*0.5f + bins_[i+1]*0.5f;
+            auto ba = (*spec)[i]*0.5f + (*spec)[i+1]*0.5f;
             ret.amplitude += ba * delta;
             weight_total  += delta;
         }
 
         ret.amplitude /= weight_total;
-        ret.wavelength = Nanometer(avg(r, float(lambda_min_), float(lambda_max_)));
+        ret.wavelength = Nanometer(avg(r, float(spec->lambda_min()), float(spec->lambda_max())));
 
         return ret;
     }
