@@ -136,7 +136,7 @@ namespace gaudy {
         const int i = f*static_cast<float>(size()-1);
         const Interval<float> bin_interval (i / float(size()-1), (1+i) / float(size()-1));
 
-        float frac = (f-bin_interval.min()) / (bin_interval.max()-bin_interval.min());
+        float frac = (f-bin_interval.min) / (bin_interval.max-bin_interval.min);
         if (size_t(i+1) >= size()) // TODO: can this happen?
                 throw std::logic_error("crap");
         return SpectrumSample(g, bins_[i]*(1-frac) + bins_[i+1]*frac);
@@ -155,20 +155,20 @@ namespace gaudy {
 
 
     inline SpectrumSample Spectrum::operator() (Interval<float> r) const {
-        if (r.min()<0) throw std::logic_error("passed value < 0 to "
+        if (r.min<0) throw std::logic_error("passed value < 0 to "
                                               "Spectrum::operator()(Interval<float>)");
-        if (r.max()>1) throw std::logic_error("passed value > 1 to "
+        if (r.max>1) throw std::logic_error("passed value > 1 to "
                                               "Spectrum::operator()(Interval<float>)");
 
-        if (r.min() == r.max()) {
+        if (r.min == r.max) {
             // We assume that (amp*0)/inf == amp.
-            return (*this)(r.min());
+            return (*this)(r.min);
         }
 
         auto avg = [](Interval<float> const &i, float A, float B)
         {
-            return 0.5*(A*(1-i.min()) + B*i.min())
-                    + 0.5*(A*(1-i.max()) + B*i.max());
+            return 0.5*(A*(1-i.min) + B*i.min)
+                    + 0.5*(A*(1-i.max) + B*i.max);
         };
 
         const auto delta = float(1)/(size()-1);
@@ -180,16 +180,16 @@ namespace gaudy {
             //    throw std::logic_error("in SpectrumSample::operator()(Interval)");
 
             // translate the spectrum-space overlap-interval to bin-space
-            const Interval<float> overlap_local((overlap_global->min()-bin_global.min())/delta,
-                                                (overlap_global->max()-bin_global.min())/delta);
+            const Interval<float> overlap_local((overlap_global->min - bin_global.min)/delta,
+                                                (overlap_global->max - bin_global.min)/delta);
 
             const auto weight = length(*overlap_global);
             const auto local_avg_amplitude = avg(overlap_local, bins_[bin], bins_[bin+1]);
             return make_tuple(weight, local_avg_amplitude);
         };
 
-        const int min_i = r.min() * (size()-1);
-        const int max_i = r.max() * (size()-1);
+        const int min_i = r.min * (size()-1);
+        const int max_i = r.max * (size()-1);
 
         float weight_total = 0;
         SpectrumSample ret;

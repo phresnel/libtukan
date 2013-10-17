@@ -17,19 +17,17 @@ namespace gaudy {
     class Interval {
     public:
         constexpr Interval(T min, T max) :
-            min_(min<=max?min:throw std::out_of_range("Interval::min must be <= Interval::max")),
-            max_(max)
+            min(min<=max?min:throw std::out_of_range("Interval::min must be <= Interval::max")),
+            max(max)
         {}
-        constexpr T min() noexcept { return min_; }
-        constexpr T max() noexcept { return max_; }
-    private:
-        T min_, max_;
+
+        const T min, max;
     };
 
     template <typename T>
     inline constexpr
     bool operator== (Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
-        return lhs.min()==rhs.min() && lhs.max()==rhs.max();
+        return lhs.min==rhs.min && lhs.max==rhs.max;
     }
 
     template <typename T>
@@ -41,15 +39,15 @@ namespace gaudy {
     template <typename T>
     inline constexpr
     T length(Interval<T> const &i) noexcept {
-        return i.max() - i.min();
+        return i.max - i.min;
     }
 
     template <typename T>
     inline
     optional<Interval<T>> intersection(Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
         using std::min; using std::max;
-        T l = max(lhs.min(), rhs.min()),
-          r = min(lhs.max(), rhs.max());
+        T l = max(lhs.min, rhs.min),
+          r = min(lhs.max, rhs.max);
         if (l>r) return optional<Interval<T>>();
         return Interval<T>(l,r);
     }
