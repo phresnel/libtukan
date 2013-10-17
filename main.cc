@@ -5,7 +5,6 @@
 
 #include "gaudy/Nanometer.hh"
 #include "gaudy/Interval.hh"
-#include "gaudy/rel_equal.hh"
 #include "gaudy/Spectrum.hh"
 
 #include <vector>
@@ -15,6 +14,7 @@
 
 
 namespace gaudy {
+    // TODO: test these
 
     inline
     std::ostream& operator<< (std::ostream &os, Nanometer const &nm) {
