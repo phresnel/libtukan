@@ -227,45 +227,70 @@ namespace gaudy {
                                                   "Spectrum::operator()(Interval<float>)");
             if (r.max()>1) throw std::logic_error("passed value > 1 to "
                                                   "Spectrum::operator()(Interval<float>)");
-            if (r.min() == r.max())
+
+            if (r.min() == r.max()) {
+                // We assume that (amp*0)/inf == amp.
                 return (*this)(r.min());
+            }
 
-            auto avg = [](Interval<float> const &i, float A, float B)
-            {
-                return 0.5*(A*(1-i.min()) + B*i.min())
-                     + 0.5*(A*(1-i.max()) + B*i.max());
-            };
-
-            auto delta = float(1)/(size()-1);
+            const auto delta = float(1)/(size()-1);
             auto bin_average = [&delta, &r, &avg, this] (int bin)
             {
-                Interval<float> bin_global (bin*delta, bin*delta+delta);
-                auto overlap_global = intersection(bin_global, r);
-                if (!overlap_global)
-                    throw std::logic_error("in SpectrumSample::operator()(Interval)");
+                auto avg = [](Interval<float> const &i, float A, float B)
+                {
+                    return 0.5*(A*(1-i.min()) + B*i.min())
+                         + 0.5*(A*(1-i.max()) + B*i.max());
+                };
+
+                const Interval<float> bin_global (bin*delta, bin*delta+delta);
+                const auto overlap_global = intersection(bin_global, r);
+                //if (!overlap_global)
+                //    throw std::logic_error("in SpectrumSample::operator()(Interval)");
 
                 // translate the spectrum-space overlap-interval to bin-space
-                Interval<float> overlap_local((overlap_global->min()-bin_global.min())/delta,
-                                              (overlap_global->max()-bin_global.min())/delta);
+                const Interval<float> overlap_local((overlap_global->min()-bin_global.min())/delta,
+                                                    (overlap_global->max()-bin_global.min())/delta);
 
-                float area = length(*overlap_global);
-                auto local_avg_amp = avg(overlap_local, bins_[bin], bins_[bin+1]);
-
-                return make_tuple(area, local_avg_amp);
+                const auto weight = length(*overlap_global);
+                const auto local_avg_amplitude = avg(overlap_local, bins_[bin], bins_[bin+1]);
+                return make_tuple(weight, local_avg_amplitude);
             };
 
-            int min_i = r.min() * (size()-1);
-            int max_i = r.max() * (size()-1);
+            const int min_i = r.min() * (size()-1);
+            const int max_i = r.max() * (size()-1);
 
             float weight_total = 0;
             SpectrumSample ret;
 
-            auto i = min_i;
-            do {
-                auto ba = bin_average(i);
+            // Given our bins            [    |    |    |    |    ]
+            // with the query interval      [______________]
+            // we compute the average and weight for the first and last bin in the interval exactly,
+            // and then iterate over the inner bins using a constant weight:
+            //  [exact|const|const|exact|    ]
+            //     [________________]
+
+            // First bin:
+            {
+                auto ba = bin_average(min_i);
                 ret.amplitude  = ret.amplitude + get<1>(ba) * get<0>(ba);
                 weight_total += get<0>(ba);
-            } while (i++ != max_i);
+            }
+
+            // Second bin (if there's only one bin in the interval, we already have it):
+            if (min_i != max_i)
+            {
+                auto ba = bin_average(max_i);
+                ret.amplitude  = ret.amplitude + get<1>(ba) * get<0>(ba);
+                weight_total += get<0>(ba);
+            }
+
+            // Inner bins with known weight (we could solely use the bin_average() function,
+            //                               but this is less performant)
+            for (auto i=min_i+1; i<max_i; ++i) {
+                auto ba = bins_[i]*0.5f + bins_[i+1]*0.5f;
+                ret.amplitude  = ret.amplitude + ba * delta;
+                weight_total += delta;
+            }
 
             ret.amplitude = ret.amplitude / weight_total;
             ret.wavelength = Nanometer(avg(r, float(lambda_min_), float(lambda_max_)));
