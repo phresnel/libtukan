@@ -1,5 +1,5 @@
 
-gaudy - C++ color conversion and computation library
+gaudy - a C++ header-only color conversion- and computation-library
 -------------------------------------------------------------------------------
 
 More info later.
