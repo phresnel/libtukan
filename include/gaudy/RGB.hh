@@ -19,10 +19,10 @@ namespace gaudy {
         constexpr RGB() noexcept = default;
         constexpr RGB(float r, float g, float b) noexcept : r(r), g(g), b(b) {}
 
-        RGB& operator+= (RGB const &rhs) noexcept;
-        RGB& operator-= (RGB const &rhs) noexcept;
-        RGB& operator*= (RGB const &rhs) noexcept;
-        RGB& operator/= (RGB const &rhs) noexcept;
+        RGB& operator+= (RGB rhs) noexcept;
+        RGB& operator-= (RGB rhs) noexcept;
+        RGB& operator*= (RGB rhs) noexcept;
+        RGB& operator/= (RGB rhs) noexcept;
 
         RGB& operator+= (float rhs) noexcept;
         RGB& operator-= (float rhs) noexcept;
@@ -32,26 +32,26 @@ namespace gaudy {
 
 
     // relation
-    constexpr bool operator== (RGB const &lhs, RGB const &rhs) noexcept;
-    constexpr bool operator!= (RGB const &lhs, RGB const &rhs) noexcept;
-    constexpr bool rel_equal (RGB const &lhs, RGB const &rhs,
+    constexpr bool operator== (RGB lhs, RGB rhs) noexcept;
+    constexpr bool operator!= (RGB lhs, RGB rhs) noexcept;
+    constexpr bool rel_equal (RGB lhs, RGB rhs,
                               float max_rel_diff=std::numeric_limits<float>::epsilon() ) noexcept;
 
     // arithmetics
-    constexpr RGB operator+ (RGB const &lhs, RGB const &rhs) noexcept;
-    constexpr RGB operator- (RGB const &lhs, RGB const &rhs) noexcept;
-    constexpr RGB operator* (RGB const &lhs, RGB const &rhs) noexcept;
-    constexpr RGB operator/ (RGB const &lhs, RGB const &rhs) noexcept;
+    constexpr RGB operator+ (RGB lhs, RGB rhs) noexcept;
+    constexpr RGB operator- (RGB lhs, RGB rhs) noexcept;
+    constexpr RGB operator* (RGB lhs, RGB rhs) noexcept;
+    constexpr RGB operator/ (RGB lhs, RGB rhs) noexcept;
 
-    constexpr RGB operator+ (RGB const &lhs, float rhs) noexcept;
-    constexpr RGB operator- (RGB const &lhs, float rhs) noexcept;
-    constexpr RGB operator* (RGB const &lhs, float rhs) noexcept;
-    constexpr RGB operator/ (RGB const &lhs, float rhs) noexcept;
+    constexpr RGB operator+ (RGB lhs, float rhs) noexcept;
+    constexpr RGB operator- (RGB lhs, float rhs) noexcept;
+    constexpr RGB operator* (RGB lhs, float rhs) noexcept;
+    constexpr RGB operator/ (RGB lhs, float rhs) noexcept;
 
-    constexpr RGB operator+ (float lhs, RGB const &rhs) noexcept;
-    constexpr RGB operator- (float lhs, RGB const &rhs) noexcept;
-    constexpr RGB operator* (float lhs, RGB const &rhs) noexcept;
-    constexpr RGB operator/ (float lhs, RGB const &rhs) noexcept;
+    constexpr RGB operator+ (float lhs, RGB rhs) noexcept;
+    constexpr RGB operator- (float lhs, RGB rhs) noexcept;
+    constexpr RGB operator* (float lhs, RGB rhs) noexcept;
+    constexpr RGB operator/ (float lhs, RGB rhs) noexcept;
 
 
 
@@ -61,28 +61,28 @@ namespace gaudy {
     //---------------------------------------------------------------------------------------------
     // implementation
     //---------------------------------------------------------------------------------------------
-    inline RGB& RGB::operator+= (RGB const &rhs) noexcept {
+    inline RGB& RGB::operator+= (RGB rhs) noexcept {
         r += rhs.r;
         g += rhs.g;
         b += rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator-= (RGB const &rhs) noexcept {
+    inline RGB& RGB::operator-= (RGB rhs) noexcept {
         r -= rhs.r;
         g -= rhs.g;
         b -= rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator*= (RGB const &rhs) noexcept {
+    inline RGB& RGB::operator*= (RGB rhs) noexcept {
         r *= rhs.r;
         g *= rhs.g;
         b *= rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator/= (RGB const &rhs) noexcept {
+    inline RGB& RGB::operator/= (RGB rhs) noexcept {
         r /= rhs.r;
         g /= rhs.g;
         b /= rhs.b;
@@ -119,13 +119,13 @@ namespace gaudy {
 
 
     // relation
-    constexpr bool operator== (RGB const &lhs, RGB const &rhs) noexcept {
+    constexpr bool operator== (RGB lhs, RGB rhs) noexcept {
         return lhs.r==rhs.r && lhs.g==rhs.g && lhs.b==rhs.b;
     }
-    constexpr bool operator!= (RGB const &lhs, RGB const &rhs) noexcept {
+    constexpr bool operator!= (RGB lhs, RGB rhs) noexcept {
         return !(lhs == rhs);
     }
-    constexpr bool rel_equal (RGB const &lhs, RGB const &rhs, float max_rel_diff) noexcept
+    constexpr bool rel_equal (RGB lhs, RGB rhs, float max_rel_diff) noexcept
     {
         return rel_equal (lhs.r, rhs.r, max_rel_diff)
             && rel_equal (lhs.g, rhs.g, max_rel_diff)
@@ -135,42 +135,42 @@ namespace gaudy {
 
 
     // arithmetics
-    constexpr RGB operator+ (RGB const &lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator+ (RGB lhs, RGB rhs) noexcept {
         return {lhs.r+rhs.r, lhs.g+rhs.g, lhs.b+rhs.b};
     }
-    constexpr RGB operator- (RGB const &lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator- (RGB lhs, RGB rhs) noexcept {
         return {lhs.r-rhs.r, lhs.g-rhs.g, lhs.b-rhs.b};
     }
-    constexpr RGB operator* (RGB const &lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator* (RGB lhs, RGB rhs) noexcept {
         return {lhs.r*rhs.r, lhs.g*rhs.g, lhs.b*rhs.b};
     }
-    constexpr RGB operator/ (RGB const &lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator/ (RGB lhs, RGB rhs) noexcept {
         return {lhs.r/rhs.r, lhs.g/rhs.g, lhs.b/rhs.b};
     }
 
-    constexpr RGB operator+ (RGB const &lhs, float rhs) noexcept {
+    constexpr RGB operator+ (RGB lhs, float rhs) noexcept {
         return {lhs.r+rhs, lhs.g+rhs, lhs.b+rhs};
     }
-    constexpr RGB operator- (RGB const &lhs, float rhs) noexcept {
+    constexpr RGB operator- (RGB lhs, float rhs) noexcept {
         return {lhs.r-rhs, lhs.g-rhs, lhs.b-rhs};
     }
-    constexpr RGB operator* (RGB const &lhs, float rhs) noexcept {
+    constexpr RGB operator* (RGB lhs, float rhs) noexcept {
         return {lhs.r*rhs, lhs.g*rhs, lhs.b*rhs};
     }
-    constexpr RGB operator/ (RGB const &lhs, float rhs) noexcept {
+    constexpr RGB operator/ (RGB lhs, float rhs) noexcept {
         return {lhs.r/rhs, lhs.g/rhs, lhs.b/rhs};
     }
 
-    constexpr RGB operator+ (float lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator+ (float lhs, RGB rhs) noexcept {
         return {lhs+rhs.r, lhs+rhs.g, lhs+rhs.b};
     }
-    constexpr RGB operator- (float lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator- (float lhs, RGB rhs) noexcept {
         return {lhs-rhs.r, lhs-rhs.g, lhs-rhs.b};
     }
-    constexpr RGB operator* (float lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator* (float lhs, RGB rhs) noexcept {
         return {lhs*rhs.r, lhs*rhs.g, lhs*rhs.b};
     }
-    constexpr RGB operator/ (float lhs, RGB const &rhs) noexcept {
+    constexpr RGB operator/ (float lhs, RGB rhs) noexcept {
         return {lhs/rhs.r, lhs/rhs.g, lhs/rhs.b};
     }
 }
