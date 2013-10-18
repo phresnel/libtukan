@@ -12,7 +12,7 @@ namespace gaudy {
     // RGB
     //---------------------------------------------------------------------------------------------
 
-    // structure
+    // -- structure -------------------------------------------------------------------------------
     struct RGB {
         float r=0, g=0, b=0;
 
@@ -31,13 +31,17 @@ namespace gaudy {
     };
 
 
-    // relation
+    // -- relation --------------------------------------------------------------------------------
     constexpr bool operator== (RGB lhs, RGB rhs) noexcept;
     constexpr bool operator!= (RGB lhs, RGB rhs) noexcept;
     constexpr bool rel_equal (RGB lhs, RGB rhs,
                               float max_rel_diff=std::numeric_limits<float>::epsilon() ) noexcept;
+}
 
-    // arithmetics
+#include <ostream>
+namespace gaudy {
+
+    // -- arithmetics -----------------------------------------------------------------------------
     constexpr RGB operator+ (RGB lhs, RGB rhs) noexcept;
     constexpr RGB operator- (RGB lhs, RGB rhs) noexcept;
     constexpr RGB operator* (RGB lhs, RGB rhs) noexcept;
@@ -53,9 +57,52 @@ namespace gaudy {
     constexpr RGB operator* (float lhs, RGB rhs) noexcept;
     constexpr RGB operator/ (float lhs, RGB rhs) noexcept;
 
+}
 
 
+#include <cmath>
+namespace gaudy {
 
+    // -- <cmath> ---------------------------------------------------------------------------------
+
+
+    //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
+    // Info: While glibcxx defines some (many? (all?)) cmath functions as constexpr, this is not
+    //       sanctioned  by  the  C++11  standard,  therefore we are not making the  promise  of
+    //       constexpr, as such code is non-portable.
+    //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
+
+
+    // trigonometric
+    inline RGB cos(RGB v) noexcept { return RGB{std::cos(v.r), std::cos(v.g), std::cos(v.b)}; }
+    inline RGB sin(RGB v) noexcept { return RGB{std::sin(v.r), std::sin(v.g), std::sin(v.b)}; }
+    inline RGB tan(RGB v) noexcept { return RGB{std::tan(v.r), std::tan(v.g), std::tan(v.b)}; }
+    inline RGB acos(RGB v) noexcept { return RGB{std::acos(v.r), std::acos(v.g), std::acos(v.b)}; }
+    inline RGB asin(RGB v) noexcept { return RGB{std::asin(v.r), std::asin(v.g), std::asin(v.b)}; }
+    inline RGB atan(RGB v) noexcept { return RGB{std::atan(v.r), std::atan(v.g), std::atan(v.b)}; }
+    inline RGB atan2(RGB v, RGB w) noexcept { return RGB{std::atan2(v.r,w.r),
+                                                         std::atan2(v.g,w.g),
+                                                         std::atan2(v.b,w.b)}; }
+
+    // hyperbolic
+
+    // exponential and logarithmic
+
+    // power
+
+    // error and gamma
+
+    // rounding and remainder
+
+    // floating point manipulation
+
+    // min, max, difference
+
+    // other
+
+    // classification functions
+
+    // comparison functions
 
 
     //---------------------------------------------------------------------------------------------

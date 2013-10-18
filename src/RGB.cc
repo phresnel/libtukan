@@ -112,3 +112,20 @@ TEST_CASE("gaudy/RGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
     REQUIRE_FALSE((RGB(1/.0f, 1/.0f, 1/.0f) *= 0) == RGB(0,0,0));
     REQUIRE((RGB(0,0,0) *= (1/.0f)              ) != RGB(0,0,0));
 }
+
+TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
+{
+    using namespace gaudy;
+    RGB v {0.6, 0.4, 0.8};
+    RGB w {0.9, 0.2, 0.7};
+
+    SECTION("trigonometric") {
+        REQUIRE(sin(v)     == rel_equal(RGB(sin(v.r),       sin(v.g),        sin(v.b))));
+        REQUIRE(cos(v)     == rel_equal(RGB(cos(v.r),       cos(v.g),        cos(v.b))));
+        REQUIRE(tan(v)     == rel_equal(RGB(tan(v.r),       tan(v.g),        tan(v.b))));
+        REQUIRE(acos(v)    == rel_equal(RGB(acos(v.r),      acos(v.g),       acos(v.b))));
+        REQUIRE(asin(v)    == rel_equal(RGB(asin(v.r),      asin(v.g),       asin(v.b))));
+        REQUIRE(atan(v)    == rel_equal(RGB(atan(v.r),      atan(v.g),       atan(v.b))));
+        REQUIRE(atan2(v,w) == rel_equal(RGB(atan2(v.r,w.r), atan2(v.g, w.g), atan2(v.b, w.b))));
+    }
+}
