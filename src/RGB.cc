@@ -55,6 +55,12 @@ TEST_CASE("gaudy/RGB", "RGB tests")
         REQUIRE((RGB(3,6,9)/=-2) == RGB(-1.5,-3,-4.5));
     }
 
+    SECTION("sign") {
+        REQUIRE(RGB(-1,1,-1) == +RGB(-1, 1,-1));
+        REQUIRE(RGB(-1,1,-1) == -RGB( 1,-1, 1));
+        REQUIRE(RGB(-1,1,-1) == - + - +RGB(-1,1,-1));
+    }
+
     SECTION("arithmetics") {
         REQUIRE((RGB()+RGB())           == RGB());
         REQUIRE((RGB()+RGB(1,2,3))      == RGB(1,2,3));
@@ -237,5 +243,53 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(tgamma(v) == RGB(tgamma(v.r), tgamma(v.g), tgamma(v.b)));
         REQUIRE(lgamma(x) == RGB(lgamma(x.r), lgamma(x.g), lgamma(x.b)));
         REQUIRE(lgamma(v) == RGB(lgamma(v.r), lgamma(v.g), lgamma(v.b)));
+    }
+
+    SECTION("rounding and remainder") {
+        REQUIRE(ceil(x)  == RGB(ceil(x.r),  ceil(x.g),  ceil(x.b)));
+        REQUIRE(ceil(-x) == RGB(ceil(-x.r), ceil(-x.g), ceil(-x.b)));
+        REQUIRE(floor(x)  == RGB(floor(x.r),  floor(x.g),  floor(x.b)));
+        REQUIRE(floor(-x) == RGB(floor(-x.r), floor(-x.g), floor(-x.b)));
+        REQUIRE(fmod(x, w)  == RGB(fmod(x.r,w.r),  fmod(x.g,w.g),  fmod(x.b,w.b)));
+        REQUIRE(fmod(-x, w)  == RGB(fmod(-x.r,w.r),  fmod(-x.g,w.g),  fmod(-x.b,w.b)));
+        REQUIRE(fmod(x, -w)  == RGB(fmod(x.r,-w.r),  fmod(x.g,-w.g),  fmod(x.b,-w.b)));
+
+        REQUIRE(trunc(x)  == RGB(trunc(x.r),  trunc(x.g),  trunc(x.b)));
+        REQUIRE(trunc(-x) == RGB(trunc(-x.r), trunc(-x.g), trunc(-x.b)));
+        REQUIRE(round(x)  == RGB(round(x.r),  round(x.g),  round(x.b)));
+        REQUIRE(round(-x) == RGB(round(-x.r), round(-x.g), round(-x.b)));
+        REQUIRE(lround(x)  == RGB(lround(x.r),  lround(x.g),  lround(x.b)));
+        REQUIRE(lround(-x) == RGB(lround(-x.r), lround(-x.g), lround(-x.b)));
+        REQUIRE(llround(x)  == RGB(llround(x.r),  llround(x.g),  llround(x.b)));
+        REQUIRE(llround(-x) == RGB(llround(-x.r), llround(-x.g), llround(-x.b)));
+
+        REQUIRE(rint(x)  == RGB(rint(x.r),  rint(x.g),  rint(x.b)));
+        REQUIRE(rint(-x) == RGB(rint(-x.r), rint(-x.g), rint(-x.b)));
+        REQUIRE(lrint(x)  == RGB(lrint(x.r),  lrint(x.g),  lrint(x.b)));
+        REQUIRE(lrint(-x) == RGB(lrint(-x.r), lrint(-x.g), lrint(-x.b)));
+        REQUIRE(llrint(x)  == RGB(llrint(x.r),  llrint(x.g),  llrint(x.b)));
+        REQUIRE(llrint(-x) == RGB(llrint(-x.r), llrint(-x.g), llrint(-x.b)));
+
+        REQUIRE(nearbyint(x)  == RGB(nearbyint(x.r),  nearbyint(x.g),  nearbyint(x.b)));
+        REQUIRE(nearbyint(-x) == RGB(nearbyint(-x.r), nearbyint(-x.g), nearbyint(-x.b)));
+
+        REQUIRE(remainder(x, w)==RGB(remainder(x.r,w.r),remainder(x.g,w.g),remainder(x.b,w.b)));
+        REQUIRE(remainder(-x,w)==RGB(remainder(-x.r,w.r),remainder(-x.g,w.g),remainder(-x.b,w.b)));
+        REQUIRE(remainder(x,-w)==RGB(remainder(x.r,-w.r),remainder(x.g,-w.g),remainder(x.b,-w.b)));
+
+        RGB quot_rgb;
+        RGB remquo_rgb = remquo(x,w,&quot_rgb);
+
+        int quot_r, quot_g, quot_b;
+        float remquo_r = remquo(x.r,w.r,&quot_r);
+        float remquo_g = remquo(x.g,w.g,&quot_g);
+        float remquo_b = remquo(x.b,w.b,&quot_b);
+
+        REQUIRE(remquo_r == remquo_rgb.r);
+        REQUIRE(remquo_g == remquo_rgb.g);
+        REQUIRE(remquo_b == remquo_rgb.b);
+        REQUIRE(quot_r == quot_rgb.r);
+        REQUIRE(quot_g == quot_rgb.g);
+        REQUIRE(quot_b == quot_rgb.b);
     }
 }
