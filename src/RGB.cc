@@ -123,33 +123,33 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     const auto a = 2., b = 11., c = 0.5;
 
     SECTION("trigonometric") {
-        REQUIRE(sin(v)     == rel_equal(RGB(sin(v.r),       sin(v.g),        sin(v.b))));
-        REQUIRE(cos(v)     == rel_equal(RGB(cos(v.r),       cos(v.g),        cos(v.b))));
-        REQUIRE(tan(v)     == rel_equal(RGB(tan(v.r),       tan(v.g),        tan(v.b))));
-        REQUIRE(acos(v)    == rel_equal(RGB(acos(v.r),      acos(v.g),       acos(v.b))));
-        REQUIRE(asin(v)    == rel_equal(RGB(asin(v.r),      asin(v.g),       asin(v.b))));
-        REQUIRE(atan(v)    == rel_equal(RGB(atan(v.r),      atan(v.g),       atan(v.b))));
+        REQUIRE(sin(v)     == (RGB(sin(v.r),       sin(v.g),        sin(v.b))));
+        REQUIRE(cos(v)     == (RGB(cos(v.r),       cos(v.g),        cos(v.b))));
+        REQUIRE(tan(v)     == (RGB(tan(v.r),       tan(v.g),        tan(v.b))));
+        REQUIRE(acos(v)    == (RGB(acos(v.r),      acos(v.g),       acos(v.b))));
+        REQUIRE(asin(v)    == (RGB(asin(v.r),      asin(v.g),       asin(v.b))));
+        REQUIRE(atan(v)    == (RGB(atan(v.r),      atan(v.g),       atan(v.b))));
 
-        REQUIRE(atan2(v,x) == rel_equal(RGB(atan2(v.r, x.r), atan2(v.g, x.g), atan2(v.b, x.b))));
-        REQUIRE(atan2(a,w) == rel_equal(RGB(atan2(a, w.r),   atan2(a, w.g),   atan2(a, w.b))));
-        REQUIRE(atan2(b,w) == rel_equal(RGB(atan2(b, w.r),   atan2(b, w.g),   atan2(b, w.b))));
-        REQUIRE(atan2(c,w) == rel_equal(RGB(atan2(c, w.r),   atan2(c, w.g),   atan2(c, w.b))));
-        REQUIRE(atan2(x,a) == rel_equal(RGB(atan2(x.r, a),   atan2(x.g, a),   atan2(x.b, a))));
-        REQUIRE(atan2(x,b) == rel_equal(RGB(atan2(x.r, b),   atan2(x.g, b),   atan2(x.b, b))));
-        REQUIRE(atan2(x,c) == rel_equal(RGB(atan2(x.r, c),   atan2(x.g, c),   atan2(x.b, c))));
+        REQUIRE(atan2(v,x) == (RGB(atan2(v.r, x.r), atan2(v.g, x.g), atan2(v.b, x.b))));
+        REQUIRE(atan2(a,w) == (RGB(atan2(a, w.r),   atan2(a, w.g),   atan2(a, w.b))));
+        REQUIRE(atan2(b,w) == (RGB(atan2(b, w.r),   atan2(b, w.g),   atan2(b, w.b))));
+        REQUIRE(atan2(c,w) == (RGB(atan2(c, w.r),   atan2(c, w.g),   atan2(c, w.b))));
+        REQUIRE(atan2(x,a) == (RGB(atan2(x.r, a),   atan2(x.g, a),   atan2(x.b, a))));
+        REQUIRE(atan2(x,b) == (RGB(atan2(x.r, b),   atan2(x.g, b),   atan2(x.b, b))));
+        REQUIRE(atan2(x,c) == (RGB(atan2(x.r, c),   atan2(x.g, c),   atan2(x.b, c))));
     }
 
     SECTION("hyperbolic") {
-        REQUIRE(cosh(v)  == rel_equal(RGB(cosh(v.r),  cosh(v.g),  cosh(v.b))));
-        REQUIRE(sinh(v)  == rel_equal(RGB(sinh(v.r),  sinh(v.g),  sinh(v.b))));
-        REQUIRE(tanh(v)  == rel_equal(RGB(tanh(v.r),  tanh(v.g),  tanh(v.b))));
-        REQUIRE(acosh(x) == rel_equal(RGB(acosh(x.r), acosh(x.g), acosh(x.b))));
-        REQUIRE(asinh(x) == rel_equal(RGB(asinh(x.r), asinh(x.g), asinh(x.b))));
-        REQUIRE(atanh(v) == rel_equal(RGB(atanh(v.r), atanh(v.g), atanh(v.b))));
+        REQUIRE(cosh(v)  == (RGB(cosh(v.r),  cosh(v.g),  cosh(v.b))));
+        REQUIRE(sinh(v)  == (RGB(sinh(v.r),  sinh(v.g),  sinh(v.b))));
+        REQUIRE(tanh(v)  == (RGB(tanh(v.r),  tanh(v.g),  tanh(v.b))));
+        REQUIRE(acosh(x) == (RGB(acosh(x.r), acosh(x.g), acosh(x.b))));
+        REQUIRE(asinh(x) == (RGB(asinh(x.r), asinh(x.g), asinh(x.b))));
+        REQUIRE(atanh(v) == (RGB(atanh(v.r), atanh(v.g), atanh(v.b))));
     }
 
     SECTION("exponential and logarithmic") {
-        REQUIRE(exp(v) == rel_equal(RGB(exp(v.r), exp(v.g), exp(v.b))));
+        REQUIRE(exp(v) == (RGB(exp(v.r), exp(v.g), exp(v.b))));
 
         RGB sig, exp;
         sig = frexp(x, &exp);
@@ -157,17 +157,17 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         float sig_r = frexp(x.r, &exp_r);
         float sig_g = frexp(x.g, &exp_g);
         float sig_b = frexp(x.b, &exp_b);
-        REQUIRE(exp_r == rel_equal(exp.r));
-        REQUIRE(exp_g == rel_equal(exp.g));
-        REQUIRE(exp_b == rel_equal(exp.b));
-        REQUIRE(sig_r == rel_equal(sig.r));
-        REQUIRE(sig_g == rel_equal(sig.g));
-        REQUIRE(sig_b == rel_equal(sig.b));
+        REQUIRE(exp_r == (exp.r));
+        REQUIRE(exp_g == (exp.g));
+        REQUIRE(exp_b == (exp.b));
+        REQUIRE(sig_r == (sig.r));
+        REQUIRE(sig_g == (sig.g));
+        REQUIRE(sig_b == (sig.b));
 
-        REQUIRE(x == rel_equal(RGB(ldexp(sig_r,exp_r), ldexp(sig_g,exp_g), ldexp(sig_b,exp_b))));
+        REQUIRE(x == (RGB(ldexp(sig_r,exp_r), ldexp(sig_g,exp_g), ldexp(sig_b,exp_b))));
 
-        REQUIRE(log(x)   == rel_equal(RGB(log(x.r),   log(x.g),   log(x.b))));
-        REQUIRE(log10(x) == rel_equal(RGB(log10(x.r), log10(x.g), log10(x.b))));
+        REQUIRE(log(x)   == (RGB(log(x.r),   log(x.g),   log(x.b))));
+        REQUIRE(log10(x) == (RGB(log10(x.r), log10(x.g), log10(x.b))));
 
         RGB intpart, frac = modf(x, &intpart);
         float intpart_r, frac_r = modf(x.r, &intpart_r);
@@ -204,26 +204,26 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     }
 
     SECTION("power functions") {
-        REQUIRE(pow(v,x) == rel_equal(RGB(pow(v.r, x.r), pow(v.g, x.g), pow(v.b, x.b))));
-        REQUIRE(pow(a,w) == rel_equal(RGB(pow(a, w.r),   pow(a, w.g),   pow(a, w.b))));
-        REQUIRE(pow(b,w) == rel_equal(RGB(pow(b, w.r),   pow(b, w.g),   pow(b, w.b))));
-        REQUIRE(pow(c,w) == rel_equal(RGB(pow(c, w.r),   pow(c, w.g),   pow(c, w.b))));
-        REQUIRE(pow(x,a) == rel_equal(RGB(pow(x.r, a),   pow(x.g, a),   pow(x.b, a))));
-        REQUIRE(pow(x,b) == rel_equal(RGB(pow(x.r, b),   pow(x.g, b),   pow(x.b, b))));
-        REQUIRE(pow(x,c) == rel_equal(RGB(pow(x.r, c),   pow(x.g, c),   pow(x.b, c))));
+        REQUIRE(pow(v,x) == (RGB(pow(v.r, x.r), pow(v.g, x.g), pow(v.b, x.b))));
+        REQUIRE(pow(a,w) == (RGB(pow(a, w.r),   pow(a, w.g),   pow(a, w.b))));
+        REQUIRE(pow(b,w) == (RGB(pow(b, w.r),   pow(b, w.g),   pow(b, w.b))));
+        REQUIRE(pow(c,w) == (RGB(pow(c, w.r),   pow(c, w.g),   pow(c, w.b))));
+        REQUIRE(pow(x,a) == (RGB(pow(x.r, a),   pow(x.g, a),   pow(x.b, a))));
+        REQUIRE(pow(x,b) == (RGB(pow(x.r, b),   pow(x.g, b),   pow(x.b, b))));
+        REQUIRE(pow(x,c) == (RGB(pow(x.r, c),   pow(x.g, c),   pow(x.b, c))));
 
-        REQUIRE(sqrt(v) == rel_equal(RGB(sqrt(v.r), sqrt(v.g), sqrt(v.b))));
-        REQUIRE(sqrt(x) == rel_equal(RGB(sqrt(x.r), sqrt(x.g), sqrt(x.b))));
+        REQUIRE(sqrt(v) == (RGB(sqrt(v.r), sqrt(v.g), sqrt(v.b))));
+        REQUIRE(sqrt(x) == (RGB(sqrt(x.r), sqrt(x.g), sqrt(x.b))));
 
-        REQUIRE(cbrt(v) == rel_equal(RGB(cbrt(v.r), cbrt(v.g), cbrt(v.b))));
-        REQUIRE(cbrt(x) == rel_equal(RGB(cbrt(x.r), cbrt(x.g), cbrt(x.b))));
+        REQUIRE(cbrt(v) == (RGB(cbrt(v.r), cbrt(v.g), cbrt(v.b))));
+        REQUIRE(cbrt(x) == (RGB(cbrt(x.r), cbrt(x.g), cbrt(x.b))));
 
-        REQUIRE(hypot(v,x) == rel_equal(RGB(hypot(v.r, x.r), hypot(v.g, x.g), hypot(v.b, x.b))));
-        REQUIRE(hypot(a,w) == rel_equal(RGB(hypot(a, w.r),   hypot(a, w.g),   hypot(a, w.b))));
-        REQUIRE(hypot(b,w) == rel_equal(RGB(hypot(b, w.r),   hypot(b, w.g),   hypot(b, w.b))));
-        REQUIRE(hypot(c,w) == rel_equal(RGB(hypot(c, w.r),   hypot(c, w.g),   hypot(c, w.b))));
-        REQUIRE(hypot(x,a) == rel_equal(RGB(hypot(x.r, a),   hypot(x.g, a),   hypot(x.b, a))));
-        REQUIRE(hypot(x,b) == rel_equal(RGB(hypot(x.r, b),   hypot(x.g, b),   hypot(x.b, b))));
-        REQUIRE(hypot(x,c) == rel_equal(RGB(hypot(x.r, c),   hypot(x.g, c),   hypot(x.b, c))));
+        REQUIRE(hypot(v,x) == (RGB(hypot(v.r, x.r), hypot(v.g, x.g), hypot(v.b, x.b))));
+        REQUIRE(hypot(a,w) == (RGB(hypot(a, w.r),   hypot(a, w.g),   hypot(a, w.b))));
+        REQUIRE(hypot(b,w) == (RGB(hypot(b, w.r),   hypot(b, w.g),   hypot(b, w.b))));
+        REQUIRE(hypot(c,w) == (RGB(hypot(c, w.r),   hypot(c, w.g),   hypot(c, w.b))));
+        REQUIRE(hypot(x,a) == (RGB(hypot(x.r, a),   hypot(x.g, a),   hypot(x.b, a))));
+        REQUIRE(hypot(x,b) == (RGB(hypot(x.r, b),   hypot(x.g, b),   hypot(x.b, b))));
+        REQUIRE(hypot(x,c) == (RGB(hypot(x.r, c),   hypot(x.g, c),   hypot(x.b, c))));
     }
 }
