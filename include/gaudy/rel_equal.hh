@@ -10,10 +10,11 @@
 
 namespace gaudy {
 
+
     namespace detail {
         constexpr
-        bool rel_equal(float lhs, float rhs, float max_rel_diff,
-                       float diff, float largest)
+        bool rel_equal_helper(float lhs, float rhs, float max_rel_diff,
+                              float diff, float largest)
         {
             return diff <= largest * max_rel_diff;
         }
@@ -26,11 +27,10 @@ namespace gaudy {
     {
         using std::fabs;
         // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
-        return detail::rel_equal(fabs(lhs), fabs(rhs), max_rel_diff,
-                                 fabs(lhs - rhs), (rhs > lhs) ? rhs : lhs
-                                );
+        return detail::rel_equal_helper(fabs(lhs), fabs(rhs), max_rel_diff,
+                                        fabs(lhs - rhs), (rhs > lhs) ? rhs : lhs
+                                       );
     }
-
 
     namespace detail {
         template <typename T>
@@ -42,6 +42,7 @@ namespace gaudy {
             friend
             constexpr bool operator== (T const &lhs, RelEqualProxy const &rhs) noexcept
             {
+                using gaudy::rel_equal;
                 return rel_equal (lhs, rhs.val, rhs.max_rel_diff);
             }
 
@@ -64,7 +65,7 @@ namespace gaudy {
         float max_rel_diff=std::numeric_limits<float>::epsilon()
     ) noexcept
     {
-        return {rhs, max_rel_diff};
+        return {rhs, std::numeric_limits<float>::epsilon()};//max_rel_diff};
     }
 }
 

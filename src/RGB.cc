@@ -116,6 +116,7 @@ TEST_CASE("gaudy/RGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
 TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
 {
     using namespace gaudy;
+    using namespace std;
     const RGB v {0.6, 0.4, 0.8};
     const RGB w {0.9, 0.2, 0.7};
     const RGB x {1.9, 4, 8.7};
@@ -148,7 +149,58 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     }
 
     SECTION("exponential and logarithmic") {
+        REQUIRE(exp(v) == rel_equal(RGB(exp(v.r), exp(v.g), exp(v.b))));
 
+        RGB sig, exp;
+        sig = frexp(x, &exp);
+        int exp_r, exp_g, exp_b;
+        float sig_r = frexp(x.r, &exp_r);
+        float sig_g = frexp(x.g, &exp_g);
+        float sig_b = frexp(x.b, &exp_b);
+        REQUIRE(exp_r == rel_equal(exp.r));
+        REQUIRE(exp_g == rel_equal(exp.g));
+        REQUIRE(exp_b == rel_equal(exp.b));
+        REQUIRE(sig_r == rel_equal(sig.r));
+        REQUIRE(sig_g == rel_equal(sig.g));
+        REQUIRE(sig_b == rel_equal(sig.b));
+
+        REQUIRE(x == rel_equal(RGB(ldexp(sig_r,exp_r), ldexp(sig_g,exp_g), ldexp(sig_b,exp_b))));
+
+        REQUIRE(log(x)   == rel_equal(RGB(log(x.r),   log(x.g),   log(x.b))));
+        REQUIRE(log10(x) == rel_equal(RGB(log10(x.r), log10(x.g), log10(x.b))));
+
+        RGB intpart, frac = modf(x, &intpart);
+        float intpart_r, frac_r = modf(x.r, &intpart_r);
+        float intpart_g, frac_g = modf(x.g, &intpart_g);
+        float intpart_b, frac_b = modf(x.b, &intpart_b);
+        REQUIRE (intpart.r == intpart_r);
+        REQUIRE (intpart.g == intpart_g);
+        REQUIRE (intpart.b == intpart_b);
+        REQUIRE (frac.r == frac_r);
+        REQUIRE (frac.g == frac_g);
+        REQUIRE (frac.b == frac_b);
+
+        REQUIRE (exp2(x)  == RGB(exp2(x.r),  exp2(x.g),  exp2(x.b)));
+        REQUIRE (expm1(x) == RGB(expm1(x.r), expm1(x.g), expm1(x.b)));
+        REQUIRE (ilogb(x) == RGB(ilogb(x.r), ilogb(x.g), ilogb(x.b)));
+        REQUIRE (log1p(x) == RGB(log1p(x.r), log1p(x.g), log1p(x.b)));
+        REQUIRE (log2(x)  == RGB(log2(x.r),  log2(x.g),  log2(x.b)));
+
+        REQUIRE (scalbn(x,2)   == RGB(scalbn(x.r,2),   scalbn(x.g,2),   scalbn(x.b,2)));
+        REQUIRE (scalbn(x,11)  == RGB(scalbn(x.r,11),  scalbn(x.g,11),  scalbn(x.b,11)));
+        REQUIRE (scalbn(x,-2)  == RGB(scalbn(x.r,-2),  scalbn(x.g,-2),  scalbn(x.b,-2)));
+
+        REQUIRE (scalbn(w,RGB(2,3,11))   == RGB(scalbn(w.r,2),  scalbn(w.g,3),   scalbn(w.b,11)));
+        REQUIRE (scalbn(w,RGB(7,-3,0))   == RGB(scalbn(w.r,7),  scalbn(w.g,-3),  scalbn(w.b,0)));
+        REQUIRE (scalbn(w,RGB(12,17,-2)) == RGB(scalbn(w.r,12), scalbn(w.g,17),  scalbn(w.b,-2)));
+
+        REQUIRE (scalbln(x,2)   == RGB(scalbln(x.r,2),   scalbln(x.g,2),   scalbln(x.b,2)));
+        REQUIRE (scalbln(x,11)  == RGB(scalbln(x.r,11),  scalbln(x.g,11),  scalbln(x.b,11)));
+        REQUIRE (scalbln(x,-2)  == RGB(scalbln(x.r,-2),  scalbln(x.g,-2),  scalbln(x.b,-2)));
+
+        REQUIRE (scalbln(w,RGB(2,3,11))   == RGB(scalbln(w.r,2),  scalbln(w.g,3),   scalbln(w.b,11)));
+        REQUIRE (scalbln(w,RGB(7,-3,0))   == RGB(scalbln(w.r,7),  scalbln(w.g,-3),  scalbln(w.b,0)));
+        REQUIRE (scalbln(w,RGB(12,17,-2)) == RGB(scalbln(w.r,12), scalbln(w.g,17),  scalbln(w.b,-2)));;
     }
 
     SECTION("power functions") {

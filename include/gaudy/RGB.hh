@@ -14,6 +14,8 @@ namespace gaudy {
 
     // -- structure -------------------------------------------------------------------------------
     struct RGB {
+        using value_type = float;
+
         float r=0, g=0, b=0;
 
         constexpr RGB() noexcept = default;
@@ -65,6 +67,7 @@ namespace gaudy {
 
     // -- <cmath> ---------------------------------------------------------------------------------
 
+    // TODO: replace all std-qualifcations by a using
 
     //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
     // Info: While glibcxx defines some (many? (all?)) cmath functions as constexpr, this is not
@@ -99,6 +102,63 @@ namespace gaudy {
     inline RGB atanh(RGB v) noexcept { return RGB{std::atanh(v.r), std::atanh(v.g), std::atanh(v.b)}; }
 
     // exponential and logarithmic
+    inline RGB exp(RGB v) noexcept { return RGB{std::exp(v.r), std::exp(v.g), std::exp(v.b)}; }
+
+    // TODO: the second parameter should be RGB<int>, once RGB is generified
+    inline RGB frexp(RGB v, RGB *exp) noexcept {
+        using std::frexp;
+        int exp_r, exp_g, exp_b;
+        RGB sig {frexp(v.r, &exp_r),
+                 frexp(v.g, &exp_g),
+                 frexp(v.b, &exp_b)};
+        *exp = RGB(exp_r, exp_g, exp_b);
+        return sig;
+    }
+
+    // TODO: the second parameter should be RGB<int>, once RGB is generified
+    inline RGB frexp(RGB sig, RGB exp) noexcept {
+        using std::ldexp;
+        return {ldexp(sig.r, exp.r),
+                ldexp(sig.g, exp.g),
+                ldexp(sig.b, exp.b)};
+    }
+
+    inline RGB log(RGB v) noexcept { return {std::log(v.r), std::log(v.g), std::log(v.b)}; }
+    inline RGB log10(RGB v)noexcept{return {std::log10(v.r), std::log10(v.g), std::log10(v.b)};}
+
+    inline RGB modf(RGB v, RGB *intpart) noexcept {
+        using std::modf;
+        return { modf(v.r, &intpart->r),
+                 modf(v.g, &intpart->g),
+                 modf(v.b, &intpart->b) };
+    }
+
+    inline RGB exp2(RGB v)noexcept{return {std::exp2(v.r), std::exp2(v.g), std::exp2(v.b)};}
+    inline RGB expm1(RGB v)noexcept{return {std::expm1(v.r), std::expm1(v.g), std::expm1(v.b)};}
+
+    // TODO: the return type should be RGB<int>, once RGB is generified
+    inline RGB ilogb(RGB v)noexcept{using std::ilogb; return RGB(ilogb(v.r),ilogb(v.g),ilogb(v.b));}
+
+    inline RGB log1p(RGB v) noexcept{ using std::log1p; return {log1p(v.r),log1p(v.g),log1p(v.b)}; }
+    inline RGB log2 (RGB v) noexcept{ using std::log2;  return {log2(v.r),log2(v.g),log2(v.b)}; }
+
+    inline RGB scalbn (RGB v, int n) noexcept {
+        using std::scalbn;  return {scalbn(v.r,n), scalbn(v.g,n), scalbn(v.b,n)};
+    }
+    inline RGB scalbn (RGB v, RGB n) noexcept { // TODO: RGB<int> as rhs
+        using std::scalbn;
+        return {scalbn(v.r,(int)n.r), scalbn(v.g,(int)n.g), scalbn(v.b,(int)n.b)};
+    }
+
+    inline RGB scalbln (RGB v, long n) noexcept {
+        using std::scalbln;
+        return {scalbln(v.r,n), scalbln(v.g,n), scalbln(v.b,n)};
+    }
+    inline RGB scalbln (RGB v, RGB n) noexcept { // TODO: RGB<long> as rhs
+        using std::scalbln;
+        return {scalbln(v.r,(long)n.r), scalbln(v.g,(long)n.g), scalbln(v.b,(long)n.b)};
+    }
+
 
     // power
     inline RGB pow(RGB v, RGB w) noexcept { return RGB{std::pow(v.r,w.r),
