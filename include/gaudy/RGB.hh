@@ -95,6 +95,29 @@ namespace gaudy {
     // exponential and logarithmic
 
     // power
+    inline RGB pow(RGB v, RGB w) noexcept { return RGB{std::pow(v.r,w.r),
+                                                       std::pow(v.g,w.g),
+                                                       std::pow(v.b,w.b)}; }
+    inline RGB pow(RGB v, float w) noexcept { return RGB{std::pow(v.r,w),
+                                                         std::pow(v.g,w),
+                                                         std::pow(v.b,w)}; }
+    inline RGB pow(float v, RGB w) noexcept { return RGB{std::pow(v,w.r),
+                                                         std::pow(v,w.g),
+                                                         std::pow(v,w.b)}; }
+
+    inline RGB sqrt(RGB v) noexcept { return RGB{std::sqrt(v.r), std::sqrt(v.g), std::sqrt(v.b)}; }
+    inline RGB cbrt(RGB v) noexcept { return RGB{std::cbrt(v.r), std::cbrt(v.g), std::cbrt(v.b)}; }
+
+
+    inline RGB hypot(RGB v, RGB w) noexcept { return RGB{std::hypot(v.r,w.r),
+                                                         std::hypot(v.g,w.g),
+                                                         std::hypot(v.b,w.b)}; }
+    inline RGB hypot(RGB v, float w) noexcept { return RGB{std::hypot(v.r,w),
+                                                           std::hypot(v.g,w),
+                                                           std::hypot(v.b,w)}; }
+    inline RGB hypot(float v, RGB w) noexcept { return RGB{std::hypot(v,w.r),
+                                                           std::hypot(v,w.g),
+                                                           std::hypot(v,w.b)}; }
 
     // error and gamma
 
