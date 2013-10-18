@@ -85,6 +85,12 @@ namespace gaudy {
                                                          std::atan2(v.b,w.b)}; }
 
     // hyperbolic
+    inline RGB cosh(RGB v) noexcept { return RGB{std::cosh(v.r), std::cosh(v.g), std::cosh(v.b)}; }
+    inline RGB sinh(RGB v) noexcept { return RGB{std::sinh(v.r), std::sinh(v.g), std::sinh(v.b)}; }
+    inline RGB tanh(RGB v) noexcept { return RGB{std::tanh(v.r), std::tanh(v.g), std::tanh(v.b)}; }
+    inline RGB acosh(RGB v) noexcept { return RGB{std::acosh(v.r), std::acosh(v.g), std::acosh(v.b)}; }
+    inline RGB asinh(RGB v) noexcept { return RGB{std::asinh(v.r), std::asinh(v.g), std::asinh(v.b)}; }
+    inline RGB atanh(RGB v) noexcept { return RGB{std::atanh(v.r), std::atanh(v.g), std::atanh(v.b)}; }
 
     // exponential and logarithmic
 

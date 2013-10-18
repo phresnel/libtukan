@@ -119,6 +119,8 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     RGB v {0.6, 0.4, 0.8};
     RGB w {0.9, 0.2, 0.7};
 
+    RGB x {1.9, 4, 8.7};
+
     SECTION("trigonometric") {
         REQUIRE(sin(v)     == rel_equal(RGB(sin(v.r),       sin(v.g),        sin(v.b))));
         REQUIRE(cos(v)     == rel_equal(RGB(cos(v.r),       cos(v.g),        cos(v.b))));
@@ -127,5 +129,14 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(asin(v)    == rel_equal(RGB(asin(v.r),      asin(v.g),       asin(v.b))));
         REQUIRE(atan(v)    == rel_equal(RGB(atan(v.r),      atan(v.g),       atan(v.b))));
         REQUIRE(atan2(v,w) == rel_equal(RGB(atan2(v.r,w.r), atan2(v.g, w.g), atan2(v.b, w.b))));
+    }
+
+    SECTION("hyperbolic") {
+        REQUIRE(cosh(v)  == rel_equal(RGB(cosh(v.r),  cosh(v.g),  cosh(v.b))));
+        REQUIRE(sinh(v)  == rel_equal(RGB(sinh(v.r),  sinh(v.g),  sinh(v.b))));
+        REQUIRE(tanh(v)  == rel_equal(RGB(tanh(v.r),  tanh(v.g),  tanh(v.b))));
+        REQUIRE(acosh(x) == rel_equal(RGB(acosh(x.r), acosh(x.g), acosh(x.b))));
+        REQUIRE(asinh(x) == rel_equal(RGB(asinh(x.r), asinh(x.g), asinh(x.b))));
+        REQUIRE(atanh(v) == rel_equal(RGB(atanh(v.r), atanh(v.g), atanh(v.b))));
     }
 }
