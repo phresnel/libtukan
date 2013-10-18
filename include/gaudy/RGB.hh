@@ -83,6 +83,12 @@ namespace gaudy {
     inline RGB atan2(RGB v, RGB w) noexcept { return RGB{std::atan2(v.r,w.r),
                                                          std::atan2(v.g,w.g),
                                                          std::atan2(v.b,w.b)}; }
+    inline RGB atan2(RGB v, float w) noexcept { return RGB{std::atan2(v.r,w),
+                                                           std::atan2(v.g,w),
+                                                           std::atan2(v.b,w)}; }
+    inline RGB atan2(float v, RGB w) noexcept { return RGB{std::atan2(v,w.r),
+                                                           std::atan2(v,w.g),
+                                                           std::atan2(v,w.b)}; }
 
     // hyperbolic
     inline RGB cosh(RGB v) noexcept { return RGB{std::cosh(v.r), std::cosh(v.g), std::cosh(v.b)}; }

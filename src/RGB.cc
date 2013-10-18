@@ -128,7 +128,14 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(acos(v)    == rel_equal(RGB(acos(v.r),      acos(v.g),       acos(v.b))));
         REQUIRE(asin(v)    == rel_equal(RGB(asin(v.r),      asin(v.g),       asin(v.b))));
         REQUIRE(atan(v)    == rel_equal(RGB(atan(v.r),      atan(v.g),       atan(v.b))));
-        REQUIRE(atan2(v,w) == rel_equal(RGB(atan2(v.r,w.r), atan2(v.g, w.g), atan2(v.b, w.b))));
+
+        REQUIRE(atan2(v,x) == rel_equal(RGB(atan2(v.r, x.r), atan2(v.g, x.g), atan2(v.b, x.b))));
+        REQUIRE(atan2(a,w) == rel_equal(RGB(atan2(a, w.r),   atan2(a, w.g),   atan2(a, w.b))));
+        REQUIRE(atan2(b,w) == rel_equal(RGB(atan2(b, w.r),   atan2(b, w.g),   atan2(b, w.b))));
+        REQUIRE(atan2(c,w) == rel_equal(RGB(atan2(c, w.r),   atan2(c, w.g),   atan2(c, w.b))));
+        REQUIRE(atan2(x,a) == rel_equal(RGB(atan2(x.r, a),   atan2(x.g, a),   atan2(x.b, a))));
+        REQUIRE(atan2(x,b) == rel_equal(RGB(atan2(x.r, b),   atan2(x.g, b),   atan2(x.b, b))));
+        REQUIRE(atan2(x,c) == rel_equal(RGB(atan2(x.r, c),   atan2(x.g, c),   atan2(x.b, c))));
     }
 
     SECTION("hyperbolic") {
