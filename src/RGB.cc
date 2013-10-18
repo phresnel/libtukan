@@ -226,4 +226,16 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(hypot(x,b) == (RGB(hypot(x.r, b),   hypot(x.g, b),   hypot(x.b, b))));
         REQUIRE(hypot(x,c) == (RGB(hypot(x.r, c),   hypot(x.g, c),   hypot(x.b, c))));
     }
+
+    SECTION("error and gamma functions") {
+        REQUIRE(erf(x)  == RGB(erf(x.r),  erf(x.g),  erf(x.b)));
+        REQUIRE(erf(v)  == RGB(erf(v.r),  erf(v.g),  erf(v.b)));
+        REQUIRE(erfc(x) == RGB(erfc(x.r), erfc(x.g), erfc(x.b)));
+        REQUIRE(erfc(v) == RGB(erfc(v.r), erfc(v.g), erfc(v.b)));
+
+        REQUIRE(tgamma(x) == RGB(tgamma(x.r), tgamma(x.g), tgamma(x.b)));
+        REQUIRE(tgamma(v) == RGB(tgamma(v.r), tgamma(v.g), tgamma(v.b)));
+        REQUIRE(lgamma(x) == RGB(lgamma(x.r), lgamma(x.g), lgamma(x.b)));
+        REQUIRE(lgamma(v) == RGB(lgamma(v.r), lgamma(v.g), lgamma(v.b)));
+    }
 }

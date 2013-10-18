@@ -186,6 +186,11 @@ namespace gaudy {
                                                            std::hypot(v,w.b)}; }
 
     // error and gamma
+    inline RGB erf (RGB v) noexcept { using std::erf;  return {erf(v.r),  erf(v.g),  erf(v.b)};  }
+    inline RGB erfc(RGB v) noexcept { using std::erfc; return {erfc(v.r), erfc(v.g), erfc(v.b)}; }
+    inline RGB lgamma(RGB v)noexcept{using std::lgamma;return{lgamma(v.r),lgamma(v.g),lgamma(v.b)};}
+    inline RGB tgamma(RGB v)noexcept{using std::tgamma;return{tgamma(v.r),tgamma(v.g),tgamma(v.b)};}
+
 
     // rounding and remainder
 
