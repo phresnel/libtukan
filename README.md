@@ -2,6 +2,12 @@
 gaudy - a C++ header-only color conversion- and computation-library
 -------------------------------------------------------------------------------
 
+Features:
+* complete <cmath>-implementation for linear RGB
+* header only
+* no macros (except include guards)
+
+
 More info later.
 
 Build/Test:
