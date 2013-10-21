@@ -87,29 +87,82 @@ namespace gaudy {
 
 
     // trigonometric
-    inline RGB cos(RGB v) noexcept { return RGB{std::cos(v.r), std::cos(v.g), std::cos(v.b)}; }
-    inline RGB sin(RGB v) noexcept { return RGB{std::sin(v.r), std::sin(v.g), std::sin(v.b)}; }
-    inline RGB tan(RGB v) noexcept { return RGB{std::tan(v.r), std::tan(v.g), std::tan(v.b)}; }
-    inline RGB acos(RGB v) noexcept { return RGB{std::acos(v.r), std::acos(v.g), std::acos(v.b)}; }
-    inline RGB asin(RGB v) noexcept { return RGB{std::asin(v.r), std::asin(v.g), std::asin(v.b)}; }
-    inline RGB atan(RGB v) noexcept { return RGB{std::atan(v.r), std::atan(v.g), std::atan(v.b)}; }
-    inline RGB atan2(RGB v, RGB w) noexcept { return RGB{std::atan2(v.r,w.r),
-                                                         std::atan2(v.g,w.g),
-                                                         std::atan2(v.b,w.b)}; }
-    inline RGB atan2(RGB v, float w) noexcept { return RGB{std::atan2(v.r,w),
-                                                           std::atan2(v.g,w),
-                                                           std::atan2(v.b,w)}; }
-    inline RGB atan2(float v, RGB w) noexcept { return RGB{std::atan2(v,w.r),
-                                                           std::atan2(v,w.g),
-                                                           std::atan2(v,w.b)}; }
+    template <typename T>
+    inline basic_rgb<T> cos(basic_rgb<T> v) noexcept { using std::cos;
+                                                       return basic_rgb<T>(cos(v.r), cos(v.g), cos(v.b)); }
+
+    template <typename T>
+    inline basic_rgb<T> sin(basic_rgb<T> v) noexcept { using std::sin;
+                                                       return basic_rgb<T>(sin(v.r), sin(v.g), sin(v.b)); }
+
+    template <typename T>
+    inline basic_rgb<T> tan(basic_rgb<T> v) noexcept { using std::tan;
+                                                       return basic_rgb<T>(tan(v.r), tan(v.g), tan(v.b)); }
+
+    template <typename T>
+    inline basic_rgb<T> acos(basic_rgb<T> v) noexcept { using std::acos;
+                                                        return basic_rgb<T>(acos(v.r), acos(v.g), acos(v.b)); }
+
+    template <typename T>
+    inline basic_rgb<T> asin(basic_rgb<T> v) noexcept { using std::asin;
+                                                        return basic_rgb<T>(asin(v.r), asin(v.g), asin(v.b)); }
+
+    template <typename T>
+    inline basic_rgb<T> atan(basic_rgb<T> v) noexcept { using std::atan;
+                                                        return basic_rgb<T>(atan(v.r), atan(v.g), atan(v.b)); }
+
+    template <typename T>
+    inline basic_rgb<T> atan2(basic_rgb<T> v, basic_rgb<T> w) noexcept {
+        using std::atan2;
+        return basic_rgb<T>(atan2(v.r,w.r), atan2(v.g,w.g), atan2(v.b,w.b));
+    }
+    template <typename T>
+    inline basic_rgb<T> atan2(basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept {
+        using std::atan2;
+        return basic_rgb<T>(atan2(v.r,w), atan2(v.g,w), atan2(v.b,w));
+    }
+    template <typename T>
+    inline basic_rgb<T> atan2(typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept {
+        using std::atan2;
+        return basic_rgb<T>(atan2(v,w.r), atan2(v,w.g), atan2(v,w.b));
+    }
 
     // hyperbolic
-    inline RGB cosh(RGB v) noexcept { return RGB{std::cosh(v.r), std::cosh(v.g), std::cosh(v.b)}; }
-    inline RGB sinh(RGB v) noexcept { return RGB{std::sinh(v.r), std::sinh(v.g), std::sinh(v.b)}; }
-    inline RGB tanh(RGB v) noexcept { return RGB{std::tanh(v.r), std::tanh(v.g), std::tanh(v.b)}; }
-    inline RGB acosh(RGB v) noexcept { return RGB{std::acosh(v.r), std::acosh(v.g), std::acosh(v.b)}; }
-    inline RGB asinh(RGB v) noexcept { return RGB{std::asinh(v.r), std::asinh(v.g), std::asinh(v.b)}; }
-    inline RGB atanh(RGB v) noexcept { return RGB{std::atanh(v.r), std::atanh(v.g), std::atanh(v.b)}; }
+    template <typename T>
+    inline basic_rgb<T> cosh(basic_rgb<T> v) noexcept {
+        using std::cosh;
+        return basic_rgb<T>(cosh(v.r), cosh(v.g), cosh(v.b));
+    }
+
+    template <typename T>
+    inline basic_rgb<T> sinh(basic_rgb<T> v) noexcept {
+        using std::sinh;
+        return basic_rgb<T>(sinh(v.r), sinh(v.g), sinh(v.b));
+    }
+
+    template <typename T>
+    inline basic_rgb<T> tanh(basic_rgb<T> v) noexcept {
+        using std::tanh;
+        return basic_rgb<T>(tanh(v.r), tanh(v.g), tanh(v.b));
+    }
+
+    template <typename T>
+    inline basic_rgb<T> acosh(basic_rgb<T> v) noexcept {
+        using std::acosh;
+        return basic_rgb<T>(acosh(v.r), acosh(v.g), acosh(v.b));
+    }
+
+    template <typename T>
+    inline basic_rgb<T> asinh(basic_rgb<T> v) noexcept {
+        using std::asinh;
+        return basic_rgb<T>(asinh(v.r), asinh(v.g), asinh(v.b));
+    }
+
+    template <typename T>
+    inline basic_rgb<T> atanh(basic_rgb<T> v) noexcept {
+        using std::atanh;
+        return basic_rgb<T>(atanh(v.r), atanh(v.g), atanh(v.b));
+    }
 
     // exponential and logarithmic
     inline RGB exp(RGB v) noexcept { return RGB{std::exp(v.r), std::exp(v.g), std::exp(v.b)}; }
