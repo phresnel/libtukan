@@ -5,6 +5,7 @@
 #define RGB_HH_INCLUDED_20131017
 
 #include "rel_equal.hh"
+#include <functional>
 
 namespace gaudy {
 
@@ -37,31 +38,37 @@ namespace gaudy {
 
 
     // -- relation --------------------------------------------------------------------------------
-    constexpr bool operator== (RGB lhs, RGB rhs) noexcept;
-    constexpr bool operator!= (RGB lhs, RGB rhs) noexcept;
-    constexpr bool rel_equal (RGB lhs, RGB rhs,
-                              float max_rel_diff=std::numeric_limits<float>::epsilon() ) noexcept;
+    template <typename T> constexpr bool operator== (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr bool operator!= (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr bool rel_equal (basic_rgb<T> lhs, basic_rgb<T> rhs,
+                                                    T max_rel_diff=std::numeric_limits<T>::epsilon() ) noexcept;
 
     // -- sign ------------------------------------------------------------------------------------
-    constexpr RGB operator- (RGB rhs) noexcept { return {-rhs.r, -rhs.g, -rhs.b}; }
-    constexpr RGB operator+ (RGB rhs) noexcept { return rhs; }
+    template <typename T> constexpr basic_rgb<T> operator- (basic_rgb<T> rhs) noexcept { return {-rhs.r, -rhs.g, -rhs.b}; }
+    template <typename T> constexpr basic_rgb<T> operator+ (basic_rgb<T> rhs) noexcept { return rhs; }
 
     // -- arithmetics -----------------------------------------------------------------------------
-    constexpr RGB operator+ (RGB lhs, RGB rhs) noexcept;
-    constexpr RGB operator- (RGB lhs, RGB rhs) noexcept;
-    constexpr RGB operator* (RGB lhs, RGB rhs) noexcept;
-    constexpr RGB operator/ (RGB lhs, RGB rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator+ (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator- (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator* (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator/ (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
 
-    constexpr RGB operator+ (RGB lhs, float rhs) noexcept;
-    constexpr RGB operator- (RGB lhs, float rhs) noexcept;
-    constexpr RGB operator* (RGB lhs, float rhs) noexcept;
-    constexpr RGB operator/ (RGB lhs, float rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator+ (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator- (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator* (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator/ (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept;
 
-    constexpr RGB operator+ (float lhs, RGB rhs) noexcept;
-    constexpr RGB operator- (float lhs, RGB rhs) noexcept;
-    constexpr RGB operator* (float lhs, RGB rhs) noexcept;
-    constexpr RGB operator/ (float lhs, RGB rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator+ (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator- (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator* (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> constexpr basic_rgb<T> operator/ (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
 
+
+    //Implementation notes:
+    // Some operator overloads use basic_rgb<T>::value_type instead of just plain T. This is because
+    // with plain T, the operators are deduced on both the lhs AND rhs, leading to ambiguities when
+    // using e.g. 'basic_rgb<float> foo; foo += 1;', where there is an int added to a float-RGB.
+    // Using basic_rgb::value_type prevents type deduction on the scalar argument.
 }
 
 
@@ -331,13 +338,16 @@ namespace gaudy {
 
 
     // relation
-    constexpr bool operator== (RGB lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr bool operator== (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept {
         return lhs.r==rhs.r && lhs.g==rhs.g && lhs.b==rhs.b;
     }
-    constexpr bool operator!= (RGB lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr bool operator!= (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept {
         return !(lhs == rhs);
     }
-    constexpr bool rel_equal (RGB lhs, RGB rhs, float max_rel_diff) noexcept
+    template <typename T>
+    constexpr bool rel_equal (basic_rgb<T> lhs, basic_rgb<T> rhs, T max_rel_diff) noexcept
     {
         return rel_equal (lhs.r, rhs.r, max_rel_diff)
             && rel_equal (lhs.g, rhs.g, max_rel_diff)
@@ -347,42 +357,54 @@ namespace gaudy {
 
 
     // arithmetics
-    constexpr RGB operator+ (RGB lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator+ (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept {
         return {lhs.r+rhs.r, lhs.g+rhs.g, lhs.b+rhs.b};
     }
-    constexpr RGB operator- (RGB lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator- (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept {
         return {lhs.r-rhs.r, lhs.g-rhs.g, lhs.b-rhs.b};
     }
-    constexpr RGB operator* (RGB lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator* (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept {
         return {lhs.r*rhs.r, lhs.g*rhs.g, lhs.b*rhs.b};
     }
-    constexpr RGB operator/ (RGB lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator/ (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept {
         return {lhs.r/rhs.r, lhs.g/rhs.g, lhs.b/rhs.b};
     }
 
-    constexpr RGB operator+ (RGB lhs, float rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator+ (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept {
         return {lhs.r+rhs, lhs.g+rhs, lhs.b+rhs};
     }
-    constexpr RGB operator- (RGB lhs, float rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator- (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept {
         return {lhs.r-rhs, lhs.g-rhs, lhs.b-rhs};
     }
-    constexpr RGB operator* (RGB lhs, float rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator* (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept {
         return {lhs.r*rhs, lhs.g*rhs, lhs.b*rhs};
     }
-    constexpr RGB operator/ (RGB lhs, float rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator/ (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept {
         return {lhs.r/rhs, lhs.g/rhs, lhs.b/rhs};
     }
 
-    constexpr RGB operator+ (float lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator+ (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept {
         return {lhs+rhs.r, lhs+rhs.g, lhs+rhs.b};
     }
-    constexpr RGB operator- (float lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator- (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept {
         return {lhs-rhs.r, lhs-rhs.g, lhs-rhs.b};
     }
-    constexpr RGB operator* (float lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator* (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept {
         return {lhs*rhs.r, lhs*rhs.g, lhs*rhs.b};
     }
-    constexpr RGB operator/ (float lhs, RGB rhs) noexcept {
+    template <typename T>
+    constexpr basic_rgb<T> operator/ (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept {
         return {lhs/rhs.r, lhs/rhs.g, lhs/rhs.b};
     }
 }
