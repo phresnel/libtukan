@@ -13,24 +13,27 @@ namespace gaudy {
     //---------------------------------------------------------------------------------------------
 
     // -- structure -------------------------------------------------------------------------------
-    struct RGB {
-        using value_type = float;
+    template <typename T>
+    struct basic_rgb {
+        using value_type = T;
 
         float r=0, g=0, b=0;
 
-        constexpr RGB() noexcept = default;
-        constexpr RGB(float r, float g, float b) noexcept : r(r), g(g), b(b) {}
+        constexpr basic_rgb() noexcept = default;
+        constexpr basic_rgb(T r, T g, T b) noexcept : r(r), g(g), b(b) {}
 
-        RGB& operator+= (RGB rhs) noexcept;
-        RGB& operator-= (RGB rhs) noexcept;
-        RGB& operator*= (RGB rhs) noexcept;
-        RGB& operator/= (RGB rhs) noexcept;
+        basic_rgb& operator+= (basic_rgb rhs) noexcept;
+        basic_rgb& operator-= (basic_rgb rhs) noexcept;
+        basic_rgb& operator*= (basic_rgb rhs) noexcept;
+        basic_rgb& operator/= (basic_rgb rhs) noexcept;
 
-        RGB& operator+= (float rhs) noexcept;
-        RGB& operator-= (float rhs) noexcept;
-        RGB& operator*= (float rhs) noexcept;
-        RGB& operator/= (float rhs) noexcept;
+        basic_rgb& operator+= (T rhs) noexcept;
+        basic_rgb& operator-= (T rhs) noexcept;
+        basic_rgb& operator*= (T rhs) noexcept;
+        basic_rgb& operator/= (T rhs) noexcept;
     };
+
+    using RGB = basic_rgb<float>;
 
 
     // -- relation --------------------------------------------------------------------------------
@@ -262,56 +265,64 @@ namespace gaudy {
     //---------------------------------------------------------------------------------------------
     // implementation
     //---------------------------------------------------------------------------------------------
-    inline RGB& RGB::operator+= (RGB rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator+= (basic_rgb<T> rhs) noexcept {
         r += rhs.r;
         g += rhs.g;
         b += rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator-= (RGB rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator-= (basic_rgb<T> rhs) noexcept {
         r -= rhs.r;
         g -= rhs.g;
         b -= rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator*= (RGB rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator*= (basic_rgb<T> rhs) noexcept {
         r *= rhs.r;
         g *= rhs.g;
         b *= rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator/= (RGB rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator/= (basic_rgb<T> rhs) noexcept {
         r /= rhs.r;
         g /= rhs.g;
         b /= rhs.b;
         return *this;
     }
 
-    inline RGB& RGB::operator+= (float rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator+= (T rhs) noexcept {
         r += rhs;
         g += rhs;
         b += rhs;
         return *this;
     }
 
-    inline RGB& RGB::operator-= (float rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator-= (T rhs) noexcept {
         r -= rhs;
         g -= rhs;
         b -= rhs;
         return *this;
     }
 
-    inline RGB& RGB::operator*= (float rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator*= (T rhs) noexcept {
         r *= rhs;
         g *= rhs;
         b *= rhs;
         return *this;
     }
 
-    inline RGB& RGB::operator/= (float rhs) noexcept {
+    template <typename T>
+    inline basic_rgb<T>& basic_rgb<T>::operator/= (T rhs) noexcept {
         r /= rhs;
         g /= rhs;
         b /= rhs;
