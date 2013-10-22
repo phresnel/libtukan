@@ -157,20 +157,25 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     SECTION("exponential and logarithmic") {
         REQUIRE(exp(v) == rel_equal(RGB(exp(v.r), exp(v.g), exp(v.b))));
 
-        RGB sig, exp;
+        RGB sig;
+        basic_rgb<int> exp;
         sig = frexp(x, &exp);
         int exp_r, exp_g, exp_b;
         float sig_r = frexp(x.r, &exp_r);
         float sig_g = frexp(x.g, &exp_g);
         float sig_b = frexp(x.b, &exp_b);
-        REQUIRE(exp_r == rel_equal(exp.r));
-        REQUIRE(exp_g == rel_equal(exp.g));
-        REQUIRE(exp_b == rel_equal(exp.b));
-        REQUIRE(sig_r == rel_equal(sig.r));
-        REQUIRE(sig_g == rel_equal(sig.g));
-        REQUIRE(sig_b == rel_equal(sig.b));
+        REQUIRE(exp_r == exp.r);
+        REQUIRE(exp_g == exp.g);
+        REQUIRE(exp_b == exp.b);
+        REQUIRE(sig_r == Approx(sig.r));
+        REQUIRE(sig_g == Approx(sig.g));
+        REQUIRE(sig_b == Approx(sig.b));
 
         REQUIRE(x == rel_equal(RGB(ldexp(sig_r,exp_r), ldexp(sig_g,exp_g), ldexp(sig_b,exp_b))));
+
+        // TODO: ldexp is missing.
+        REQUIRE(ldexp(sig, exp) ==
+                rel_equal(RGB(ldexp(sig.r,exp.r),ldexp(sig.g,exp.g),ldexp(sig.b,exp.b))));
 
         REQUIRE(log(x)   == rel_equal(RGB(log(x.r),   log(x.g),   log(x.b))));
         REQUIRE(log10(x) == rel_equal(RGB(log10(x.r), log10(x.g), log10(x.b))));

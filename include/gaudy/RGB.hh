@@ -18,7 +18,7 @@ namespace gaudy {
     struct basic_rgb {
         using value_type = T;
 
-        float r=0, g=0, b=0;
+        T r=0, g=0, b=0;
 
         constexpr basic_rgb() noexcept = default;
         constexpr basic_rgb(T r, T g, T b) noexcept : r(r), g(g), b(b) {}
@@ -168,18 +168,18 @@ namespace gaudy {
     inline RGB exp(RGB v) noexcept { return RGB{std::exp(v.r), std::exp(v.g), std::exp(v.b)}; }
 
     // TODO: the second parameter should be RGB<int>, once RGB is generified
-    inline RGB frexp(RGB v, RGB *exp) noexcept {
+
+    template <typename T>
+    inline basic_rgb<T> frexp(basic_rgb<T> v, basic_rgb<int> *exp) noexcept {
         using std::frexp;
-        int exp_r, exp_g, exp_b;
-        RGB sig {frexp(v.r, &exp_r),
-                 frexp(v.g, &exp_g),
-                 frexp(v.b, &exp_b)};
-        *exp = RGB(exp_r, exp_g, exp_b);
-        return sig;
+        return basic_rgb<T>(frexp(v.r, &exp->r),
+                            frexp(v.g, &exp->g),
+                            frexp(v.b, &exp->b));
     }
 
     // TODO: the second parameter should be RGB<int>, once RGB is generified
-    inline RGB frexp(RGB sig, RGB exp) noexcept {
+    template <typename T>
+    inline basic_rgb<T> ldexp(basic_rgb<T> sig, basic_rgb<int> exp) noexcept {
         using std::ldexp;
         return {ldexp(sig.r, exp.r),
                 ldexp(sig.g, exp.g),
