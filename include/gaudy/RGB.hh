@@ -88,28 +88,40 @@ namespace gaudy {
 
     // trigonometric
     template <typename T>
-    inline basic_rgb<T> cos(basic_rgb<T> v) noexcept { using std::cos;
-                                                       return basic_rgb<T>(cos(v.r), cos(v.g), cos(v.b)); }
+    inline basic_rgb<T> cos(basic_rgb<T> v) noexcept {
+        using std::cos;
+        return basic_rgb<T>(cos(v.r), cos(v.g), cos(v.b));
+    }
 
     template <typename T>
-    inline basic_rgb<T> sin(basic_rgb<T> v) noexcept { using std::sin;
-                                                       return basic_rgb<T>(sin(v.r), sin(v.g), sin(v.b)); }
+    inline basic_rgb<T> sin(basic_rgb<T> v) noexcept {
+        using std::sin;
+        return basic_rgb<T>(sin(v.r), sin(v.g), sin(v.b));
+    }
 
     template <typename T>
-    inline basic_rgb<T> tan(basic_rgb<T> v) noexcept { using std::tan;
-                                                       return basic_rgb<T>(tan(v.r), tan(v.g), tan(v.b)); }
+    inline basic_rgb<T> tan(basic_rgb<T> v) noexcept {
+        using std::tan;
+        return basic_rgb<T>(tan(v.r), tan(v.g), tan(v.b));
+    }
 
     template <typename T>
-    inline basic_rgb<T> acos(basic_rgb<T> v) noexcept { using std::acos;
-                                                        return basic_rgb<T>(acos(v.r), acos(v.g), acos(v.b)); }
+    inline basic_rgb<T> acos(basic_rgb<T> v) noexcept {
+        using std::acos;
+        return basic_rgb<T>(acos(v.r), acos(v.g), acos(v.b));
+    }
 
     template <typename T>
-    inline basic_rgb<T> asin(basic_rgb<T> v) noexcept { using std::asin;
-                                                        return basic_rgb<T>(asin(v.r), asin(v.g), asin(v.b)); }
+    inline basic_rgb<T> asin(basic_rgb<T> v) noexcept {
+        using std::asin;
+        return basic_rgb<T>(asin(v.r), asin(v.g), asin(v.b));
+    }
 
     template <typename T>
-    inline basic_rgb<T> atan(basic_rgb<T> v) noexcept { using std::atan;
-                                                        return basic_rgb<T>(atan(v.r), atan(v.g), atan(v.b)); }
+    inline basic_rgb<T> atan(basic_rgb<T> v) noexcept {
+        using std::atan;
+        return basic_rgb<T>(atan(v.r), atan(v.g), atan(v.b));
+    }
 
     template <typename T>
     inline basic_rgb<T> atan2(basic_rgb<T> v, basic_rgb<T> w) noexcept {
