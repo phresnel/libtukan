@@ -10,6 +10,8 @@
 
 namespace gaudy {
 
+    // TODO: This while thing needs to be reworked wrt doubles and arbitrary types (what with epsilon?)
+
 
     namespace detail {
         constexpr

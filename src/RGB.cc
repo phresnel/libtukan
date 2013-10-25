@@ -263,17 +263,17 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(trunc(-x) == rel_equal(RGB(trunc(-x.r), trunc(-x.g), trunc(-x.b))));
         REQUIRE(round(x)  == rel_equal(RGB(round(x.r),  round(x.g),  round(x.b))));
         REQUIRE(round(-x) == rel_equal(RGB(round(-x.r), round(-x.g), round(-x.b))));
-        REQUIRE(lround(x)  == rel_equal(RGB(lround(x.r),  lround(x.g),  lround(x.b))));
-        REQUIRE(lround(-x) == rel_equal(RGB(lround(-x.r), lround(-x.g), lround(-x.b))));
-        REQUIRE(llround(x)  == rel_equal(RGB(llround(x.r),  llround(x.g),  llround(x.b))));
-        REQUIRE(llround(-x) == rel_equal(RGB(llround(-x.r), llround(-x.g), llround(-x.b))));
+        REQUIRE(lround(x)  == (basic_rgb<long>{lround(x.r),  lround(x.g),  lround(x.b)}));
+        REQUIRE(lround(-x) == (basic_rgb<long>{lround(-x.r), lround(-x.g), lround(-x.b)}));
+        REQUIRE(llround(x)  == (basic_rgb<long long>{llround(x.r),  llround(x.g),  llround(x.b)}));
+        REQUIRE(llround(-x) == (basic_rgb<long long>{llround(-x.r), llround(-x.g), llround(-x.b)}));
 
         REQUIRE(rint(x)  == rel_equal(RGB(rint(x.r),  rint(x.g),  rint(x.b))));
         REQUIRE(rint(-x) == rel_equal(RGB(rint(-x.r), rint(-x.g), rint(-x.b))));
-        REQUIRE(lrint(x)  == rel_equal(RGB(lrint(x.r),  lrint(x.g),  lrint(x.b))));
-        REQUIRE(lrint(-x) == rel_equal(RGB(lrint(-x.r), lrint(-x.g), lrint(-x.b))));
-        REQUIRE(llrint(x)  == rel_equal(RGB(llrint(x.r),  llrint(x.g),  llrint(x.b))));
-        REQUIRE(llrint(-x) == rel_equal(RGB(llrint(-x.r), llrint(-x.g), llrint(-x.b))));
+        REQUIRE(lrint(x)  == (basic_rgb<long>{lrint(x.r),  lrint(x.g),  lrint(x.b)}));
+        REQUIRE(lrint(-x) == (basic_rgb<long>{lrint(-x.r), lrint(-x.g), lrint(-x.b)}));
+        REQUIRE(llrint(x)  == (basic_rgb<long long>{llrint(x.r),  llrint(x.g),  llrint(x.b)}));
+        REQUIRE(llrint(-x) == (basic_rgb<long long>{llrint(-x.r), llrint(-x.g), llrint(-x.b)}));
 
         REQUIRE(nearbyint(x)  == rel_equal(RGB(nearbyint(x.r),  nearbyint(x.g),  nearbyint(x.b))));
         REQUIRE(nearbyint(-x) == rel_equal(RGB(nearbyint(-x.r), nearbyint(-x.g), nearbyint(-x.b))));
@@ -282,7 +282,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(remainder(-x,w)== rel_equal(RGB(remainder(-x.r,w.r),remainder(-x.g,w.g),remainder(-x.b,w.b))));
         REQUIRE(remainder(x,-w)== rel_equal(RGB(remainder(x.r,-w.r),remainder(x.g,-w.g),remainder(x.b,-w.b))));
 
-        RGB quot_rgb;
+        basic_rgb<int> quot_rgb;
         RGB remquo_rgb = remquo(x,w,&quot_rgb);
 
         int quot_r, quot_g, quot_b;
@@ -293,8 +293,8 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(remquo_r == Approx(remquo_rgb.r));
         REQUIRE(remquo_g == Approx(remquo_rgb.g));
         REQUIRE(remquo_b == Approx(remquo_rgb.b));
-        REQUIRE(quot_r == Approx(quot_rgb.r));
-        REQUIRE(quot_g == Approx(quot_rgb.g));
-        REQUIRE(quot_b == Approx(quot_rgb.b));
+        REQUIRE(quot_r == quot_rgb.r);
+        REQUIRE(quot_g == quot_rgb.g);
+        REQUIRE(quot_b == quot_rgb.b);
     }
 }

@@ -335,59 +335,84 @@ namespace gaudy {
 
 
     // rounding and remainder
-    inline RGB ceil (RGB v) noexcept { using std::ceil;  return {ceil(v.r), ceil(v.g), ceil(v.b)}; }
-    inline RGB floor(RGB v) noexcept { using std::floor; return {floor(v.r),floor(v.g),floor(v.b)};}
-    inline RGB fmod(RGB num, RGB denom) noexcept {
+    template <typename T>
+    inline basic_rgb<T> ceil (basic_rgb<T> v) noexcept {
+        using std::ceil;
+        return {ceil(v.r), ceil(v.g), ceil(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> floor(basic_rgb<T> v) noexcept {
+        using std::floor;
+        return {floor(v.r),floor(v.g),floor(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fmod(basic_rgb<T> num, basic_rgb<T> denom) noexcept {
         using std::fmod;
         return{ fmod(num.r, denom.r), fmod(num.g, denom.g), fmod(num.b, denom.b) };
     }
-    inline RGB trunc(RGB v) noexcept { using std::trunc; return {trunc(v.r),trunc(v.g),trunc(v.b)};}
-    inline RGB round(RGB v) noexcept { using std::round; return {round(v.r),round(v.g),round(v.b)};}
 
-    // TODO: use RGB<int> and RGB<long long>
-    inline RGB lround(RGB v) noexcept{
+    template <typename T>
+    inline basic_rgb<T> trunc(basic_rgb<T> v) noexcept {
+        using std::trunc;
+        return {trunc(v.r),trunc(v.g),trunc(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> round(basic_rgb<T> v) noexcept {
+        using std::round;
+        return {round(v.r),round(v.g),round(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<long> lround(basic_rgb<T> v) noexcept{
         using std::lround;
-        return RGB(lround(v.r), lround(v.g), lround(v.b));
+        return {lround(v.r), lround(v.g), lround(v.b)};
     }
-    inline RGB llround(RGB v)noexcept{
+    template <typename T>
+    inline basic_rgb<long long> llround(basic_rgb<T> v) noexcept{
         using std::llround;
-        return RGB(llround(v.r), llround(v.g), llround(v.b));
+        return {llround(v.r), llround(v.g), llround(v.b)};
     }
 
-    inline RGB rint (RGB v) noexcept { using std::rint; return {rint(v.r), rint(v.g), rint(v.b)}; }
+    template <typename T>
+    inline basic_rgb<T> rint (basic_rgb<T> v) noexcept {
+        using std::rint;
+        return {rint(v.r), rint(v.g), rint(v.b)};
+    }
 
-    // TODO: use RGB<int> and RGB<long long>
-    inline RGB lrint(RGB v) noexcept{
+    template <typename T>
+    inline basic_rgb<long> lrint(basic_rgb<T> v) noexcept{
         using std::lrint;
-        return RGB(lrint(v.r), lrint(v.g), lrint(v.b));
+        return {lrint(v.r), lrint(v.g), lrint(v.b)};
     }
-    inline RGB llrint(RGB v)noexcept{
+    template <typename T>
+    inline basic_rgb<long long> llrint(basic_rgb<T> v)noexcept{
         using std::llrint;
-        return RGB(llrint(v.r), llrint(v.g), llrint(v.b));
+        return {llrint(v.r), llrint(v.g), llrint(v.b)};
     }
 
-    inline RGB nearbyint(RGB v) noexcept {
+    template <typename T>
+    inline basic_rgb<T> nearbyint(basic_rgb<T> v) noexcept {
         using std::nearbyint;
         return {nearbyint(v.r), nearbyint(v.g), nearbyint(v.b)};
     }
 
-    inline RGB remainder (RGB num, RGB denom) noexcept {
+    template <typename T>
+    inline basic_rgb<T> remainder (basic_rgb<T> num, basic_rgb<T> denom) noexcept {
         using std::remainder;
         return { remainder(num.r, denom.r),
                  remainder(num.g, denom.g),
                  remainder(num.b, denom.b) };
     }
 
-    inline RGB remquo (RGB num, RGB denom, RGB *quot) noexcept {
+    template <typename T>
+    inline basic_rgb<T> remquo (basic_rgb<T> num, basic_rgb<T> denom, basic_rgb<int> *quot) noexcept {
         using std::remquo;
-        int quot_r, quot_g, quot_b;
-        RGB ret { remquo(num.r, denom.r, &quot_r),
-                  remquo(num.g, denom.g, &quot_g),
-                  remquo(num.b, denom.b, &quot_b)};
-        quot->r = quot_r;
-        quot->g = quot_g;
-        quot->b = quot_b;
-        return ret;
+        return { remquo(num.r, denom.r, &quot->r),
+                 remquo(num.g, denom.g, &quot->g),
+                 remquo(num.b, denom.b, &quot->b) };
     }
 
     // floating point manipulation
