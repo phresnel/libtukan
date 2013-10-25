@@ -263,35 +263,75 @@ namespace gaudy {
 
 
     // power
-    inline RGB pow(RGB v, RGB w) noexcept { return RGB{std::pow(v.r,w.r),
-                                                       std::pow(v.g,w.g),
-                                                       std::pow(v.b,w.b)}; }
-    inline RGB pow(RGB v, float w) noexcept { return RGB{std::pow(v.r,w),
-                                                         std::pow(v.g,w),
-                                                         std::pow(v.b,w)}; }
-    inline RGB pow(float v, RGB w) noexcept { return RGB{std::pow(v,w.r),
-                                                         std::pow(v,w.g),
-                                                         std::pow(v,w.b)}; }
+    template <typename T>
+    inline basic_rgb<T> pow(basic_rgb<T> v, basic_rgb<T> w) noexcept {
+        using std::pow;
+        return {pow(v.r,w.r), pow(v.g,w.g), pow(v.b,w.b)};
+    }
 
-    inline RGB sqrt(RGB v) noexcept { return RGB{std::sqrt(v.r), std::sqrt(v.g), std::sqrt(v.b)}; }
-    inline RGB cbrt(RGB v) noexcept { return RGB{std::cbrt(v.r), std::cbrt(v.g), std::cbrt(v.b)}; }
+    template <typename T>
+    inline basic_rgb<T> pow(basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept {
+        using std::pow;
+        return {pow(v.r,w), pow(v.g,w), pow(v.b,w)};
+    }
 
+    template <typename T>
+    inline basic_rgb<T> pow(typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept {
+        using std::pow;
+        return {pow(v,w.r), pow(v,w.g), pow(v,w.b)};
+    }
 
-    inline RGB hypot(RGB v, RGB w) noexcept { return RGB{std::hypot(v.r,w.r),
-                                                         std::hypot(v.g,w.g),
-                                                         std::hypot(v.b,w.b)}; }
-    inline RGB hypot(RGB v, float w) noexcept { return RGB{std::hypot(v.r,w),
-                                                           std::hypot(v.g,w),
-                                                           std::hypot(v.b,w)}; }
-    inline RGB hypot(float v, RGB w) noexcept { return RGB{std::hypot(v,w.r),
-                                                           std::hypot(v,w.g),
-                                                           std::hypot(v,w.b)}; }
+    template <typename T>
+    inline basic_rgb<T> sqrt(basic_rgb<T> v) noexcept {
+        using std::sqrt;
+        return {sqrt(v.r), sqrt(v.g), sqrt(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> cbrt(basic_rgb<T> v) noexcept {
+        using std::cbrt;
+        return {cbrt(v.r), cbrt(v.g), cbrt(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> hypot(basic_rgb<T> v, basic_rgb<T> w) noexcept {
+        using std::hypot;
+        return {hypot(v.r,w.r), hypot(v.g,w.g), hypot(v.b,w.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> hypot(basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept {
+        using std::hypot;
+        return {hypot(v.r,w), hypot(v.g,w), hypot(v.b,w)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> hypot(typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept {
+        using std::hypot;
+        return {hypot(v,w.r), hypot(v,w.g), hypot(v,w.b)};
+    }
 
     // error and gamma
-    inline RGB erf (RGB v) noexcept { using std::erf;  return {erf(v.r),  erf(v.g),  erf(v.b)};  }
-    inline RGB erfc(RGB v) noexcept { using std::erfc; return {erfc(v.r), erfc(v.g), erfc(v.b)}; }
-    inline RGB lgamma(RGB v)noexcept{using std::lgamma;return{lgamma(v.r),lgamma(v.g),lgamma(v.b)};}
-    inline RGB tgamma(RGB v)noexcept{using std::tgamma;return{tgamma(v.r),tgamma(v.g),tgamma(v.b)};}
+    template <typename T>
+    inline basic_rgb<T> erf (basic_rgb<T> v) noexcept {
+        using std::erf;
+        return {erf(v.r),  erf(v.g),  erf(v.b)};
+    }
+    template <typename T>
+    inline basic_rgb<T> erfc(basic_rgb<T> v) noexcept {
+        using std::erfc;
+        return {erfc(v.r), erfc(v.g), erfc(v.b)};
+    }
+    template <typename T>
+    inline basic_rgb<T> lgamma(basic_rgb<T> v) noexcept {
+        using std::lgamma;
+        return {lgamma(v.r),lgamma(v.g),lgamma(v.b)};
+    }
+    template <typename T>
+    inline basic_rgb<T> tgamma(basic_rgb<T> v) noexcept {
+        using std::tgamma;
+        return {tgamma(v.r),tgamma(v.g),tgamma(v.b)};
+    }
 
 
     // rounding and remainder
