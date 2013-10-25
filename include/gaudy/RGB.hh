@@ -428,10 +428,77 @@ namespace gaudy {
     }
 
     // floating point manipulation
+    template <typename T>
+    inline basic_rgb<T> copysign(basic_rgb<T> x, basic_rgb<T> y) {
+        using std::copysign;
+        return { copysign(x.r, y.r),
+                 copysign(x.g, y.g),
+                 copysign(x.b, y.b) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> nextafter(basic_rgb<T> x, basic_rgb<T> y) {
+        using std::nextafter;
+        return { nextafter(x.r, y.r),
+                 nextafter(x.g, y.g),
+                 nextafter(x.b, y.b) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> nexttoward(basic_rgb<T> x, basic_rgb<long double> y) {
+        using std::nexttoward;
+        return { nexttoward(x.r, y.r),
+                 nexttoward(x.g, y.g),
+                 nexttoward(x.b, y.b) };
+    }
+
+    // Not implementing the NAN macro constant, because we would need to be able to overload macros.
 
     // min, max, difference
+    template <typename T>
+    inline basic_rgb<T> fmin(basic_rgb<T> x, basic_rgb<T> y) {
+        using std::fmin;
+        return { fmin(x.r, y.r),
+                 fmin(x.g, y.g),
+                 fmin(x.b, y.b) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fmax(basic_rgb<T> x, basic_rgb<T> y) {
+        using std::fmax;
+        return { fmax(x.r, y.r),
+                 fmax(x.g, y.g),
+                 fmax(x.b, y.b) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fdim(basic_rgb<T> x, basic_rgb<T> y) {
+        using std::fdim;
+        return { fdim(x.r, y.r),
+                 fdim(x.g, y.g),
+                 fdim(x.b, y.b) };
+    }
 
     // other
+    template <typename T>
+    inline basic_rgb<T> fabs(basic_rgb<T> v) noexcept {
+        using std::fabs;
+        return {fabs(v.r),fabs(v.g),fabs(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> abs(basic_rgb<T> v) noexcept {
+        using std::abs;
+        return {abs(v.r),abs(v.g),abs(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fma(basic_rgb<T> x, basic_rgb<T> y, basic_rgb<T> z) {
+        using std::fma;
+        return { fma(x.r, y.r, z.r),
+                 fma(x.g, y.g, z.g),
+                 fma(x.b, y.b, z.b) };
+    }
 
     // classification functions
 

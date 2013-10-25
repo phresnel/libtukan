@@ -126,6 +126,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     const RGB v {0.6, 0.4, 0.8};
     const RGB w {0.9, 0.2, 0.7};
     const RGB x {1.9, 4, 8.7};
+    const RGB z {100.9, -1, -0.7};
     const auto a = 2., b = 11., c = 0.5;
 
     SECTION("trigonometric") {
@@ -296,5 +297,25 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(quot_r == quot_rgb.r);
         REQUIRE(quot_g == quot_rgb.g);
         REQUIRE(quot_b == quot_rgb.b);
+    }
+
+    SECTION("floating point manipulation") {
+        REQUIRE(copysign(x,z) == rel_equal(RGB(copysign(x.r,z.r),copysign(x.g,z.g),copysign(x.b,z.b))));
+        REQUIRE(nextafter(x,z) == rel_equal(RGB(nextafter(x.r,z.r),nextafter(x.g,z.g),nextafter(x.b,z.b))));
+
+        basic_rgb<long double> d {1.0l,-0.5l,-1.0l/0.0l};
+        REQUIRE(nexttoward(x,d) == rel_equal(RGB(nexttoward(x.r,d.r),nexttoward(x.g,d.g),nexttoward(x.b,d.b))));
+    }
+
+    SECTION("minimum, maximum, difference") {
+        REQUIRE(fmin(x,z) == rel_equal(RGB(fmin(x.r,z.r),fmin(x.g,z.g),fmin(x.b,z.b))));
+        REQUIRE(fmax(x,z) == rel_equal(RGB(fmax(x.r,z.r),fmax(x.g,z.g),fmax(x.b,z.b))));
+        REQUIRE(fdim(x,z) == rel_equal(RGB(fdim(x.r,z.r),fdim(x.g,z.g),fdim(x.b,z.b))));
+    }
+
+    SECTION("other") {
+        REQUIRE(abs(z) == rel_equal(RGB(abs(z.r),abs(z.g),abs(z.b))));
+        REQUIRE(fabs(z) == rel_equal(RGB(fabs(z.r),fabs(z.g),fabs(z.b))));
+        REQUIRE(fma(x,z,w) == rel_equal(RGB(fma(x.r,z.r,w.r),fma(x.g,z.g,w.g),fma(x.b,z.b,w.b))));
     }
 }
