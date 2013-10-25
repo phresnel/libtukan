@@ -1,0 +1,15 @@
+../include/gaudy/Interval.hh
+../include/gaudy/Nanometer.hh
+../include/gaudy/optional.hh
+../include/gaudy/rel_equal.hh
+../include/gaudy/RGB.hh
+../include/gaudy/Spectrum.hh
+../include/gaudy/tuple.hh
+../src/Interval.cc
+../src/Nanometer.cc
+../src/RGB.cc
+../src/Spectrum.cc
+../bootstrap
+../main.cc
+../README.md
+../SConstruct
