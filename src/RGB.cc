@@ -193,7 +193,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
 
         REQUIRE (exp2(x)  == rel_equal(RGB(exp2(x.r),  exp2(x.g),  exp2(x.b))));
         REQUIRE (expm1(x) == rel_equal(RGB(expm1(x.r), expm1(x.g), expm1(x.b))));
-        REQUIRE (ilogb(x) == rel_equal(RGB(ilogb(x.r), ilogb(x.g), ilogb(x.b))));
+        REQUIRE (ilogb(x) == (basic_rgb<int>(ilogb(x.r), ilogb(x.g), ilogb(x.b))));
         REQUIRE (log1p(x) == rel_equal(RGB(log1p(x.r), log1p(x.g), log1p(x.b))));
         REQUIRE (log2(x)  == rel_equal(RGB(log2(x.r),  log2(x.g),  log2(x.b))));
 
@@ -201,17 +201,17 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE (scalbn(x,11)  == rel_equal(RGB(scalbn(x.r,11),  scalbn(x.g,11),  scalbn(x.b,11))));
         REQUIRE (scalbn(x,-2)  == rel_equal(RGB(scalbn(x.r,-2),  scalbn(x.g,-2),  scalbn(x.b,-2))));
 
-        REQUIRE (scalbn(w,RGB(2,3,11))   == rel_equal(RGB(scalbn(w.r,2),  scalbn(w.g,3),   scalbn(w.b,11))));
-        REQUIRE (scalbn(w,RGB(7,-3,0))   == rel_equal(RGB(scalbn(w.r,7),  scalbn(w.g,-3),  scalbn(w.b,0))));
-        REQUIRE (scalbn(w,RGB(12,17,-2)) == rel_equal(RGB(scalbn(w.r,12), scalbn(w.g,17),  scalbn(w.b,-2))));
+        REQUIRE (scalbn(w,basic_rgb<int>(2,3,11))   == rel_equal(RGB(scalbn(w.r,2),  scalbn(w.g,3),   scalbn(w.b,11))));
+        REQUIRE (scalbn(w,basic_rgb<int>(7,-3,0))   == rel_equal(RGB(scalbn(w.r,7),  scalbn(w.g,-3),  scalbn(w.b,0))));
+        REQUIRE (scalbn(w,basic_rgb<int>(12,17,-2)) == rel_equal(RGB(scalbn(w.r,12), scalbn(w.g,17),  scalbn(w.b,-2))));
 
         REQUIRE (scalbln(x,2)   == rel_equal(RGB(scalbln(x.r,2),   scalbln(x.g,2),   scalbln(x.b,2))));
         REQUIRE (scalbln(x,11)  == rel_equal(RGB(scalbln(x.r,11),  scalbln(x.g,11),  scalbln(x.b,11))));
         REQUIRE (scalbln(x,-2)  == rel_equal(RGB(scalbln(x.r,-2),  scalbln(x.g,-2),  scalbln(x.b,-2))));
 
-        REQUIRE (scalbln(w,RGB(2,3,11))   == rel_equal(RGB(scalbln(w.r,2),  scalbln(w.g,3),   scalbln(w.b,11))));
-        REQUIRE (scalbln(w,RGB(7,-3,0))   == rel_equal(RGB(scalbln(w.r,7),  scalbln(w.g,-3),  scalbln(w.b,0))));
-        REQUIRE (scalbln(w,RGB(12,17,-2)) == rel_equal(RGB(scalbln(w.r,12), scalbln(w.g,17),  scalbln(w.b,-2))));;
+        REQUIRE (scalbln(w,basic_rgb<long>(2,3,11))   == rel_equal(RGB(scalbln(w.r,2),  scalbln(w.g,3),   scalbln(w.b,11))));
+        REQUIRE (scalbln(w,basic_rgb<long>(7,-3,0))   == rel_equal(RGB(scalbln(w.r,7),  scalbln(w.g,-3),  scalbln(w.b,0))));
+        REQUIRE (scalbln(w,basic_rgb<long>(12,17,-2)) == rel_equal(RGB(scalbln(w.r,12), scalbln(w.g,17),  scalbln(w.b,-2))));;
     }
 
     SECTION("power functions") {

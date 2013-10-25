@@ -165,9 +165,11 @@ namespace gaudy {
     }
 
     // exponential and logarithmic
-    inline RGB exp(RGB v) noexcept { return RGB{std::exp(v.r), std::exp(v.g), std::exp(v.b)}; }
-
-    // TODO: the second parameter should be RGB<int>, once RGB is generified
+    template <typename T>
+    inline basic_rgb<T> exp(basic_rgb<T> v) noexcept {
+        using std::exp;
+        return {exp(v.r), exp(v.g), exp(v.b)};
+}
 
     template <typename T>
     inline basic_rgb<T> frexp(basic_rgb<T> v, basic_rgb<int> *exp) noexcept {
@@ -177,7 +179,6 @@ namespace gaudy {
                             frexp(v.b, &exp->b));
     }
 
-    // TODO: the second parameter should be RGB<int>, once RGB is generified
     template <typename T>
     inline basic_rgb<T> ldexp(basic_rgb<T> sig, basic_rgb<int> exp) noexcept {
         using std::ldexp;
@@ -186,40 +187,78 @@ namespace gaudy {
                 ldexp(sig.b, exp.b)};
     }
 
-    inline RGB log(RGB v) noexcept { return {std::log(v.r), std::log(v.g), std::log(v.b)}; }
-    inline RGB log10(RGB v)noexcept{return {std::log10(v.r), std::log10(v.g), std::log10(v.b)};}
+    template <typename T>
+    inline basic_rgb<T> log(basic_rgb<T> v) noexcept {
+        using std::log;
+        return {log(v.r), log(v.g), log(v.b)};
+    }
 
-    inline RGB modf(RGB v, RGB *intpart) noexcept {
+    template <typename T>
+    inline basic_rgb<T> log10(basic_rgb<T> v) noexcept {
+        using std::log10;
+        return {log10(v.r), log10(v.g), log10(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> modf(basic_rgb<T> v, basic_rgb<T> *intpart) noexcept {
         using std::modf;
         return { modf(v.r, &intpart->r),
                  modf(v.g, &intpart->g),
                  modf(v.b, &intpart->b) };
     }
 
-    inline RGB exp2(RGB v)noexcept{return {std::exp2(v.r), std::exp2(v.g), std::exp2(v.b)};}
-    inline RGB expm1(RGB v)noexcept{return {std::expm1(v.r), std::expm1(v.g), std::expm1(v.b)};}
-
-    // TODO: the return type should be RGB<int>, once RGB is generified
-    inline RGB ilogb(RGB v)noexcept{using std::ilogb; return RGB(ilogb(v.r),ilogb(v.g),ilogb(v.b));}
-
-    inline RGB log1p(RGB v) noexcept{ using std::log1p; return {log1p(v.r),log1p(v.g),log1p(v.b)}; }
-    inline RGB log2 (RGB v) noexcept{ using std::log2;  return {log2(v.r),log2(v.g),log2(v.b)}; }
-
-    inline RGB scalbn (RGB v, int n) noexcept {
-        using std::scalbn;  return {scalbn(v.r,n), scalbn(v.g,n), scalbn(v.b,n)};
+    template <typename T>
+    inline basic_rgb<T> exp2(basic_rgb<T> v) noexcept {
+        using std::exp2;
+        return {exp2(v.r), exp2(v.g), exp2(v.b)};
     }
-    inline RGB scalbn (RGB v, RGB n) noexcept { // TODO: RGB<int> as rhs
+
+    template <typename T>
+    inline basic_rgb<T> expm1(basic_rgb<T> v) noexcept {
+        using std::expm1;
+        return {expm1(v.r), expm1(v.g), expm1(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<int> ilogb(basic_rgb<T> v) noexcept {
+        using std::ilogb;
+        return {ilogb(v.r), ilogb(v.g), ilogb(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> log1p(basic_rgb<T> v) noexcept {
+        using std::log1p;
+        return {log1p(v.r), log1p(v.g), log1p(v.b)};
+    }
+
+    template <typename T>
+    inline basic_rgb<T> log2(basic_rgb<T> v) noexcept {
+        using std::log2;
+        return {log2(v.r), log2(v.g), log2(v.b)};
+    }
+
+
+    template <typename T>
+    inline basic_rgb<T> scalbn (basic_rgb<T> v, int n) noexcept {
         using std::scalbn;
-        return {scalbn(v.r,(int)n.r), scalbn(v.g,(int)n.g), scalbn(v.b,(int)n.b)};
+        return {scalbn(v.r,n), scalbn(v.g,n), scalbn(v.b,n)};
+    }
+    template <typename T>
+    inline basic_rgb<T> scalbn (basic_rgb<T> v, basic_rgb<int> n) noexcept {
+        using std::scalbn;
+        return {scalbn(v.r, n.r), scalbn(v.g, n.g), scalbn(v.b, n.b)};
     }
 
-    inline RGB scalbln (RGB v, long n) noexcept {
+
+    template <typename T>
+    inline basic_rgb<T> scalbln (basic_rgb<T> v, long n) noexcept {
         using std::scalbln;
         return {scalbln(v.r,n), scalbln(v.g,n), scalbln(v.b,n)};
     }
-    inline RGB scalbln (RGB v, RGB n) noexcept { // TODO: RGB<long> as rhs
+    template <typename T>
+    inline basic_rgb<T> scalbln (basic_rgb<T> v, basic_rgb<long> n) noexcept {
         using std::scalbln;
-        return {scalbln(v.r,(long)n.r), scalbln(v.g,(long)n.g), scalbln(v.b,(long)n.b)};
+        return {scalbln(v.r, n.r), scalbln(v.g, n.g), scalbln(v.b, n.b)};
     }
 
 
