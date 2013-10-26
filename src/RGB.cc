@@ -349,6 +349,10 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(fmin(c,z) == rel_equal(RGB(fmin(c,z.r),fmin(c,z.g),fmin(c,z.b))));
         REQUIRE(fmax(c,z) == rel_equal(RGB(fmax(c,z.r),fmax(c,z.g),fmax(c,z.b))));
         REQUIRE(fdim(c,z) == rel_equal(RGB(fdim(c,z.r),fdim(c,z.g),fdim(c,z.b))));
+
+
+        REQUIRE(fmax(0, fmin(1, RGB(-1, 2, -1))) == rel_equal(RGB(0,1,0)));
+        REQUIRE(fmax(0, fmin(1, RGB(0.1, 0.2, 0.3))) == rel_equal(RGB(0.1,0.2,0.3)));
     }
 
     SECTION("other") {
