@@ -138,6 +138,8 @@ namespace gaudy {
     template <typename T> basic_rgb<T>         ceil      (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>         floor     (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>         fmod      (basic_rgb<T> num, basic_rgb<T> den) noexcept ;
+    template <typename T> basic_rgb<T>         fmod      (basic_rgb<T> num, typename basic_rgb<T>::value_type den) noexcept ;
+    template <typename T> basic_rgb<T>         fmod      (typename basic_rgb<T>::value_type num, basic_rgb<T> den) noexcept ;
     template <typename T> basic_rgb<T>         trunc     (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>         round     (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<long>      lround    (basic_rgb<T> v) noexcept ;
@@ -147,12 +149,24 @@ namespace gaudy {
     template <typename T> basic_rgb<long long> llrint    (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>         nearbyint (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>         remainder (basic_rgb<T> num, basic_rgb<T> denom) noexcept ;
+    template <typename T> basic_rgb<T>         remainder (basic_rgb<T> num, typename basic_rgb<T>::value_type denom) noexcept ;
+    template <typename T> basic_rgb<T>         remainder (typename basic_rgb<T>::value_type num, basic_rgb<T> denom) noexcept ;
     template <typename T> basic_rgb<T> remquo (basic_rgb<T> num, basic_rgb<T> den, basic_rgb<int> *quot) noexcept ;
+    template <typename T> basic_rgb<T> remquo (basic_rgb<T> num, typename basic_rgb<T>::value_type den, basic_rgb<int> *quot) noexcept ;
+    template <typename T> basic_rgb<T> remquo (typename basic_rgb<T>::value_type num, basic_rgb<T> den, basic_rgb<int> *quot) noexcept ;
 
     // -- floating point manipulation --------------------------------------------------------------
     template <typename T> basic_rgb<T> copysign  (basic_rgb<T> x, basic_rgb<T> y) noexcept ;
     template <typename T> basic_rgb<T> nextafter (basic_rgb<T> x, basic_rgb<T> y) noexcept ;
     template <typename T> basic_rgb<T> nexttoward(basic_rgb<T> x, basic_rgb<long double> y) noexcept ;
+
+    template <typename T> basic_rgb<T> copysign  (basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
+    template <typename T> basic_rgb<T> nextafter (basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
+    template <typename T> basic_rgb<T> nexttoward(basic_rgb<T> x, long double y) noexcept ;
+
+    template <typename T> basic_rgb<T> copysign  (typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
+    template <typename T> basic_rgb<T> nextafter (typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
+    template <typename T> basic_rgb<T> nexttoward(T x,                                 basic_rgb<long double> y) noexcept ;
     // NAN macro constant not implemented, because we would need to be able to overload macros.
 
     // -- min, max, difference ---------------------------------------------------------------------
@@ -160,10 +174,34 @@ namespace gaudy {
     template <typename T> basic_rgb<T> fmax(basic_rgb<T> x, basic_rgb<T> y) noexcept ;
     template <typename T> basic_rgb<T> fdim(basic_rgb<T> x, basic_rgb<T> y) noexcept ;
 
+    template <typename T> basic_rgb<T> fmin(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
+    template <typename T> basic_rgb<T> fmax(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
+    template <typename T> basic_rgb<T> fdim(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
+
+    template <typename T> basic_rgb<T> fmin(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
+    template <typename T> basic_rgb<T> fmax(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
+    template <typename T> basic_rgb<T> fdim(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
+
     // -- other ------------------------------------------------------------------------------------
     template <typename T> basic_rgb<T> fabs(basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T> abs (basic_rgb<T> v) noexcept;
+
+    // fma comes in many overloads:
+    //   fma (RGB,    RGB,    RGB   )
+    //   fma (RGB,    RGB,    Scalar)
+    //   fma (RGB,    Scalar, RGB   )
+    //   fma (RGB,    Scalar, Scalar)
+    //   fma (Scalar, RGB,    RGB   )
+    //   fma (Scalar, RGB,    Scalar)
+    //   fma (Scalar, Scalar, RGB   )
+    //   fma (Scalar, Scalar, Scalar) <-- this is given by cmath
     template <typename T> basic_rgb<T> fma (basic_rgb<T> x, basic_rgb<T> y, basic_rgb<T> z) noexcept ;
+    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept ;
+    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept ;
+    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, typename basic_rgb<T>::value_type y, typename basic_rgb<T>::value_type z) noexcept ;
+    template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, basic_rgb<T> y, basic_rgb<T> z) noexcept ;
+    template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept ;
+    template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept ;
 
     // -- classification functions -----------------------------------------------------------------
 
@@ -605,6 +643,16 @@ namespace gaudy {
         using std::fmod;
         return{ fmod(num.r, denom.r), fmod(num.g, denom.g), fmod(num.b, denom.b) };
     }
+    template <typename T>
+    inline basic_rgb<T> fmod(basic_rgb<T> num, typename basic_rgb<T>::value_type denom) noexcept {
+        using std::fmod;
+        return{ fmod(num.r, denom), fmod(num.g, denom), fmod(num.b, denom) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fmod(typename basic_rgb<T>::value_type num, basic_rgb<T> denom) noexcept {
+        using std::fmod;
+        return{ fmod(num, denom.r), fmod(num, denom.g), fmod(num, denom.b) };
+    }
 
     template <typename T>
     inline basic_rgb<T> trunc(basic_rgb<T> v) noexcept {
@@ -659,6 +707,20 @@ namespace gaudy {
                  remainder(num.g, denom.g),
                  remainder(num.b, denom.b) };
     }
+    template <typename T>
+    inline basic_rgb<T> remainder (basic_rgb<T> num, typename basic_rgb<T>::value_type denom) noexcept {
+        using std::remainder;
+        return { remainder(num.r, denom),
+                 remainder(num.g, denom),
+                 remainder(num.b, denom) };
+    }
+    template <typename T>
+    inline basic_rgb<T> remainder (typename basic_rgb<T>::value_type num, basic_rgb<T> denom) noexcept {
+        using std::remainder;
+        return { remainder(num, denom.r),
+                 remainder(num, denom.g),
+                 remainder(num, denom.b) };
+    }
 
     template <typename T>
     inline basic_rgb<T> remquo (basic_rgb<T> num, basic_rgb<T> denom, basic_rgb<int> *quot) noexcept {
@@ -666,6 +728,20 @@ namespace gaudy {
         return { remquo(num.r, denom.r, &quot->r),
                  remquo(num.g, denom.g, &quot->g),
                  remquo(num.b, denom.b, &quot->b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> remquo (basic_rgb<T> num, typename basic_rgb<T>::value_type denom, basic_rgb<int> *quot) noexcept {
+        using std::remquo;
+        return { remquo(num.r, denom, &quot->r),
+                 remquo(num.g, denom, &quot->g),
+                 remquo(num.b, denom, &quot->b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> remquo (typename basic_rgb<T>::value_type num, basic_rgb<T> denom, basic_rgb<int> *quot) noexcept {
+        using std::remquo;
+        return { remquo(num, denom.r, &quot->r),
+                 remquo(num, denom.g, &quot->g),
+                 remquo(num, denom.b, &quot->b) };
     }
 
     // floating point manipulation
@@ -676,6 +752,20 @@ namespace gaudy {
                  copysign(x.g, y.g),
                  copysign(x.b, y.b) };
     }
+    template <typename T>
+    inline basic_rgb<T> copysign(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::copysign;
+        return { copysign(x.r, y),
+                 copysign(x.g, y),
+                 copysign(x.b, y) };
+    }
+    template <typename T>
+    inline basic_rgb<T> copysign(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::copysign;
+        return { copysign(x, y.r),
+                 copysign(x, y.g),
+                 copysign(x, y.b) };
+    }
 
     template <typename T>
     inline basic_rgb<T> nextafter(basic_rgb<T> x, basic_rgb<T> y) noexcept {
@@ -684,6 +774,20 @@ namespace gaudy {
                  nextafter(x.g, y.g),
                  nextafter(x.b, y.b) };
     }
+    template <typename T>
+    inline basic_rgb<T> nextafter(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::nextafter;
+        return { nextafter(x.r, y),
+                 nextafter(x.g, y),
+                 nextafter(x.b, y) };
+    }
+    template <typename T>
+    inline basic_rgb<T> nextafter(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::nextafter;
+        return { nextafter(x, y.r),
+                 nextafter(x, y.g),
+                 nextafter(x, y.b) };
+    }
 
     template <typename T>
     inline basic_rgb<T> nexttoward(basic_rgb<T> x, basic_rgb<long double> y) noexcept {
@@ -691,6 +795,23 @@ namespace gaudy {
         return { nexttoward(x.r, y.r),
                  nexttoward(x.g, y.g),
                  nexttoward(x.b, y.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> nexttoward(basic_rgb<T> x, long double y) noexcept {
+        using std::nexttoward;
+        return { nexttoward(x.r, y),
+                 nexttoward(x.g, y),
+                 nexttoward(x.b, y) };
+    }
+    // Note: The following overload does not use our 'basic_rgb<T>::value_type' pattern to prevent
+    //       lookup upon the scalar type, but rather uses just 'T', because otherwise lookup
+    //       would not be possible.
+    template <typename T>
+    inline basic_rgb<T> nexttoward(T x, basic_rgb<long double> y) noexcept {
+        using std::nexttoward;
+        return { nexttoward(x, y.r),
+                 nexttoward(x, y.g),
+                 nexttoward(x, y.b) };
     }
 
     // Not implementing the NAN macro constant, because we would need to be able to overload macros.
@@ -703,7 +824,6 @@ namespace gaudy {
                  fmin(x.g, y.g),
                  fmin(x.b, y.b) };
     }
-
     template <typename T>
     inline basic_rgb<T> fmax(basic_rgb<T> x, basic_rgb<T> y) noexcept {
         using std::fmax;
@@ -711,13 +831,56 @@ namespace gaudy {
                  fmax(x.g, y.g),
                  fmax(x.b, y.b) };
     }
-
     template <typename T>
     inline basic_rgb<T> fdim(basic_rgb<T> x, basic_rgb<T> y) noexcept {
         using std::fdim;
         return { fdim(x.r, y.r),
                  fdim(x.g, y.g),
                  fdim(x.b, y.b) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fmin(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::fmin;
+        return { fmin(x.r, y),
+                 fmin(x.g, y),
+                 fmin(x.b, y) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fmax(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::fmax;
+        return { fmax(x.r, y),
+                 fmax(x.g, y),
+                 fmax(x.b, y) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fdim(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::fdim;
+        return { fdim(x.r, y),
+                 fdim(x.g, y),
+                 fdim(x.b, y) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fmin(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::fmin;
+        return { fmin(x, y.r),
+                 fmin(x, y.g),
+                 fmin(x, y.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fmax(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::fmax;
+        return { fmax(x, y.r),
+                 fmax(x, y.g),
+                 fmax(x, y.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fdim(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::fdim;
+        return { fdim(x, y.r),
+                 fdim(x, y.g),
+                 fdim(x, y.b) };
     }
 
     // other
@@ -739,6 +902,49 @@ namespace gaudy {
         return { fma(x.r, y.r, z.r),
                  fma(x.g, y.g, z.g),
                  fma(x.b, y.b, z.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fma(basic_rgb<T> x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept {
+        using std::fma;
+        return { fma(x.r, y.r, z),
+                 fma(x.g, y.g, z),
+                 fma(x.b, y.b, z) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fma(basic_rgb<T> x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept {
+        using std::fma;
+        return { fma(x.r, y, z.r),
+                 fma(x.g, y, z.g),
+                 fma(x.b, y, z.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fma(basic_rgb<T> x, typename basic_rgb<T>::value_type y, typename basic_rgb<T>::value_type z) noexcept {
+        using std::fma;
+        return { fma(x.r, y, z),
+                 fma(x.g, y, z),
+                 fma(x.b, y, z) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> fma(typename basic_rgb<T>::value_type x, basic_rgb<T> y, basic_rgb<T> z) noexcept {
+        using std::fma;
+        return { fma(x, y.r, z.r),
+                 fma(x, y.g, z.g),
+                 fma(x, y.b, z.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fma(typename basic_rgb<T>::value_type x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept {
+        using std::fma;
+        return { fma(x, y.r, z),
+                 fma(x, y.g, z),
+                 fma(x, y.b, z) };
+    }
+    template <typename T>
+    inline basic_rgb<T> fma(typename basic_rgb<T>::value_type x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept {
+        using std::fma;
+        return { fma(x, y, z.r),
+                 fma(x, y, z.g),
+                 fma(x, y, z.b) };
     }
 
     // classification functions

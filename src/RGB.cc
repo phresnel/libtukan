@@ -8,8 +8,9 @@
 
 #include <iostream>
 namespace gaudy {
+    template <typename T>
     inline
-    std::ostream& operator<< (std::ostream &os, RGB const &rhs) {
+    std::ostream& operator<< (std::ostream &os, basic_rgb<T> const &rhs) {
         return os << "rgb{" << rhs.r << ";" << rhs.g << ";" << rhs.b << "}";
     }
 }
@@ -127,7 +128,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     const RGB w {0.9, 0.2, 0.7};
     const RGB x {1.9, 4, 8.7};
     const RGB z {100.9, -1, -0.7};
-    const auto a = 2., b = 11., c = 0.5;
+    const auto a = 2., b = 11., c = 0.5, d = -1.0/0.0, e = -99999.;
 
     SECTION("trigonometric") {
         REQUIRE(sin(v)     == rel_equal(RGB(sin(v.r),       sin(v.g),        sin(v.b))));
@@ -257,6 +258,8 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(floor(x)  == rel_equal(RGB(floor(x.r),  floor(x.g),  floor(x.b))));
         REQUIRE(floor(-x) == rel_equal(RGB(floor(-x.r), floor(-x.g), floor(-x.b))));
         REQUIRE(fmod(x, w)  == rel_equal(RGB(fmod(x.r,w.r),  fmod(x.g,w.g),  fmod(x.b,w.b))));
+        REQUIRE(fmod(x, b)  == rel_equal(RGB(fmod(x.r,b),  fmod(x.g,b),  fmod(x.b,b))));
+        REQUIRE(fmod(b, w)  == rel_equal(RGB(fmod(b,w.r),  fmod(b,w.g),  fmod(b,w.b))));
         REQUIRE(fmod(-x, w)  == rel_equal(RGB(fmod(-x.r,w.r),  fmod(-x.g,w.g),  fmod(-x.b,w.b))));
         REQUIRE(fmod(x, -w)  == rel_equal(RGB(fmod(x.r,-w.r),  fmod(x.g,-w.g),  fmod(x.b,-w.b))));
 
@@ -282,40 +285,82 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(remainder(x, w)== rel_equal(RGB(remainder(x.r,w.r),remainder(x.g,w.g),remainder(x.b,w.b))));
         REQUIRE(remainder(-x,w)== rel_equal(RGB(remainder(-x.r,w.r),remainder(-x.g,w.g),remainder(-x.b,w.b))));
         REQUIRE(remainder(x,-w)== rel_equal(RGB(remainder(x.r,-w.r),remainder(x.g,-w.g),remainder(x.b,-w.b))));
+        REQUIRE(remainder(c, w)== rel_equal(RGB(remainder(c,w.r),remainder(c,w.g),remainder(c,w.b))));
+        REQUIRE(remainder(-x,c)== rel_equal(RGB(remainder(-x.r,c),remainder(-x.g,c),remainder(-x.b,c))));
 
         basic_rgb<int> quot_rgb;
-        RGB remquo_rgb = remquo(x,w,&quot_rgb);
-
         int quot_r, quot_g, quot_b;
-        float remquo_r = remquo(x.r,w.r,&quot_r);
-        float remquo_g = remquo(x.g,w.g,&quot_g);
-        float remquo_b = remquo(x.b,w.b,&quot_b);
 
-        REQUIRE(remquo_r == Approx(remquo_rgb.r));
-        REQUIRE(remquo_g == Approx(remquo_rgb.g));
-        REQUIRE(remquo_b == Approx(remquo_rgb.b));
-        REQUIRE(quot_r == quot_rgb.r);
-        REQUIRE(quot_g == quot_rgb.g);
-        REQUIRE(quot_b == quot_rgb.b);
+        RGB remquo_rgb = remquo(x,   w,   &quot_rgb);
+        float remquo_r = remquo(x.r, w.r, &quot_r);
+        float remquo_g = remquo(x.g, w.g, &quot_g);
+        float remquo_b = remquo(x.b, w.b, &quot_b);
+        REQUIRE(remquo_rgb == rel_equal(RGB(remquo_r,remquo_g,remquo_b)));
+        REQUIRE(  quot_rgb == basic_rgb<int>(quot_r, quot_g, quot_b));
+
+        remquo_rgb = remquo(c, w,   &quot_rgb);
+        remquo_r   = remquo(c, w.r, &quot_r);
+        remquo_g   = remquo(c, w.g, &quot_g);
+        remquo_b   = remquo(c, w.b, &quot_b);
+        REQUIRE(remquo_rgb == rel_equal(RGB(remquo_r,remquo_g,remquo_b)));
+        REQUIRE(  quot_rgb == basic_rgb<int>(quot_r, quot_g, quot_b));
+
+        remquo_rgb = remquo(x,   b, &quot_rgb);
+        remquo_r   = remquo(x.r, b, &quot_r);
+        remquo_g   = remquo(x.g, b, &quot_g);
+        remquo_b   = remquo(x.b, b, &quot_b);
+
+        // NOTE: when chosing c=0.5 instead of b=11 for the test, it fails on at least one device.
+        //       I am not sure how this is explained.
+        REQUIRE(  quot_rgb == basic_rgb<int>(quot_r, quot_g, quot_b));
+        REQUIRE(remquo_rgb == rel_equal(RGB(remquo_r,remquo_g,remquo_b)));
     }
 
     SECTION("floating point manipulation") {
         REQUIRE(copysign(x,z) == rel_equal(RGB(copysign(x.r,z.r),copysign(x.g,z.g),copysign(x.b,z.b))));
+        REQUIRE(copysign(x,c) == rel_equal(RGB(copysign(x.r,c),  copysign(x.g,c),  copysign(x.b,c))));
+        REQUIRE(copysign(e,z) == rel_equal(RGB(copysign(e,z.r),  copysign(e,z.g),  copysign(e,z.b))));
+
         REQUIRE(nextafter(x,z) == rel_equal(RGB(nextafter(x.r,z.r),nextafter(x.g,z.g),nextafter(x.b,z.b))));
+        REQUIRE(nextafter(x,c) == rel_equal(RGB(nextafter(x.r,c),  nextafter(x.g,c),  nextafter(x.b,c))));
+        REQUIRE(nextafter(d,z) == rel_equal(RGB(nextafter(d,z.r),  nextafter(d,z.g),  nextafter(d,z.b))));
 
         basic_rgb<long double> d {1.0l,-0.5l,-1.0l/0.0l};
+        const long double e = -99999;
         REQUIRE(nexttoward(x,d) == rel_equal(RGB(nexttoward(x.r,d.r),nexttoward(x.g,d.g),nexttoward(x.b,d.b))));
+        REQUIRE(nexttoward(x,c) == rel_equal(RGB(nexttoward(x.r,c),  nexttoward(x.g,c),  nexttoward(x.b,c))));
+
+        // TODO: replace below code with rel_equal once rel_equal works properly for basic_rgb<T!=float>.
+        const auto nt = nexttoward(e,d);
+        REQUIRE(nt.r == Approx(nexttoward(e,d.r)));
+        REQUIRE(nt.g == Approx(nexttoward(e,d.g)));
+        REQUIRE(nt.b == Approx(nexttoward(e,d.b)));
     }
 
     SECTION("minimum, maximum, difference") {
         REQUIRE(fmin(x,z) == rel_equal(RGB(fmin(x.r,z.r),fmin(x.g,z.g),fmin(x.b,z.b))));
         REQUIRE(fmax(x,z) == rel_equal(RGB(fmax(x.r,z.r),fmax(x.g,z.g),fmax(x.b,z.b))));
         REQUIRE(fdim(x,z) == rel_equal(RGB(fdim(x.r,z.r),fdim(x.g,z.g),fdim(x.b,z.b))));
+
+        REQUIRE(fmin(z,c) == rel_equal(RGB(fmin(z.r,c),fmin(z.g,c),fmin(z.b,c))));
+        REQUIRE(fmax(z,c) == rel_equal(RGB(fmax(z.r,c),fmax(z.g,c),fmax(z.b,c))));
+        REQUIRE(fdim(z,c) == rel_equal(RGB(fdim(z.r,c),fdim(z.g,c),fdim(z.b,c))));
+
+        REQUIRE(fmin(c,z) == rel_equal(RGB(fmin(c,z.r),fmin(c,z.g),fmin(c,z.b))));
+        REQUIRE(fmax(c,z) == rel_equal(RGB(fmax(c,z.r),fmax(c,z.g),fmax(c,z.b))));
+        REQUIRE(fdim(c,z) == rel_equal(RGB(fdim(c,z.r),fdim(c,z.g),fdim(c,z.b))));
     }
 
     SECTION("other") {
         REQUIRE(abs(z) == rel_equal(RGB(abs(z.r),abs(z.g),abs(z.b))));
         REQUIRE(fabs(z) == rel_equal(RGB(fabs(z.r),fabs(z.g),fabs(z.b))));
+
         REQUIRE(fma(x,z,w) == rel_equal(RGB(fma(x.r,z.r,w.r),fma(x.g,z.g,w.g),fma(x.b,z.b,w.b))));
+        REQUIRE(fma(x,z,c) == rel_equal(RGB(fma(x.r,z.r,c),fma(x.g,z.g,c),fma(x.b,z.b,c))));
+        REQUIRE(fma(x,c,w) == rel_equal(RGB(fma(x.r,c,w.r),fma(x.g,c,w.g),fma(x.b,c,w.b))));
+        REQUIRE(fma(x,c,c) == rel_equal(RGB(fma(x.r,c,c),fma(x.g,c,c),fma(x.b,c,c))));
+        REQUIRE(fma(c,z,w) == rel_equal(RGB(fma(c,z.r,w.r),fma(c,z.g,w.g),fma(c,z.b,w.b))));
+        REQUIRE(fma(c,z,c) == rel_equal(RGB(fma(c,z.r,c),fma(c,z.g,c),fma(c,z.b,c))));
+        REQUIRE(fma(c,c,w) == rel_equal(RGB(fma(c,c,w.r),fma(c,c,w.g),fma(c,c,w.b))));
     }
 }
