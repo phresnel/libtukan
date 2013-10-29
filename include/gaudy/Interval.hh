@@ -25,6 +25,11 @@ namespace gaudy {
     };
 
     template <typename T>
+    constexpr Interval<T> interval (T const &a, T const &b) {
+        return {a, b};
+    }
+
+    template <typename T>
     inline constexpr
     bool operator== (Interval<T> const &lhs, Interval<T> const &rhs) noexcept {
         return lhs.min==rhs.min && lhs.max==rhs.max;

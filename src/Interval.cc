@@ -29,4 +29,7 @@ TEST_CASE("gaudy/Interval", "Interval tests")
 
     REQUIRE(length(Interval<float>(1,2)) == 1);
     REQUIRE(length(Interval<float>(-1,1)) == 2);
+
+    REQUIRE(interval(1,2) == Interval<int>(1,2));
+    REQUIRE(interval(1.f,2.f) == Interval<float>(1.f,2.f));
 }

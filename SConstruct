@@ -10,7 +10,8 @@ gaudy = env.Program(target='unit_tests',
                             'src/Nanometer.cc',
                             'src/Interval.cc',
                             'src/Spectrum.cc',
-                            'src/RGB.cc'
+                            'src/RGB.cc',
+                            'src/algorithm.cc'
                            ],
                     LIBS=['gomp']
                     )
