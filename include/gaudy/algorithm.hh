@@ -5,6 +5,7 @@
 #define ALGORITHM_HH_INCLUDED_20131029
 
 #include "Interval.hh"
+#include <algorithm>
 
 //--------------------------------------------------------------------------------------------------
 // Interface / Documentation
@@ -60,6 +61,47 @@ namespace gaudy {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     template <typename T, typename F>
     auto lerp(Interval<T> i, F f) noexcept -> decltype(lerp(i.min, i.max, f));
+
+
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //
+    // lerp_sat : L -> R -> F -> (L*(1-F) + R*F)
+    //
+    //----------------------------------------------------------------------------------------------
+    // Type Requirements:
+    //   The same requirements like for lerp apply, with the following addition:
+    //
+    //   `f = max(F(0), min(f, F(1)))` must be defined, such that if f<0, f is saturated to 0,
+    //                                 and if f>1, f is saturated to 1.
+    //
+    //----------------------------------------------------------------------------------------------
+    // About:
+    //
+    // Overload which does the same as lerp, but saturates f into the range [0..1]. The effect is
+    // that for `lerp_sat(a,b,f)`, the result is `a` for all `f<0`, `b` for all `f>1`, and
+    // `lerp(a,b,f)` for any `f in [0..1]`.
+    //
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    template <typename L, typename R, typename F>
+    auto lerp_sat(L a, R b, F f) noexcept -> decltype(a*(1-f) + b*f);
+
+
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //
+    // lerp_sat : [T..T] -> f -> (T*(1-F) + T*F)
+    //
+    //----------------------------------------------------------------------------------------------
+    // About:
+    //
+    // Overload which does the same as lerp, but saturates f into the range [0..1]. The effect is
+    // that for `lerp_sat([a,b],f)`, the result is `a` for all `f<0`, `b` for all `f>1`, and
+    // `lerp([a,b],f)` for any `f in [0..1]`.
+    //
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    template <typename T, typename F>
+    auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp(i.min, i.max, f));
 }
 
 
@@ -79,6 +121,18 @@ namespace gaudy {
     template <typename T, typename F>
     inline auto lerp(Interval<T> i, F f) noexcept -> decltype(lerp(i.min, i.max, f)) {
         return lerp(i.min, i.max, f);
+    }
+
+    template <typename L, typename R, typename F>
+    inline auto lerp_sat(L a, R b, F f) noexcept -> decltype(a*(1-f) + b*f) {
+        using std::min; using std::max;
+        f = max(F(0), min(f, F(1)));
+        return a*(1-f) + b*f;
+    }
+
+    template <typename T, typename F>
+    inline auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp(i.min, i.max, f)) {
+        return lerp_sat(i.min, i.max, f);
     }
 }
 
