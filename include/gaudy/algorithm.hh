@@ -5,6 +5,7 @@
 #define ALGORITHM_HH_INCLUDED_20131029
 
 #include "Interval.hh"
+#include <cmath>
 #include <algorithm>
 #include <initializer_list>
 
@@ -103,6 +104,43 @@ namespace gaudy {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     template <typename T, typename F>
     auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp_sat(i.min, i.max, f));
+
+
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //
+    // lerp_sat : {x_1,x_2,..,x_n} -> f -> lerp(x_a,x_b,f)
+    //
+    //----------------------------------------------------------------------------------------------
+    // Type Requirements:
+    //
+    // * let x_n be any element in the initializer-list, then `lerp(x_n,x_(n+1), f)` must be defined
+    // * `f = max(F(0), min(f, F(1))) * size_t()` must be defined
+    // * `size_t(trunc(f))` must be defined, i.e. `trunc(f)` must be defined, and `f` must be
+    //    convertible to `size_t` (a conversion to `int` will work).
+    //
+    // Value Requirements:
+    //   None:
+    //     * an initializer-list without elements results in an exception
+    //     * `f` will be saturated onto [0..1]
+    //
+    //----------------------------------------------------------------------------------------------
+    // About:
+    //
+    // This overload allows to use lerp_sat like this:
+    //   lerp_sat({1}, 0.5) == 1
+    //   lerp_sat({1,2}, 0.5) == 1.5
+    //   lerp_sat({1,2,3,4}, 0.5) == 2.5
+    //
+    // Note that calling it with an empty initializer-list yields an exception, therefore it is not
+    // noexcept.
+    //
+    // There is some additional overhead in size-checking, but optimization wil probably eliminate
+    // it.
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    template <typename T, typename F>
+    auto lerp_sat(std::initializer_list<T> vals, F f)
+     -> decltype(lerp(vals.begin()[std::size_t()], vals.begin()[std::size_t()], f - std::size_t()));
 }
 
 
@@ -134,6 +172,22 @@ namespace gaudy {
     template <typename T, typename F>
     inline auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp_sat(i.min, i.max, f)) {
         return lerp_sat(i.min, i.max, f);
+    }
+
+    template <typename T, typename F>
+    inline auto lerp_sat(std::initializer_list<T> vals, F f)
+     -> decltype(lerp(vals.begin()[std::size_t()], vals.begin()[std::size_t()], f-std::size_t()))
+    {
+        using std::min; using std::max; using std::trunc;
+
+        switch (vals.size()) {
+        case 0: throw std::logic_error("called lerp_sat({...},f) with empty initializer list");
+        case 1: return *vals.begin();
+        default:
+            f = max(F(0), min(f, F(1))) * (vals.size()-1);
+            const auto t = std::size_t(trunc(f));
+            return lerp(vals.begin()[t], vals.begin()[t+1], f-t);
+        }
     }
 }
 

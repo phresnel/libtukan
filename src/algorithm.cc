@@ -75,11 +75,24 @@ TEST_CASE("algorithm/lerp", "lerp tests")
         REQUIRE(lerp(interval(-1,1), RGB(-1,0.5,2) == RGB(-1,0,2)));
     }
 
-    SECTION("lerp({x_1,x_2,..,x_n}, f)") {
-        /*REQUIRE(lerp({0,1,2},  0.0) == 1);
-        REQUIRE(lerp({0,1,2},  0.5) == 1);
-        REQUIRE(lerp({0,1,2},  1.0) == 1);
-        REQUIRE(lerp({0,1,2},  2.0) == 4);*/
+    SECTION("lerp_sat({x_1,x_2,..,x_n}, f)") {
+        REQUIRE_THROWS(lerp_sat(std::initializer_list<int>{},  0.0));
+        REQUIRE(lerp_sat({2},  0.0) == 2);
+        REQUIRE(lerp_sat({2},  1.0) == 2);
+        REQUIRE(lerp_sat({2},  0.5) == 2);
+        REQUIRE(lerp_sat({2},  0.0) == 2);
+        REQUIRE(lerp_sat({0,1},  0.0) == 0);
+        REQUIRE(lerp_sat({0,1},  1.0) == 1);
+        REQUIRE(lerp_sat({0,1,2},  0.75) == 1.5);
+        REQUIRE(lerp_sat({2,1,2},  0.75) == 1.5);
+        REQUIRE(lerp_sat({2,1,2},  0.25) == 1.5);
+        REQUIRE(lerp_sat({2,1,2},  0.5 ) == 1  );
+        REQUIRE(lerp_sat({2,1,2},  0.0 ) == 2  );
+        REQUIRE(lerp_sat({2,1,2},  1.0 ) == 2  );
+        REQUIRE(lerp_sat({2,1,2}, -1.0 ) == 2  );
+        REQUIRE(lerp_sat({2,1,2},  2.0 ) == 2  );
+
+        REQUIRE(lerp_sat({RGB(1,1,1),RGB(1,2,1)},  0.5 ) == RGB(1,1.5,1) );
     }
 }
 

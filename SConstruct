@@ -1,7 +1,7 @@
 Execute('./bootstrap')
 
 env = Environment(CPPPATH = ['.', 'bootstrapped/Catch/include/', 'include'],
-                  CXXFLAGS = "-std=c++11 -Wall -fopenmp ",
+                  CXXFLAGS = "-std=c++11 -Wall -Wextra -fopenmp ",
                   CPPFLAGS=""
                   )
 
