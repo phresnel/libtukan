@@ -6,6 +6,7 @@
 
 #include "Interval.hh"
 #include <algorithm>
+#include <initializer_list>
 
 //--------------------------------------------------------------------------------------------------
 // Interface / Documentation
@@ -101,7 +102,7 @@ namespace gaudy {
     //
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     template <typename T, typename F>
-    auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp(i.min, i.max, f));
+    auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp_sat(i.min, i.max, f));
 }
 
 
@@ -131,7 +132,7 @@ namespace gaudy {
     }
 
     template <typename T, typename F>
-    inline auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp(i.min, i.max, f)) {
+    inline auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp_sat(i.min, i.max, f)) {
         return lerp_sat(i.min, i.max, f);
     }
 }

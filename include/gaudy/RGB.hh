@@ -6,6 +6,8 @@
 
 #include "rel_equal.hh"
 #include <functional>
+#include <algorithm>
+#include <cmath>
 
 namespace gaudy {
 
@@ -22,6 +24,7 @@ namespace gaudy {
 
         constexpr basic_rgb() noexcept = default;
         constexpr basic_rgb(T r, T g, T b) noexcept : r(r), g(g), b(b) {}
+        constexpr explicit basic_rgb(T f) noexcept  : r(f), g(f), b(f) {}
 
         basic_rgb& operator+= (basic_rgb rhs) noexcept;
         basic_rgb& operator-= (basic_rgb rhs) noexcept;
@@ -63,6 +66,15 @@ namespace gaudy {
     template <typename T> constexpr basic_rgb<T> operator* (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
     template <typename T> constexpr basic_rgb<T> operator/ (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
 
+    // -- algorithms ------------------------------------------------------------------------------
+    // Note: we do not offer constexpr were the C++11 <algorithms> library does neither.
+    template <typename T> basic_rgb<T> min (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> basic_rgb<T> min (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> basic_rgb<T> min (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept;
+
+    template <typename T> basic_rgb<T> max (basic_rgb<T> lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> basic_rgb<T> max (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept;
+    template <typename T> basic_rgb<T> max (basic_rgb<T> lhs, typename basic_rgb<T>::value_type rhs) noexcept;
 
     //Implementation notes:
     // Some operator overloads use basic_rgb<T>::value_type instead of just plain T. This is because
@@ -351,6 +363,53 @@ namespace gaudy {
     template <typename T>
     constexpr basic_rgb<T> operator/ (typename basic_rgb<T>::value_type lhs, basic_rgb<T> rhs) noexcept {
         return {lhs/rhs.r, lhs/rhs.g, lhs/rhs.b};
+    }
+
+
+    // algorithms
+    template <typename T>
+    inline basic_rgb<T> min(basic_rgb<T> x, basic_rgb<T> y) noexcept {
+        using std::min;
+        return { min(x.r, y.r),
+                 min(x.g, y.g),
+                 min(x.b, y.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> max(basic_rgb<T> x, basic_rgb<T> y) noexcept {
+        using std::max;
+        return { max(x.r, y.r),
+                 max(x.g, y.g),
+                 max(x.b, y.b) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> min(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::min;
+        return { min(x.r, y),
+                 min(x.g, y),
+                 min(x.b, y) };
+    }
+    template <typename T>
+    inline basic_rgb<T> max(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
+        using std::max;
+        return { max(x.r, y),
+                 max(x.g, y),
+                 max(x.b, y) };
+    }
+
+    template <typename T>
+    inline basic_rgb<T> min(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::min;
+        return { min(x, y.r),
+                 min(x, y.g),
+                 min(x, y.b) };
+    }
+    template <typename T>
+    inline basic_rgb<T> max(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
+        using std::max;
+        return { max(x, y.r),
+                 max(x, y.g),
+                 max(x, y.b) };
     }
 }
 

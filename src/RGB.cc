@@ -93,6 +93,18 @@ TEST_CASE("gaudy/RGB", "RGB tests")
         REQUIRE((RGB()/1)       == rel_equal(RGB(0,0,0)));
         REQUIRE((RGB(3,6,9)/-2) == rel_equal(RGB(-1.5,-3,-4.5)));
     }
+
+    SECTION("algorithms") {
+        REQUIRE(min(RGB(1,0,3), RGB(2,3,1)) == rel_equal(RGB(1,0,1)));
+        REQUIRE(min(RGB(2,3,1), RGB(1,0,3)) == rel_equal(RGB(1,0,1)));
+        REQUIRE(max(RGB(1,0,3), RGB(2,3,1)) == rel_equal(RGB(2,3,3)));
+        REQUIRE(max(RGB(2,3,1), RGB(1,0,3)) == rel_equal(RGB(2,3,3)));
+
+        REQUIRE(min(1, RGB(2,3,0)) == rel_equal(RGB(1,1,0)));
+        REQUIRE(min(RGB(2,3,0), 1) == rel_equal(RGB(1,1,0)));
+        REQUIRE(max(1, RGB(2,3,0)) == rel_equal(RGB(2,3,1)));
+        REQUIRE(max(RGB(2,3,0), 1) == rel_equal(RGB(2,3,1)));
+    }
 }
 
 TEST_CASE("gaudy/RGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")

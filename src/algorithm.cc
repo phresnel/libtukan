@@ -29,6 +29,8 @@ TEST_CASE("algorithm/lerp", "lerp tests")
         REQUIRE(lerp(RGB(0,0,0), RGB(1,2,3), RGB(0,0.5,1)) == RGB(0,1,3));
         REQUIRE(lerp(RGB(0,0,0), 1         , RGB(0,0.5,1)) == RGB(0,0.5,1));
         REQUIRE(lerp(0         , 1         , RGB(0,0.5,1)) == RGB(0,0.5,1));
+        REQUIRE(lerp(RGB(0,0,0), RGB(1,2,3), 2.0         ) == RGB(2,4,6));
+        REQUIRE(lerp(RGB(0,0,0), RGB(1,2,3), -1.0        ) == RGB(-1,-2,-3));
     }
 
     SECTION("lerp([a..b], f)") {
@@ -51,6 +53,14 @@ TEST_CASE("algorithm/lerp", "lerp tests")
         REQUIRE(lerp_sat(-1,1, -1)  == -1);
         REQUIRE(lerp_sat(-1,1, -1.5) == -1);
         REQUIRE(lerp_sat(-1,1, -2)   == -1);
+        REQUIRE(lerp_sat(RGB(0,0,0), RGB(1,2,3), 0.0         ) == RGB(0,0,0));
+        REQUIRE(lerp_sat(RGB(0,0,0), RGB(1,2,3), 0.5         ) == RGB(0.5,1,1.5));
+        REQUIRE(lerp_sat(RGB(0,0,0), RGB(1,2,3), 1.0         ) == RGB(1,2,3));
+        REQUIRE(lerp_sat(RGB(0,0,0), RGB(1,2,3), RGB(0,0.5,1)) == RGB(0,1,3));
+        REQUIRE(lerp_sat(RGB(0,0,0), 1         , RGB(0,0.5,1)) == RGB(0,0.5,1));
+        REQUIRE(lerp_sat(0         , 1         , RGB(0,0.5,1)) == RGB(0,0.5,1));
+        REQUIRE(lerp_sat(RGB(0,0,0), RGB(1,2,3), 2.0         ) == RGB(1,2,3));
+        REQUIRE(lerp_sat(RGB(0,0,0), RGB(1,2,3), -1.0        ) == RGB(0,0,0));
     }
 
     SECTION("lerp_sat([a..b], f)") {
