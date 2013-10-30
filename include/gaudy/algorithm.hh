@@ -8,6 +8,8 @@
 #include <cmath>
 #include <algorithm>
 #include <initializer_list>
+#include <type_traits>
+
 
 //--------------------------------------------------------------------------------------------------
 // Interface / Documentation
@@ -187,6 +189,29 @@ namespace gaudy {
             f = max(F(0), min(f, F(1))) * (vals.size()-1);
             const auto t = std::size_t(trunc(f));
             return lerp(vals.begin()[t], vals.begin()[t+1], f-t);
+        }
+    }
+
+    template <typename Iter, typename F>
+    inline auto lerp_sat_(Iter begin, Iter end, F f)
+     -> typename std::enable_if<
+          std::is_same<
+                     typename std::iterator_traits<Iter>::iterator_category,
+                     std::random_access_iterator_tag
+          >::value,
+          decltype(lerp(begin[std::size_t()], begin[std::size_t()], f-std::size_t()))
+        >::type
+    {
+        using std::min; using std::max; using std::trunc; using std::distance;
+
+        const auto size = distance(begin, end);
+        switch (size) {
+        case 0: throw std::logic_error("called lerp_sat({...},f) with empty initializer list");
+        case 1: return *begin;
+        default:
+            f = max(F(0), min(f, F(1))) * (size-1);
+            const auto t = std::size_t(trunc(f));
+            return lerp(begin[t], begin[t+1], f-t);
         }
     }
 }

@@ -5,7 +5,8 @@
 #include "gaudy/RGB.hh"
 #include "gaudy/algorithm.hh"
 #include "catch.hpp"
-
+#include <vector>
+#include <list>
 
 TEST_CASE("algorithm/lerp", "lerp tests")
 {
@@ -14,7 +15,7 @@ TEST_CASE("algorithm/lerp", "lerp tests")
     using gaudy::RGB;
     using gaudy::Interval;
     using gaudy::interval;
-
+/*
     SECTION("lerp(a,b, f)") {
         REQUIRE(lerp(1,2,  0.5) == 1.5);
         REQUIRE(lerp(-1,1, 0.5) == 0);
@@ -93,6 +94,16 @@ TEST_CASE("algorithm/lerp", "lerp tests")
         REQUIRE(lerp_sat({2,1,2},  2.0 ) == 2  );
 
         REQUIRE(lerp_sat({RGB(1,1,1),RGB(1,2,1)},  0.5 ) == RGB(1,1.5,1) );
+    }*/
+
+    SECTION("lerp_sat(RandomAccessIterator, RandomAccessIterator, f)") {
+        using gaudy::lerp_sat_;
+        std::vector<int> vec = {1,2,3};
+        using Iter = std::list<int>::iterator;
+        REQUIRE(lerp_sat_(begin(vec), end(vec), 0.5) == 2);
+
+        std::list<int> l;
+        REQUIRE(lerp_sat_(begin(l), end(l), 0.5) == 2);
     }
 }
 
