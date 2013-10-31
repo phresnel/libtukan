@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <type_traits>
+#include <iterator>
 
 
 //--------------------------------------------------------------------------------------------------
@@ -111,6 +112,42 @@ namespace gaudy {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     //
+    // lerp_sat : RandomAccessIterator -> RandomAccessIterator -> f -> lerp(*,*,f)
+    //
+    //----------------------------------------------------------------------------------------------
+    // Type Requirements:
+    //
+    // * let x_n be any element in the range, then `lerp(x_n,x_(n+1), f)` must be defined
+    // * `f = max(F(0), min(f, F(1))) * size_t()` must be defined
+    // * `size_t(trunc(f))` must be defined, i.e. `trunc(f)` must be defined, and `f` must be
+    //    convertible to `size_t` (a conversion to `int` will work).
+    //
+    // Value Requirements:
+    //   None:
+    //     * an initializer-list without elements results in an exception
+    //     * `f` will be saturated onto [0..1]
+    //
+    //----------------------------------------------------------------------------------------------
+    // About:
+    //
+    // This overload allows to use lerp_sat with random-access-iterators, or simply containers:
+    //   std::vector<int> foo{1,2,3,5};
+    //   lerp_sat(foo.begin(), foo.end(), 0.5) == 1
+    //   lerp_sat(begin(foo), end(foo), 0.5) == 1.5
+    //
+    // Calling it with an empty container yields an exception.
+    //
+    // There is some additional overhead in size-checking, but optimization will probably eliminate
+    // it.
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    template <typename Iter, typename F>
+    auto lerp_sat(Iter begin, Iter end, F f)
+     -> decltype(lerp(*Iter(), *Iter(), F()-std::size_t()));
+
+
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //
     // lerp_sat : {x_1,x_2,..,x_n} -> f -> lerp(x_a,x_b,f)
     //
     //----------------------------------------------------------------------------------------------
@@ -142,7 +179,7 @@ namespace gaudy {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     template <typename T, typename F>
     auto lerp_sat(std::initializer_list<T> vals, F f)
-     -> decltype(lerp(vals.begin()[std::size_t()], vals.begin()[std::size_t()], f - std::size_t()));
+      -> decltype(lerp_sat(vals.begin(), vals.end(), f));
 }
 
 
@@ -174,35 +211,13 @@ namespace gaudy {
     template <typename T, typename F>
     inline auto lerp_sat(Interval<T> i, F f) noexcept -> decltype(lerp_sat(i.min, i.max, f)) {
         return lerp_sat(i.min, i.max, f);
-    }
-
-    template <typename T, typename F>
-    inline auto lerp_sat(std::initializer_list<T> vals, F f)
-     -> decltype(lerp(vals.begin()[std::size_t()], vals.begin()[std::size_t()], f-std::size_t()))
-    {
-        using std::min; using std::max; using std::trunc;
-
-        switch (vals.size()) {
-        case 0: throw std::logic_error("called lerp_sat({...},f) with empty initializer list");
-        case 1: return *vals.begin();
-        default:
-            f = max(F(0), min(f, F(1))) * (vals.size()-1);
-            const auto t = std::size_t(trunc(f));
-            return lerp(vals.begin()[t], vals.begin()[t+1], f-t);
-        }
-    }
+    }    
 
     template <typename Iter, typename F>
-    inline auto lerp_sat_(Iter begin, Iter end, F f)
-     -> typename std::enable_if<
-          std::is_same<
-                     typename std::iterator_traits<Iter>::iterator_category,
-                     std::random_access_iterator_tag
-          >::value,
-          decltype(lerp(begin[std::size_t()], begin[std::size_t()], f-std::size_t()))
-        >::type
+    inline auto lerp_sat(Iter begin, Iter end, F f)
+     -> decltype(lerp(*Iter(), *Iter(), F()-std::size_t()))
     {
-        using std::min; using std::max; using std::trunc; using std::distance;
+        using std::min; using std::max; using std::trunc; using std::distance; using std::next;
 
         const auto size = distance(begin, end);
         switch (size) {
@@ -211,8 +226,16 @@ namespace gaudy {
         default:
             f = max(F(0), min(f, F(1))) * (size-1);
             const auto t = std::size_t(trunc(f));
-            return lerp(begin[t], begin[t+1], f-t);
+            const auto x = next(begin, t);
+            return lerp(*x, *next(x), f-t);
         }
+    }
+
+    template <typename T, typename F>
+    inline auto lerp_sat(std::initializer_list<T> vals, F f)
+     -> decltype(lerp_sat(vals.begin(), vals.end(), f))
+    {
+        return lerp_sat(begin(vals), end(vals), f);
     }
 }
 
