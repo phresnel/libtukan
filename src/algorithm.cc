@@ -109,6 +109,16 @@ TEST_CASE("algorithm/lerp", "lerp tests")
         int arr[] = {1,2,3,4};
         REQUIRE(lerp_sat(std::begin(arr), std::end(arr), 0.5) == 2.5);
     }
+
+    SECTION("lerp_sat(range, f)") {
+        using gaudy::lerp_sat;
+        std::vector<int> vec = {1,2,3};
+        using Iter = std::list<int>::iterator;
+        REQUIRE(lerp_sat(vec, 0.5) == 2);
+
+        std::list<int> lst = {7,9};
+        REQUIRE(lerp_sat(lst, 0.5) == 8);
+    }
 }
 
 TEST_CASE("algorithm/bilerp", "bilerp tests")

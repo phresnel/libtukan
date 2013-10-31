@@ -179,7 +179,39 @@ namespace gaudy {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     template <typename T, typename F>
     auto lerp_sat(std::initializer_list<T> vals, F f)
-      -> decltype(lerp_sat(vals.begin(), vals.end(), f));
+      -> decltype(lerp_sat(std::begin(vals), std::end(vals), f));
+
+
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //
+    // lerp_sat
+    //
+    //----------------------------------------------------------------------------------------------
+    // Type Requirements:
+    //
+    // Value Requirements:
+    //   None:
+    //     * an empty range results in an exception
+    //     * `f` will be saturated onto [0..1]
+    //
+    //----------------------------------------------------------------------------------------------
+    // About:
+    //
+    // This overload allows to use lerp_sat like this:
+    //   lerp_sat({1}, 0.5) == 1
+    //   lerp_sat({1,2}, 0.5) == 1.5
+    //   lerp_sat({1,2,3,4}, 0.5) == 2.5
+    //
+    // Note that calling it with an empty initializer-list yields an exception, therefore it is not
+    // noexcept.
+    //
+    // There is some additional overhead in size-checking, but optimization will probably eliminate
+    // it.
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    template <typename Range, typename F>
+    auto lerp_sat(Range const& range, F f)
+      -> decltype(lerp_sat(std::begin(range), std::end(range), f));
 }
 
 
@@ -233,9 +265,16 @@ namespace gaudy {
 
     template <typename T, typename F>
     inline auto lerp_sat(std::initializer_list<T> vals, F f)
-     -> decltype(lerp_sat(vals.begin(), vals.end(), f))
+     -> decltype(lerp_sat(std::begin(vals), std::end(vals), f))
     {
         return lerp_sat(begin(vals), end(vals), f);
+    }
+
+    template <typename Range, typename F>
+    inline auto lerp_sat(Range const &range, F f)
+     -> decltype(lerp_sat(std::begin(range), std::end(range), f))
+    {
+        return lerp_sat(std::begin(range), std::end(range), f);
     }
 }
 
