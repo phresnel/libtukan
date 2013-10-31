@@ -142,7 +142,7 @@ namespace gaudy {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     template <typename Iter, typename F>
     auto lerp_sat(Iter begin, Iter end, F f)
-     -> decltype(lerp(*Iter(), *Iter(), F()-std::size_t()));
+     -> decltype(lerp(*begin, *begin, f-std::size_t()));
 
 
 
@@ -247,7 +247,7 @@ namespace gaudy {
 
     template <typename Iter, typename F>
     inline auto lerp_sat(Iter begin, Iter end, F f)
-     -> decltype(lerp(*Iter(), *Iter(), F()-std::size_t()))
+     -> decltype(lerp(*begin, *begin, f-std::size_t()))
     {
         using std::min; using std::max; using std::trunc; using std::distance; using std::next;
 
