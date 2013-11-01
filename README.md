@@ -1,9 +1,8 @@
-
 #gaudy
 ##_a C++ header-only color conversion- and computation-library_
 
 ##Features (Summary):
-* almost complete <cmath>-implementation for linear RGB
+* almost complete `<cmath>`-implementation for linear RGB
 * header only, no further dependencies except a C++11 compiler (or newer)
 * no macros (except include guards)
 
