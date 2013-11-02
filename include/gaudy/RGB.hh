@@ -8,11 +8,18 @@
 #include <functional>
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
 namespace gaudy {
 
     //---------------------------------------------------------------------------------------------
     // RGB
+    // ---
+    //
+    // About
+    // -----
+    // Using -O3, benchmarks/IndexingOperator.cc shows that there is no performance difference
+    // between indexing and direct member access with 'g++ (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3'.
     //---------------------------------------------------------------------------------------------
 
     // -- structure -------------------------------------------------------------------------------
@@ -35,7 +42,35 @@ namespace gaudy {
         basic_rgb& operator-= (T rhs) noexcept;
         basic_rgb& operator*= (T rhs) noexcept;
         basic_rgb& operator/= (T rhs) noexcept;
+
+        // Array interface.
+        T& operator[] (size_t idx) noexcept { return this->*offsets_[idx]; }
+        constexpr T operator[] (size_t idx) const noexcept { return this->*offsets_[idx]; }
+        T& at (size_t idx) {
+            if (idx>=size()) // TODO: check if the negative check is faster.
+                throw std::out_of_range("basic_rgb: out of range access");
+            return this->*offsets_[idx];
+        }
+        constexpr T at (size_t idx) const {
+            if (idx>=size()) // TODO: check if the negative check is faster.
+                throw std::out_of_range("basic_rgb: out of range access");
+            return this->*offsets_[idx];
+        }
+        constexpr size_t size() const noexcept { return 3; }
+
+    private:
+        static T basic_rgb::* const offsets_[3];
     };
+
+    template <typename T>
+    T basic_rgb<T>::* const basic_rgb<T>::offsets_[3] = {
+        &basic_rgb<T>::r,
+        &basic_rgb<T>::g,
+        &basic_rgb<T>::b
+    };
+
+    template <typename T>
+    constexpr size_t size(basic_rgb<T> const &v) noexcept { return v.size(); }
 
     using RGB = basic_rgb<float>;
 

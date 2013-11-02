@@ -20,6 +20,21 @@ TEST_CASE("gaudy/RGB", "RGB tests")
 {
     using namespace gaudy;
 
+    SECTION("array interface") {
+        REQUIRE(RGB(1,2,3)[0] == 1);
+        REQUIRE(RGB(1,2,3)[1] == 2);
+        REQUIRE(RGB(1,2,3)[2] == 3);
+        REQUIRE(RGB(1,2,3).size() == 3);
+        REQUIRE(3 == size(RGB()));
+
+        REQUIRE_NOTHROW(RGB().at(0));
+        REQUIRE_NOTHROW(RGB().at(1));
+        REQUIRE_NOTHROW(RGB().at(2));
+        REQUIRE_THROWS(RGB().at(3));
+        REQUIRE_THROWS(RGB().at(4));
+        REQUIRE_THROWS(RGB().at(454545456));
+    }
+
     SECTION("assignment and comparison") {
         REQUIRE(RGB()      == rel_equal(RGB()));
         REQUIRE(RGB(0,0,0) == rel_equal(RGB()));

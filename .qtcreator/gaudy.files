@@ -10,9 +10,11 @@
 ../src/Interval.cc
 ../src/Nanometer.cc
 ../src/RGB.cc
+../src/XYZ.cc
 ../src/Spectrum.cc
 ../src/algorithm.cc
 ../src/algorithm/lerp.cc
+../benchmarks/IndexingOperator.cc
 ../bootstrap
 ../main.cc
 ../README.md
