@@ -5,6 +5,7 @@
 ../include/gaudy/RGB.hh
 ../include/gaudy/Spectrum.hh
 ../include/gaudy/tuple.hh
+../include/gaudy/cmath.hh
 ../include/gaudy/algorithm.hh
 ../include/gaudy/algorithm/lerp.hh
 ../src/Interval.cc
