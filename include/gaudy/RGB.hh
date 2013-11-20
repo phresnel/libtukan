@@ -72,6 +72,135 @@ namespace gaudy {
     template <typename T>
     constexpr size_t size(basic_rgb<T> const &v) noexcept { return v.size(); }
 
+    //
+    // Unary
+    template <typename T, typename Fun>
+    constexpr basic_rgb<decltype (std::declval<Fun>()(std::declval<T>()))>
+    apply (basic_rgb<T> operand, Fun fun)
+    {
+        return {fun(operand.r), fun(operand.g), fun(operand.b)};
+    }
+
+    // Binary
+    template <typename T, typename U, typename Fun>
+    constexpr basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>()))>
+    apply (basic_rgb<T> lhs, basic_rgb<U> rhs, Fun fun)
+    {
+        return {fun(lhs.r, rhs.r), fun(lhs.g, rhs.g), fun(lhs.b, rhs.b)};
+    }
+
+    template <typename T, typename U, typename Fun>
+    constexpr basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>()))>
+    apply (basic_rgb<T> lhs, U rhs, Fun fun)
+    {
+        return {fun(lhs.r, rhs), fun(lhs.g, rhs), fun(lhs.b, rhs)};
+    }
+
+    template <typename T, typename U, typename Fun>
+    constexpr basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>()))>
+    apply (T lhs, basic_rgb<U> rhs, Fun fun)
+    {
+        return {fun(lhs, rhs.r), fun(lhs, rhs.g), fun(lhs, rhs.b)};
+    }
+
+
+    template <typename T, typename U, typename Fun>
+    constexpr basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U*>()))>
+    apply (basic_rgb<T> lhs, basic_rgb<U> *rhs, Fun fun)
+    {
+        return {fun(lhs.r, &rhs->r), fun(lhs.g, &rhs->g), fun(lhs.b, &rhs->b)};
+    }
+
+    template <typename T, typename U, typename Fun>
+    constexpr basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U*>()))>
+    apply (T lhs, basic_rgb<U> *rhs, Fun fun)
+    {
+        return {fun(lhs, &rhs->r), fun(lhs, &rhs->g), fun(lhs, &rhs->b)};
+    }
+
+
+    // Ternary
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (basic_rgb<T> a, basic_rgb<U> b, basic_rgb<V> c, Fun fun)
+    {
+        return {fun(a.r, b.r, c.r), fun(a.g, b.g, c.g), fun(a.b, b.b, c.b)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (basic_rgb<T> a, basic_rgb<U> b, V c, Fun fun)
+    {
+        return {fun(a.r, b.r, c), fun(a.g, b.g, c), fun(a.b, b.b, c)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (basic_rgb<T> a, U b, basic_rgb<V> c, Fun fun)
+    {
+        return {fun(a.r, b, c.r), fun(a.g, b, c.g), fun(a.b, b, c.b)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (basic_rgb<T> a, U b, V c, Fun fun)
+    {
+        return {fun(a.r, b, c), fun(a.g, b, c), fun(a.b, b, c)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (T a, basic_rgb<U> b, basic_rgb<V> c, Fun fun)
+    {
+        return {fun(a, b.r, c.r), fun(a, b.g, c.g), fun(a, b.b, c.b)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (T a, basic_rgb<U> b, V c, Fun fun)
+    {
+        return {fun(a, b.r, c), fun(a, b.g, c), fun(a, b.b, c)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V>()))>
+    apply (T a, U b, basic_rgb<V> c, Fun fun)
+    {
+        return {fun(a, b, c.r), fun(a, b, c.g), fun(a, b, c.b)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V*>()))>
+    apply (basic_rgb<T> a, basic_rgb<U> b, basic_rgb<V> *c, Fun fun)
+    {
+        return {fun(a.r, b.r, &c->r), fun(a.g, b.g, &c->g), fun(a.b, b.b, &c->b)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V*>()))>
+    apply (basic_rgb<T> a, U b, basic_rgb<V> *c, Fun fun)
+    {
+        return {fun(a.r, b, &c->r), fun(a.g, b, &c->g), fun(a.b, b, &c->b)};
+    }
+
+    template <typename T, typename U, typename V, typename Fun>
+    constexpr
+    basic_rgb<decltype (std::declval<Fun>()(std::declval<T>(), std::declval<U>(), std::declval<V*>()))>
+    apply (T a, basic_rgb<U> b, basic_rgb<V> *c, Fun fun)
+    {
+        return {fun(a, b.r, &c->r), fun(a, b.g, &c->g), fun(a, b.b, &c->b)};
+    }
+
+
     using RGB = basic_rgb<float>;
 
 
