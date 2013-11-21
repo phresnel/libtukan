@@ -394,4 +394,8 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(fma(c,z,c) == rel_equal(RGB(fma(c,z.r,c),fma(c,z.g,c),fma(c,z.b,c))));
         REQUIRE(fma(c,c,w) == rel_equal(RGB(fma(c,c,w.r),fma(c,c,w.g),fma(c,c,w.b))));
     }
+
+    SECTION("type tests") {
+        REQUIRE((std::is_same<basic_rgb<int>, decltype(ilogb(RGB(1,2,3)))>::value));
+    }
 }

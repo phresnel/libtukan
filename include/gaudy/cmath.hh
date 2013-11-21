@@ -10,15 +10,48 @@
 
 namespace gaudy {
 
-    namespace find_cmath {
-      /*using std::cos; template <typename T> using cos_type = decltype(cos(std::declval<T>()));
+    //----------------------------------------------------------------------------------------------
+    // Note that some definitions look wilder than they are. For example cos may look like:
+    //
+    //   template <typename V, typename ...R, template <typename...> class T>
+    //   inline auto cos(T<V,R...> v) noexcept -> T<cmath_or_adl::cos_type<V>, R...> {
+    //      return apply(v, [](typename T<V,R...>::value_type f){using std::cos; return cos(f);});
+    //   }
+    //
+    // The reason for template templates and variadic template arguments is that some math function
+    // return a different type than they take, for example ilogb.
+    //
+    // With C++14, this could be immediately stripped down to ...
+    //
+    //   template <typename T>
+    //   inline auto cos(T v) noexcept {
+    //      return apply(v, [](typename T::value_type f) {using std::cos; return cos(f);});
+    //   }
+    //
+    // ... because the apply-function does already the proper type conversions for us.
+    //
+    // Reading advice: All functions really mainly differ in the body of the used lambda:
+    //
+    //      return apply(v, [](typename T::value_type f) {using std::cos; return cos(f);});
+    //                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    //
+    // And because that pattern is used everywhere, the really mainly differ in just their name:
+    //
+    //      ....... cos(...) .....
+    //
+    // Which is the same as in cmath. Looks all worse than it is :).
+    //----------------------------------------------------------------------------------------------
+
+    namespace cmath_or_adl {
+      using std::cos; template <typename T> using cos_type = decltype(cos(std::declval<T>()));
       using std::sin; template <typename T> using sin_type = decltype(sin(std::declval<T>()));
-      using std::tan; template <typename T> using tan_type = decltype(tan(std::declval<T>()));*/
+      using std::tan; template <typename T> using tan_type = decltype(tan(std::declval<T>()));
 
       using std::ilogb; template <typename T> using ilogb_type = decltype(ilogb(std::declval<T>()));
     }
 
     // -- trigonometric ----------------------------------------------------------------------------
+    /*
     template <typename T> basic_rgb<T>  cos (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>  sin (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>  tan (basic_rgb<T> v) noexcept ;
@@ -49,7 +82,7 @@ namespace gaudy {
     template <typename T> basic_rgb<T> exp2  (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T> expm1 (basic_rgb<T> v) noexcept ;
 
-    template <typename T> basic_rgb<find_cmath::ilogb_type<T>> ilogb (basic_rgb<T> v) noexcept ;
+    template <typename T> basic_rgb<cmath_or_adl::ilogb_type<T>> ilogb (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>   log1p (basic_rgb<T> v) noexcept ;
     template <typename T> basic_rgb<T>   log2  (basic_rgb<T> v) noexcept ;
 
@@ -145,7 +178,7 @@ namespace gaudy {
     template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, basic_rgb<T> y, basic_rgb<T> z) noexcept ;
     template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept ;
     template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept ;
-
+    */
     // -- classification functions -----------------------------------------------------------------
 
     // -- comparison functions ---------------------------------------------------------------------
@@ -164,48 +197,59 @@ namespace gaudy {
     //       constexpr, as such code is non-portable.
     //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
 
+    template <typename>   struct has_apply_interface               : std::false_type {};
+    template <typename T> struct has_apply_interface<basic_rgb<T>> : std::true_type  {};
+
+    // This is a type alias which is only defined if for T, there exists an apply interface.
+    // Used for SFINAE.
+    template <typename T> using concept_apply = typename std::enable_if<has_apply_interface<T>::value, T>::type;
+
     // trigonometric
     template <typename T>
-    inline basic_rgb<T> cos(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::cos; return cos(f);});
+    inline auto cos(T v) noexcept -> concept_apply<T>
+    {
+        return apply(v, [](typename T::value_type f){using std::cos; return cos(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> sin(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::sin; return sin(f);});
+    inline auto sin(T v) noexcept -> concept_apply<T> {
+        return apply(v, [](typename T::value_type f){using std::sin; return sin(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> tan(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::tan; return tan(f);});
+    inline auto tan(T v) noexcept -> concept_apply<T> {
+        return apply(v, [](typename T::value_type f){using std::tan; return tan(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> acos(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::acos; return acos(f);});
+    inline auto acos(T v) noexcept -> concept_apply<T> {
+        return apply(v, [](typename T::value_type f){using std::acos; return acos(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> asin(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::asin; return asin(f);});
+    inline auto asin(T v) noexcept -> concept_apply<T> {
+        return apply(v, [](typename T::value_type f){using std::asin; return asin(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> atan(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::atan; return atan(f);});
+    inline auto atan(T v) noexcept -> concept_apply<T> {
+        return apply(v, [](typename T::value_type f){using std::atan; return atan(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> atan2(basic_rgb<T> v, basic_rgb<T> w) noexcept {
-        return apply(v, w, [](T f, T g){using std::atan2; return atan2(f, g);});
+    inline auto atan2(T v, T w) noexcept -> concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
     template <typename T>
-    inline basic_rgb<T> atan2(basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept {
-        return apply(v, w, [](T f, T g){using std::atan2; return atan2(f, g);});
+    inline auto atan2(T v, typename T::value_type w) noexcept -> concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
     template <typename T>
-    inline basic_rgb<T> atan2(typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept {
-        return apply(v, w, [](T f, T g){using std::atan2; return atan2(f, g);});
+    inline auto atan2(typename T::value_type v, T w) noexcept -> concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
 
     // hyperbolic
@@ -280,9 +324,9 @@ namespace gaudy {
         return apply(v, [](T f){using std::expm1; return expm1(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<find_cmath::ilogb_type<T>> ilogb(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::ilogb; return ilogb(f);});
+    template <typename V, typename ...R, template <typename...> class T>
+    inline auto ilogb(T<V,R...> v) noexcept -> T<cmath_or_adl::ilogb_type<V>, R...> {
+        return apply(v, [](typename T<V,R...>::value_type f){using std::ilogb; return ilogb(f);});
     }
 
     template <typename T>
