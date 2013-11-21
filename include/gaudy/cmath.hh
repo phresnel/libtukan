@@ -636,129 +636,181 @@ namespace gaudy {
     }
 
     // floating point manipulation
-    template <typename T>
-    inline basic_rgb<T> copysign(basic_rgb<T> x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::copysign; return copysign(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T copysign(T x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::copysign; return copysign(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> copysign(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
-        return apply(x, y, [](T f, T g){using std::copysign; return copysign(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T copysign(T x, typename T::value_type y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::copysign; return copysign(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> copysign(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::copysign; return copysign(f, g);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> nextafter(basic_rgb<T> x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::nextafter; return nextafter(f, g);});
-    }
-    template <typename T>
-    inline basic_rgb<T> nextafter(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
-        return apply(x, y, [](T f, T g){using std::nextafter; return nextafter(f, g);});
-    }
-    template <typename T>
-    inline basic_rgb<T> nextafter(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::nextafter; return nextafter(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T copysign(typename T::value_type x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::copysign; return copysign(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> nexttoward(basic_rgb<T> x, basic_rgb<long double> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::nexttoward; return nexttoward(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T nextafter(T x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::nextafter; return nextafter(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> nexttoward(basic_rgb<T> x, long double y) noexcept {
-        return apply(x, y, [](T f, T g){using std::nexttoward; return nexttoward(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T nextafter(T x, typename T::value_type y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::nextafter; return nextafter(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T nextafter(typename T::value_type x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::nextafter; return nextafter(f, g);});
+    }
+
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<V,R...> nexttoward(T<V,R...> x, T<long double,R...> y) noexcept {
+        return apply(x, y, [](V f, V g){using std::nexttoward; return nexttoward(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T nexttoward(T x, long double y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::nexttoward; return nexttoward(f, g);});
     }
     // Note: The following overload does not use our 'basic_rgb<T>::value_type' pattern to prevent
     //       lookup upon the scalar type, but rather uses just 'T', because otherwise lookup
     //       would not be possible.
-    template <typename T>
-    inline basic_rgb<T> nexttoward(T x, basic_rgb<long double> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::nexttoward; return nexttoward(f, g);});
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<V,R...> nexttoward(V x, T<long double,R...> y) noexcept {
+        return apply(x, y, [](V f, V g){using std::nexttoward; return nexttoward(f, g);});
     }
 
     // Not implementing the NAN macro constant, because we would need to be able to overload macros.
 
     // min, max, difference
-    template <typename T>
-    inline basic_rgb<T> fmin(basic_rgb<T> x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fmin; return fmin(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmin(T x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fmin; return fmin(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> fmax(basic_rgb<T> x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fmax; return fmax(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmax(T x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fmax; return fmax(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> fdim(basic_rgb<T> x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fdim; return fdim(f, g);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> fmin(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fmin; return fmin(f, g);});
-    }
-    template <typename T>
-    inline basic_rgb<T> fmax(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fmax; return fmax(f, g);});
-    }
-    template <typename T>
-    inline basic_rgb<T> fdim(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fdim; return fdim(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fdim(T x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fdim; return fdim(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> fmin(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fmin; return fmin(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmin(T x, typename T::value_type y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fmin; return fmin(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> fmax(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fmax; return fmax(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmax(T x, typename T::value_type y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fmax; return fmax(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> fdim(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept {
-        return apply(x, y, [](T f, T g){using std::fdim; return fdim(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fdim(T x, typename T::value_type y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fdim; return fdim(f, g);});
+    }
+
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmin(typename T::value_type x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fmin; return fmin(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmax(typename T::value_type x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fmax; return fmax(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fdim(typename T::value_type x, T y) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, [](V f, V g){using std::fdim; return fdim(f, g);});
     }
 
     // other
-    template <typename T>
-    inline basic_rgb<T> fabs(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::fabs; return fabs(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fabs(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::fabs; return fabs(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> abs(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::abs; return abs(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T abs(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::abs; return abs(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> fma(basic_rgb<T> x, basic_rgb<T> y, basic_rgb<T> z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(T x, T y, T z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
-    template <typename T>
-    inline basic_rgb<T> fma(basic_rgb<T> x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(T x, T y, typename T::value_type z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
-    template <typename T>
-    inline basic_rgb<T> fma(basic_rgb<T> x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(T x, typename T::value_type y, T z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
-    template <typename T>
-    inline basic_rgb<T> fma(basic_rgb<T> x, typename basic_rgb<T>::value_type y, typename basic_rgb<T>::value_type z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(T x, typename T::value_type y, typename T::value_type z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> fma(typename basic_rgb<T>::value_type x, basic_rgb<T> y, basic_rgb<T> z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(typename T::value_type x, T y, T z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
-    template <typename T>
-    inline basic_rgb<T> fma(typename basic_rgb<T>::value_type x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(typename T::value_type x, T y, typename T::value_type z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
-    template <typename T>
-    inline basic_rgb<T> fma(typename basic_rgb<T>::value_type x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept {
-        return apply(x, y, z, [](T f, T g, T h){using std::fma; return fma(f,g,h);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fma(typename T::value_type x, typename T::value_type y, T z) noexcept {
+        using V = typename T::value_type;
+        return apply(x, y, z, [](V f, V g, V h){using std::fma; return fma(f,g,h);});
     }
 
     // classification functions
