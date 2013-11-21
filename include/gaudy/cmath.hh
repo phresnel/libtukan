@@ -431,151 +431,208 @@ namespace gaudy {
     }
 
     // power
-    template <typename T>
-    inline basic_rgb<T> pow(basic_rgb<T> v, basic_rgb<T> w) noexcept {
-        return apply(v, w, [](T f, T g){using std::pow; return pow(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T pow(T v, T w) noexcept {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::pow; return pow(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> pow(basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept {
-        return apply(v, w, [](T f, T g){using std::pow; return pow(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T pow(T v, typename T::value_type w) noexcept {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::pow; return pow(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> pow(typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept {
-        return apply(v, w, [](T f, T g){using std::pow; return pow(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T pow(typename T::value_type v, T w) noexcept {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::pow; return pow(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> sqrt(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::sqrt; return sqrt(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T sqrt(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::sqrt; return sqrt(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> cbrt(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::cbrt; return cbrt(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T cbrt(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::cbrt; return cbrt(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> hypot(basic_rgb<T> v, basic_rgb<T> w) noexcept {
-        return apply(v, w, [](T f, T g){using std::hypot; return hypot(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T hypot(T v, T w) noexcept {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::hypot; return hypot(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T hypot(T v, typename T::value_type w) noexcept {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::hypot; return hypot(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> hypot(basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept {
-        return apply(v, w, [](T f, T g){using std::hypot; return hypot(f, g);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> hypot(typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept {
-        return apply(v, w, [](T f, T g){using std::hypot; return hypot(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T hypot(typename T::value_type v, T w) noexcept {
+        using V = typename T::value_type;
+        return apply(v, w, [](V f, V g){using std::hypot; return hypot(f, g);});
     }
 
     // error and gamma
-    template <typename T>
-    inline basic_rgb<T> erf (basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::erf; return erf(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T erf (T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::erf; return erf(f);});
     }
-    template <typename T>
-    inline basic_rgb<T> erfc(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::erfc; return erfc(f);});
+
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T erfc(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::erfc; return erfc(f);});
     }
-    template <typename T>
-    inline basic_rgb<T> lgamma(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::lgamma; return lgamma(f);});
+
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T lgamma(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::lgamma; return lgamma(f);});
     }
-    template <typename T>
-    inline basic_rgb<T> tgamma(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::tgamma; return tgamma(f);});
+
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T tgamma(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::tgamma; return tgamma(f);});
     }
 
 
     // rounding and remainder
-    template <typename T>
-    inline basic_rgb<T> ceil (basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::ceil; return ceil(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T ceil (T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::ceil; return ceil(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> floor(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::floor; return floor(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T floor(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::floor; return floor(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> fmod(basic_rgb<T> num, basic_rgb<T> denom) noexcept {
-        return apply(num, denom, [](T f, T g){using std::fmod; return fmod(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmod(T num, T denom) noexcept {
+        using V = typename T::value_type;
+        return apply(num, denom, [](V f, V g){using std::fmod; return fmod(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> fmod(basic_rgb<T> num, typename basic_rgb<T>::value_type denom) noexcept {
-        return apply(num, denom, [](T f, T g){using std::fmod; return fmod(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmod(T num, typename T::value_type denom) noexcept {
+        using V = typename T::value_type;
+        return apply(num, denom, [](V f, V g){using std::fmod; return fmod(f, g);});
     }
-    template <typename T>
-    inline basic_rgb<T> fmod(typename basic_rgb<T>::value_type num, basic_rgb<T> denom) noexcept {
-        return apply(num, denom, [](T f, T g){using std::fmod; return fmod(f, g);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> trunc(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::trunc; return trunc(f);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> round(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::round; return round(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T fmod(typename T::value_type num, T denom) noexcept {
+        using V = typename T::value_type;
+        return apply(num, denom, [](V f, V g){using std::fmod; return fmod(f, g);});
     }
 
-    template <typename T>
-    inline basic_rgb<long> lround(basic_rgb<T> v) noexcept{
-        return apply(v, [](T f){using std::lround; return lround(f);});
-    }
-    template <typename T>
-    inline basic_rgb<long long> llround(basic_rgb<T> v) noexcept{
-        return apply(v, [](T f){using std::llround; return llround(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T trunc(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::trunc; return trunc(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> rint (basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::rint; return rint(f);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T round(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::round; return round(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<long> lrint(basic_rgb<T> v) noexcept{
-        return apply(v, [](T f){using std::lrint; return lrint(f);});
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<long,R...> lround(T<V,R...> v) noexcept{
+        return apply(v, [](V f){using std::lround; return lround(f);});
     }
-    template <typename T>
-    inline basic_rgb<long long> llrint(basic_rgb<T> v)noexcept{
-        return apply(v, [](T f){using std::llrint; return llrint(f);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> nearbyint(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::nearbyint; return nearbyint(f);});
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<long long,R...> llround(T<V,R...> v) noexcept{
+        return apply(v, [](V f){using std::llround; return llround(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> remainder (basic_rgb<T> num, basic_rgb<T> denom) noexcept {
-        return apply(num, denom, [](T f, T g){using std::remainder; return remainder(f, g);});
-    }
-    template <typename T>
-    inline basic_rgb<T> remainder (basic_rgb<T> num, typename basic_rgb<T>::value_type denom) noexcept {
-        return apply(num, denom, [](T f, T g){using std::remainder; return remainder(f, g);});
-    }
-    template <typename T>
-    inline basic_rgb<T> remainder (typename basic_rgb<T>::value_type num, basic_rgb<T> denom) noexcept {
-        return apply(num, denom, [](T f, T g){using std::remainder; return remainder(f, g);});
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T rint (T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::rint; return rint(f);});
     }
 
-    template <typename T>
-    inline basic_rgb<T> remquo (basic_rgb<T> num, basic_rgb<T> denom, basic_rgb<int> *quot) noexcept {
-        return apply(num, denom, quot, [](T f, T g, int *h){using std::remquo; return remquo(f, g, h);});
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<long,R...> lrint(T<V,R...> v) noexcept{
+        return apply(v, [](V f){using std::lrint; return lrint(f);});
     }
-    template <typename T>
-    inline basic_rgb<T> remquo (basic_rgb<T> num, typename basic_rgb<T>::value_type denom, basic_rgb<int> *quot) noexcept {
-        return apply(num, denom, quot, [](T f, T g, int *h){using std::remquo; return remquo(f, g, h);});
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<long long,R...> llrint(T<V,R...> v) noexcept{
+        return apply(v, [](V f){using std::llrint; return llrint(f);});
     }
-    template <typename T>
-    inline basic_rgb<T> remquo (typename basic_rgb<T>::value_type num, basic_rgb<T> denom, basic_rgb<int> *quot) noexcept {
-        return apply(num, denom, quot, [](T f, T g, int *h){using std::remquo; return remquo(f, g, h);});
+
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T nearbyint(T v) noexcept {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::nearbyint; return nearbyint(f);});
+    }
+
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T remainder (T num, T denom) noexcept {
+        using V = typename T::value_type;
+        return apply(num, denom, [](V f, V g){using std::remainder; return remainder(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T remainder (T num, typename T::value_type denom) noexcept {
+        using V = typename T::value_type;
+        return apply(num, denom, [](V f, V g){using std::remainder; return remainder(f, g);});
+    }
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T remainder (typename T::value_type num, T denom) noexcept {
+        using V = typename T::value_type;
+        return apply(num, denom, [](V f, V g){using std::remainder; return remainder(f, g);});
+    }
+
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<V,R...> remquo (T<V,R...> num, T<V,R...> denom, T<int,R...> *quot) noexcept {
+        return apply(num, denom, quot, [](V f, V g, int *h){using std::remquo; return remquo(f, g, h);});
+    }
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<V,R...> remquo (T<V,R...> num, typename T<V,R...>::value_type denom, T<int,R...> *quot) noexcept {
+        return apply(num, denom, quot, [](V f, V g, int *h){using std::remquo; return remquo(f, g, h);});
+    }
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+    inline T<V,R...> remquo (typename T<V,R...>::value_type num, T<V,R...> denom, T<int,R...> *quot) noexcept {
+        return apply(num, denom, quot, [](V f, V g, int *h){using std::remquo; return remquo(f, g, h);});
     }
 
     // floating point manipulation
