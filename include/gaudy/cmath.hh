@@ -43,151 +43,8 @@ namespace gaudy {
     //----------------------------------------------------------------------------------------------
 
     namespace cmath_or_adl {
-      using std::cos; template <typename T> using cos_type = decltype(cos(std::declval<T>()));
-      using std::sin; template <typename T> using sin_type = decltype(sin(std::declval<T>()));
-      using std::tan; template <typename T> using tan_type = decltype(tan(std::declval<T>()));
-
       using std::ilogb; template <typename T> using ilogb_type = decltype(ilogb(std::declval<T>()));
     }
-
-    // -- trigonometric ----------------------------------------------------------------------------
-    /*
-    template <typename T> basic_rgb<T>  cos (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>  sin (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>  tan (basic_rgb<T> v) noexcept ;
-
-    template <typename T> basic_rgb<T> acos (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> asin (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> atan (basic_rgb<T> v) noexcept ;
-
-    template <typename T> basic_rgb<T> atan2 (basic_rgb<T> v, basic_rgb<T> w) noexcept ;
-    template <typename T> basic_rgb<T> atan2 (basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept ;
-    template <typename T> basic_rgb<T> atan2 (typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept ;
-
-    // -- hyperbolic -------------------------------------------------------------------------------
-    template <typename T> basic_rgb<T>  cosh (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>  sinh (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>  tanh (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> acosh (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> asinh (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> atanh (basic_rgb<T> v) noexcept ;
-
-    // -- exponential and logarithmic --------------------------------------------------------------
-    template <typename T> basic_rgb<T> exp   (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> frexp (basic_rgb<T> v, basic_rgb<int> *exp)   noexcept ;
-    template <typename T> basic_rgb<T> ldexp (basic_rgb<T> sig, basic_rgb<int> exp)  noexcept ;
-    template <typename T> basic_rgb<T> log   (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> log10 (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> modf  (basic_rgb<T> v, basic_rgb<T> *intpart)  noexcept ;
-    template <typename T> basic_rgb<T> exp2  (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> expm1 (basic_rgb<T> v) noexcept ;
-
-    template <typename T> basic_rgb<cmath_or_adl::ilogb_type<T>> ilogb (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>   log1p (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>   log2  (basic_rgb<T> v) noexcept ;
-
-    template <typename T> basic_rgb<T> scalbn  (basic_rgb<T> v, basic_rgb<int> n) noexcept ;
-    template <typename T> basic_rgb<T> scalbn  (basic_rgb<T> v, int n) noexcept ;
-    template <typename T> basic_rgb<T> scalbln (basic_rgb<T> v, basic_rgb<long> n) noexcept ;
-    template <typename T> basic_rgb<T> scalbln (basic_rgb<T> v, long n) noexcept ;
-
-
-    // -- power ------------------------------------------------------------------------------------
-    template <typename T> basic_rgb<T> pow (basic_rgb<T> v, basic_rgb<T> w) noexcept ;
-    template <typename T> basic_rgb<T> pow (basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept ;
-    template <typename T> basic_rgb<T> pow (typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept ;
-
-    template <typename T> basic_rgb<T> sqrt (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> cbrt (basic_rgb<T> v) noexcept ;
-
-    template <typename T> basic_rgb<T> hypot (basic_rgb<T> v, basic_rgb<T> w) noexcept ;
-    template <typename T> basic_rgb<T> hypot (basic_rgb<T> v, typename basic_rgb<T>::value_type w) noexcept ;
-    template <typename T> basic_rgb<T> hypot (typename basic_rgb<T>::value_type v, basic_rgb<T> w) noexcept ;
-
-    // -- error and gamma --------------------------------------------------------------------------
-    template <typename T> basic_rgb<T> erf    (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> erfc   (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> lgamma (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> tgamma (basic_rgb<T> v) noexcept ;
-
-    // -- rounding and remainder -------------------------------------------------------------------
-    template <typename T> basic_rgb<T>         ceil      (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>         floor     (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>         fmod      (basic_rgb<T> num, basic_rgb<T> den) noexcept ;
-    template <typename T> basic_rgb<T>         fmod      (basic_rgb<T> num, typename basic_rgb<T>::value_type den) noexcept ;
-    template <typename T> basic_rgb<T>         fmod      (typename basic_rgb<T>::value_type num, basic_rgb<T> den) noexcept ;
-    template <typename T> basic_rgb<T>         trunc     (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>         round     (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<long>      lround    (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<long long> llround   (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>         rint      (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<long>      lrint     (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<long long> llrint    (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>         nearbyint (basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T>         remainder (basic_rgb<T> num, basic_rgb<T> denom) noexcept ;
-    template <typename T> basic_rgb<T>         remainder (basic_rgb<T> num, typename basic_rgb<T>::value_type denom) noexcept ;
-    template <typename T> basic_rgb<T>         remainder (typename basic_rgb<T>::value_type num, basic_rgb<T> denom) noexcept ;
-    template <typename T> basic_rgb<T> remquo (basic_rgb<T> num, basic_rgb<T> den, basic_rgb<int> *quot) noexcept ;
-    template <typename T> basic_rgb<T> remquo (basic_rgb<T> num, typename basic_rgb<T>::value_type den, basic_rgb<int> *quot) noexcept ;
-    template <typename T> basic_rgb<T> remquo (typename basic_rgb<T>::value_type num, basic_rgb<T> den, basic_rgb<int> *quot) noexcept ;
-
-    // -- floating point manipulation --------------------------------------------------------------
-    template <typename T> basic_rgb<T> copysign  (basic_rgb<T> x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> nextafter (basic_rgb<T> x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> nexttoward(basic_rgb<T> x, basic_rgb<long double> y) noexcept ;
-
-    template <typename T> basic_rgb<T> copysign  (basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
-    template <typename T> basic_rgb<T> nextafter (basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
-    template <typename T> basic_rgb<T> nexttoward(basic_rgb<T> x, long double y) noexcept ;
-
-    template <typename T> basic_rgb<T> copysign  (typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> nextafter (typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> nexttoward(T x,                                 basic_rgb<long double> y) noexcept ;
-    // NAN macro constant not implemented, because we would need to be able to overload macros.
-
-    // -- min, max, difference ---------------------------------------------------------------------
-    template <typename T> basic_rgb<T> fmin(basic_rgb<T> x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> fmax(basic_rgb<T> x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> fdim(basic_rgb<T> x, basic_rgb<T> y) noexcept ;
-
-    template <typename T> basic_rgb<T> fmin(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
-    template <typename T> basic_rgb<T> fmax(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
-    template <typename T> basic_rgb<T> fdim(basic_rgb<T> x, typename basic_rgb<T>::value_type y) noexcept ;
-
-    template <typename T> basic_rgb<T> fmin(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> fmax(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
-    template <typename T> basic_rgb<T> fdim(typename basic_rgb<T>::value_type x, basic_rgb<T> y) noexcept ;
-
-    // -- other ------------------------------------------------------------------------------------
-    template <typename T> basic_rgb<T> fabs(basic_rgb<T> v) noexcept ;
-    template <typename T> basic_rgb<T> abs (basic_rgb<T> v) noexcept;
-
-    // fma comes in many overloads:
-    //   fma (RGB,    RGB,    RGB   )
-    //   fma (RGB,    RGB,    Scalar)
-    //   fma (RGB,    Scalar, RGB   )
-    //   fma (RGB,    Scalar, Scalar)
-    //   fma (Scalar, RGB,    RGB   )
-    //   fma (Scalar, RGB,    Scalar)
-    //   fma (Scalar, Scalar, RGB   )
-    //   fma (Scalar, Scalar, Scalar) <-- this is given by cmath
-    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, basic_rgb<T> y, basic_rgb<T> z) noexcept ;
-    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept ;
-    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept ;
-    template <typename T> basic_rgb<T> fma (basic_rgb<T> x, typename basic_rgb<T>::value_type y, typename basic_rgb<T>::value_type z) noexcept ;
-    template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, basic_rgb<T> y, basic_rgb<T> z) noexcept ;
-    template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, basic_rgb<T> y, typename basic_rgb<T>::value_type z) noexcept ;
-    template <typename T> basic_rgb<T> fma (typename basic_rgb<T>::value_type x, typename basic_rgb<T>::value_type y, basic_rgb<T> z) noexcept ;
-    */
-    // -- classification functions -----------------------------------------------------------------
-
-    // -- comparison functions ---------------------------------------------------------------------
-
-}
-
-
-
-namespace gaudy {
     // -- <cmath> ---------------------------------------------------------------------------------
     // DONE: replace all std-qualifcations by a using
     // TODO: for some functions, add permutations of RGB, Scalar operands
@@ -219,6 +76,171 @@ namespace gaudy {
 
     // TODO: introduce some template "rebind_value_type"
 
+
+
+    // -- trigonometric ----------------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T cos (T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T sin (T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T tan (T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T acos(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T asin(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T atan(T v) noexcept ;
+
+    template <typename T, EnableIf<has_apply_interface<T>>...> T atan2(T v, T w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T atan2(T v, typename T::value_type w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T atan2(typename T::value_type v, T w) noexcept ;
+
+    // -- hyperbolic -------------------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T cosh(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T sinh(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T tanh(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T acosh(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T asinh(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T atanh(T v) noexcept ;
+
+    // -- exponential and logarithmic --------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T exp(T v) noexcept ;
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+        T frexp(T v, RHS<int, RHS_ARGS...> *exp) noexcept ;
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+        T ldexp(T sig, RHS<int, RHS_ARGS...> exp) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T log(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T log10(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T modf(T v, T *intpart) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T exp2(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T expm1(T v) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+        auto ilogb(T<V,R...> v) noexcept -> T<cmath_or_adl::ilogb_type<V>, R...> ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T log1p(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T log2 (T v) noexcept ;
+
+    template <typename T, EnableIf<has_apply_interface<T>>...>
+        T scalbn (T v, int n) noexcept ;
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+        T scalbn(T v, RHS<int, RHS_ARGS...> n) noexcept ;
+
+    template <typename T, EnableIf<has_apply_interface<T>>...>
+        T scalbln (T v, long n) noexcept ;
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+        T scalbln(T v, RHS<long, RHS_ARGS...> n) noexcept ;
+
+
+    // -- power ------------------------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T pow(T v, T w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T pow(T v, typename T::value_type w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T pow(typename T::value_type v, T w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T sqrt(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T cbrt(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T hypot(T v, T w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T hypot(T v, typename T::value_type w) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T hypot(typename T::value_type v, T w) noexcept ;
+
+    // -- error and gamma --------------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T erf (T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T erfc(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T lgamma(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T tgamma(T v) noexcept ;
+
+    // -- rounding and remainder -------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T ceil (T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T floor(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmod(T num, T denom) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmod(T num, typename T::value_type denom) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmod(typename T::value_type num, T denom) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T trunc(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T round(T v) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T, EnableIf<has_apply_interface<T<V,R...>>>...>
+        T<long,R...> lround(T<V,R...> v) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T, EnableIf<has_apply_interface<T<V,R...>>>...>
+        T<long long,R...> llround(T<V,R...> v) noexcept ;
+
+    template <typename T, EnableIf<has_apply_interface<T>>...> T rint (T v) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T, EnableIf<has_apply_interface<T<V,R...>>>...>
+        T<long,R...> lrint(T<V,R...> v) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T, EnableIf<has_apply_interface<T<V,R...>>>...>
+        T<long long,R...> llrint(T<V,R...> v) noexcept ;
+
+    template <typename T, EnableIf<has_apply_interface<T>>...> T nearbyint(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T remainder (T num, T denom) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T remainder (T num, typename T::value_type denom) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T remainder (typename T::value_type num, T denom) noexcept ;
+
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+           T<V,R...> remquo (T<V,R...> num, T<V,R...> denom, T<int,R...> *quot) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+           T<V,R...> remquo (T<V,R...> num, typename T<V,R...>::value_type denom, T<int,R...> *quot) noexcept ;
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+           T<V,R...> remquo (typename T<V,R...>::value_type num, T<V,R...> denom, T<int,R...> *quot) noexcept ;
+
+    // -- floating point manipulation --------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T copysign(T x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T copysign(T x, typename T::value_type y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T copysign(typename T::value_type x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T nextafter(T x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T nextafter(T x, typename T::value_type y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T nextafter(typename T::value_type x, T y) noexcept ;
+
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+            T<V,R...> nexttoward(T<V,R...> x, T<long double,R...> y) noexcept ;
+
+    template <typename T, EnableIf<has_apply_interface<T>>...>
+            T nexttoward(T x, long double y) noexcept ;
+
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
+            T<V,R...> nexttoward(V x, T<long double,R...> y) noexcept ;
+    // NAN macro constant not implemented, because we would need to be able to overload macros.
+
+    // -- min, max, difference ---------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmin(T x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmax(T x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fdim(T x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmin(T x, typename T::value_type y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmax(T x, typename T::value_type y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fdim(T x, typename T::value_type y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmin(typename T::value_type x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fmax(typename T::value_type x, T y) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fdim(typename T::value_type x, T y) noexcept ;
+
+    // -- other ------------------------------------------------------------------------------------
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fabs(T v) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T abs(T v) noexcept ;
+
+    // fma comes in many overloads:
+    //   fma (RGB,    RGB,    RGB   )
+    //   fma (RGB,    RGB,    Scalar)
+    //   fma (RGB,    Scalar, RGB   )
+    //   fma (RGB,    Scalar, Scalar)
+    //   fma (Scalar, RGB,    RGB   )
+    //   fma (Scalar, RGB,    Scalar)
+    //   fma (Scalar, Scalar, RGB   )
+    //   fma (Scalar, Scalar, Scalar) <-- this is given by cmath
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(T x, T y, T z) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(T x, T y, typename T::value_type z) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(T x, typename T::value_type y, T z) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(T x, typename T::value_type y, typename T::value_type z) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(typename T::value_type x, T y, T z) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(typename T::value_type x, T y, typename T::value_type z) noexcept ;
+    template <typename T, EnableIf<has_apply_interface<T>>...> T fma(typename T::value_type x, typename T::value_type y, T z) noexcept ;
+
+    // -- classification functions -----------------------------------------------------------------
+
+    // -- comparison functions ---------------------------------------------------------------------
+
+}
+
+
+
+namespace gaudy {    
     // trigonometric
     template <typename T,
               EnableIf<has_apply_interface<T>>...>
