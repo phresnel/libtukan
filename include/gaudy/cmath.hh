@@ -5,12 +5,24 @@
 #define CMATH_HH_INCLUDED_20131102
 
 #include <cmath>
-#include <utility>
+#include "traits/traits.hh"
 #include "RGB.hh" // TODO: remove once generified
 
 namespace gaudy {
 
-    //----------------------------------------------------------------------------------------------
+    // -- <cmath> ---------------------------------------------------------------------------------
+    //
+    // DONE: replace all std-qualifcations by a using
+    // TODO: for some functions, add permutations of RGB, Scalar operands
+    //
+    //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
+    //
+    // Info: While glibcxx defines some (many? (all?)) cmath functions as constexpr, this is not
+    //       sanctioned  by  the  C++11  standard,  therefore we are not making the  promise  of
+    //       constexpr, as such code is non-portable.
+    //
+    //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
+    //
     // Note that some definitions look wilder than they are. For example cos may look like:
     //
     //   template <typename V, typename ...R, template <typename...> class T>
@@ -40,59 +52,12 @@ namespace gaudy {
     //      ....... cos(...) .....
     //
     // Which is the same as in cmath. Looks all worse than it is :).
+    //
     //----------------------------------------------------------------------------------------------
 
     namespace cmath_or_adl {
       using std::ilogb; template <typename T> using ilogb_type = decltype(ilogb(std::declval<T>()));
-    }
-    // -- <cmath> ---------------------------------------------------------------------------------
-    // DONE: replace all std-qualifcations by a using
-    // TODO: for some functions, add permutations of RGB, Scalar operands
-    //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
-    // Info: While glibcxx defines some (many? (all?)) cmath functions as constexpr, this is not
-    //       sanctioned  by  the  C++11  standard,  therefore we are not making the  promise  of
-    //       constexpr, as such code is non-portable.
-    //-- -- -- -- --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  -- --
-
-    template <typename>   struct has_apply_interface               : std::false_type {};
-    template <typename T> struct has_apply_interface<basic_rgb<T>> : std::true_type  {};
-
-    // This is a type alias which is only defined if for T, there exists an apply interface.
-    // Used for SFINAE.
-    // The idea of using EnableIf in the template argument list is by R. Martinho Fernandez,
-    // (http://flamingdangerzone.com/cxx11/2012/06/01/almost-static-if.html)
-    namespace detail {
-        enum class enabler {};
-    }
-    template <typename T> using HasConceptApply = typename std::enable_if<has_apply_interface<T>::value, detail::enabler>::type;
-
-    template <typename Cond, typename ...Rest>
-    struct all { enum { value = Cond::value && all<Rest...>::value }; };
-    template <typename Cond>
-    struct all<Cond> { enum { value = Cond::value }; };
-
-    template <typename ...Condition> using EnableIf =
-                typename std::enable_if<all<Condition...>::value, detail::enabler>::type;
-    template <typename ...Condition> using DisableIf =
-                typename std::enable_if<!all<Condition...>::value, detail::enabler>::type;
-
-    // TODO: introduce some template "rebind_value_type"
-    namespace detail {
-        template <typename To, typename Base>
-        struct rebind_value_type;
-
-        template <typename To, template <typename...> class Base, typename V, typename ...R>
-        struct rebind_value_type<To, Base<V,R...>> {
-            using type = Base<To, R...>;
-        };
-    }
-
-    template <typename Base, typename NewVType>
-    using RebindValueType = typename detail::rebind_value_type<Base, NewVType>::type;
-
-    template <typename T>
-    using ValueTypeOf = typename T::value_type;
-
+    }    
 
     // -- trigonometric ----------------------------------------------------------------------------
     template <typename T, EnableIf<has_apply_interface<T>>...> T cos (T v) noexcept ;
@@ -202,7 +167,7 @@ namespace gaudy {
     template <typename T, EnableIf<has_apply_interface<T>>...> T fabs(T v) noexcept ;
     template <typename T, EnableIf<has_apply_interface<T>>...> T abs(T v) noexcept ;
 
-    // fma comes in many overloads:
+    // fma comes in many overloads (RGB used just exemplary):
     //   fma (RGB,    RGB,    RGB   )
     //   fma (RGB,    RGB,    Scalar)
     //   fma (RGB,    Scalar, RGB   )

@@ -20,3 +20,4 @@
 ../main.cc
 ../README.md
 ../SConstruct
+../include/gaudy/traits/traits.hh
