@@ -202,187 +202,230 @@ namespace gaudy {
 
     // This is a type alias which is only defined if for T, there exists an apply interface.
     // Used for SFINAE.
-    template <typename T> using check_concept_apply = typename std::enable_if<has_apply_interface<T>::value, T>::type;
+    // The idea of using EnableIf in the template argument list is by R. Martinho Fernandez,
+    // (http://flamingdangerzone.com/cxx11/2012/06/01/almost-static-if.html)
+    namespace detail {
+        enum class enabler {};
+    }
+    template <typename T> using HasConceptApply = typename std::enable_if<has_apply_interface<T>::value, detail::enabler>::type;
+
+    template <typename Cond, typename ...Rest>
+    struct all { enum { value = Cond::value && all<Rest...>::value }; };
+    template <typename Cond>
+    struct all<Cond> { enum { value = Cond::value }; };
+
+    template <typename ...Condition> using EnableIf =
+                typename std::enable_if<all<Condition...>::value, detail::enabler>::type;
 
     // TODO: introduce some template "rebind_value_type"
 
     // trigonometric
-    template <typename T>
-    inline auto cos(T v) noexcept -> check_concept_apply<T>
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T cos(T v) noexcept
     {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::cos; return cos(f);});
     }
 
-    template <typename T>
-    inline auto sin(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T sin(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::sin; return sin(f);});
     }
 
-    template <typename T>
-    inline auto tan(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T tan(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::tan; return tan(f);});
     }
 
-    template <typename T>
-    inline auto acos(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T acos(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::acos; return acos(f);});
     }
 
-    template <typename T>
-    inline auto asin(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T asin(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::asin; return asin(f);});
     }
 
-    template <typename T>
-    inline auto atan(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T atan(T v) noexcept  {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::atan; return atan(f);});
     }
 
-    template <typename T>
-    inline auto atan2(T v, T w) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T atan2(T v, T w) noexcept {
         using V = typename T::value_type;
         return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
-    template <typename T>
-    inline auto atan2(T v, typename T::value_type w) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T atan2(T v, typename T::value_type w) noexcept {
         using V = typename T::value_type;
         return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
-    template <typename T>
-    inline auto atan2(typename T::value_type v, T w) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T atan2(typename T::value_type v, T w) noexcept {
         using V = typename T::value_type;
         return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
 
     // hyperbolic
-    template <typename T>
-    inline auto cosh(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T cosh(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::cosh; return cosh(f);});
     }
 
-    template <typename T>
-    inline auto sinh(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T sinh(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::sinh; return sinh(f);});
     }
 
-    template <typename T>
-    inline auto tanh(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T tanh(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::tanh; return tanh(f);});
     }
 
-    template <typename T>
-    inline auto acosh(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T acosh(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::acosh; return acosh(f);});
     }
 
-    template <typename T>
-    inline auto asinh(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T asinh(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::asinh; return asinh(f);});
     }
 
-    template <typename T>
-    inline auto atanh(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T atanh(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::atanh; return atanh(f);});
     }
 
     // exponential and logarithmic
-    template <typename T>
-    inline auto exp(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T exp(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::exp; return exp(f);});
     }
 
-    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
-    inline auto frexp(T v, RHS<int, RHS_ARGS...> *exp) noexcept -> check_concept_apply<T> {
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+    inline T frexp(T v, RHS<int, RHS_ARGS...> *exp) noexcept {
         using V = typename T::value_type;
         return apply(v, exp, [](V f, int *e){using std::frexp; return frexp(f, e);});
     }
 
-    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
-    inline auto ldexp(T sig, RHS<int, RHS_ARGS...> exp) noexcept -> check_concept_apply<T> {
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+    inline T ldexp(T sig, RHS<int, RHS_ARGS...> exp) noexcept {
         using V = typename T::value_type;
         return apply(sig, exp, [](V f, int e){using std::ldexp; return ldexp(f, e);});
     }
 
-    template <typename T>
-    inline auto log(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T log(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::log; return log(f);});
     }
 
-    template <typename T>
-    inline auto log10(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T log10(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::log10; return log10(f);});
     }
 
-    template <typename T>
-    inline auto modf(T v, T *intpart) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T modf(T v, T *intpart) noexcept {
         using V = typename T::value_type;
         return apply(v, intpart, [](V f, V *e){using std::modf; return modf(f, e);});
     }
 
-    template <typename T>
-    inline auto exp2(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T exp2(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::exp2; return exp2(f);});
     }
 
-    template <typename T>
-    inline auto expm1(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T expm1(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::expm1; return expm1(f);});
     }
 
-    template <typename V, typename ...R, template <typename...> class T>
+    template <typename V, typename ...R, template <typename...> class T,
+              EnableIf<has_apply_interface<T<V,R...>>>...>
     inline auto ilogb(T<V,R...> v) noexcept -> T<cmath_or_adl::ilogb_type<V>, R...> {
         return apply(v, [](typename T<V,R...>::value_type f){using std::ilogb; return ilogb(f);});
     }
 
-    template <typename T>
-    inline auto log1p(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T log1p(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::log1p; return log1p(f);});
     }
 
-    template <typename T>
-    inline auto log2(T v) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T log2(T v) noexcept {
         using V = typename T::value_type;
         return apply(v, [](V f){using std::log2; return log2(f);});
     }
 
 
-    template <typename T>
-    inline auto scalbn (T v, int n) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T scalbn (T v, int n) noexcept {
         using V = typename T::value_type;
         return apply(v, n, [](V f, int n){using std::scalbn; return scalbn(f, n);});
     }
-    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
-    inline auto scalbn(T v, RHS<int, RHS_ARGS...> n) noexcept -> check_concept_apply<T> {
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+    inline T scalbn(T v, RHS<int, RHS_ARGS...> n) noexcept {
         using V = typename T::value_type;
         return apply(v, n, [](V f, int n){using std::scalbn; return scalbn(f, n);});
     }
 
 
-    template <typename T>
-    inline auto scalbln (T v, long n) noexcept -> check_concept_apply<T> {
+    template <typename T,
+              EnableIf<has_apply_interface<T>>...>
+    inline T scalbln (T v, long n) noexcept {
         using V = typename T::value_type;
         return apply(v, n, [](V f, long n){using std::scalbln; return scalbln(f, n);});
     }
-    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
-    inline auto scalbln(T v, RHS<long, RHS_ARGS...> n) noexcept -> check_concept_apply<T> {
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS,
+              EnableIf<has_apply_interface<T>>...>
+    inline T scalbln(T v, RHS<long, RHS_ARGS...> n) noexcept {
         using V = typename T::value_type;
         return apply(v, n, [](V f, long n){using std::scalbln; return scalbln(f, n);});
     }
