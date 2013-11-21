@@ -202,126 +202,148 @@ namespace gaudy {
 
     // This is a type alias which is only defined if for T, there exists an apply interface.
     // Used for SFINAE.
-    template <typename T> using concept_apply = typename std::enable_if<has_apply_interface<T>::value, T>::type;
+    template <typename T> using check_concept_apply = typename std::enable_if<has_apply_interface<T>::value, T>::type;
+
+    // TODO: introduce some template "rebind_value_type"
 
     // trigonometric
     template <typename T>
-    inline auto cos(T v) noexcept -> concept_apply<T>
+    inline auto cos(T v) noexcept -> check_concept_apply<T>
     {
-        return apply(v, [](typename T::value_type f){using std::cos; return cos(f);});
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::cos; return cos(f);});
     }
 
     template <typename T>
-    inline auto sin(T v) noexcept -> concept_apply<T> {
-        return apply(v, [](typename T::value_type f){using std::sin; return sin(f);});
+    inline auto sin(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::sin; return sin(f);});
     }
 
     template <typename T>
-    inline auto tan(T v) noexcept -> concept_apply<T> {
-        return apply(v, [](typename T::value_type f){using std::tan; return tan(f);});
+    inline auto tan(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::tan; return tan(f);});
     }
 
     template <typename T>
-    inline auto acos(T v) noexcept -> concept_apply<T> {
-        return apply(v, [](typename T::value_type f){using std::acos; return acos(f);});
+    inline auto acos(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::acos; return acos(f);});
     }
 
     template <typename T>
-    inline auto asin(T v) noexcept -> concept_apply<T> {
-        return apply(v, [](typename T::value_type f){using std::asin; return asin(f);});
+    inline auto asin(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::asin; return asin(f);});
     }
 
     template <typename T>
-    inline auto atan(T v) noexcept -> concept_apply<T> {
-        return apply(v, [](typename T::value_type f){using std::atan; return atan(f);});
+    inline auto atan(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::atan; return atan(f);});
     }
 
     template <typename T>
-    inline auto atan2(T v, T w) noexcept -> concept_apply<T> {
+    inline auto atan2(T v, T w) noexcept -> check_concept_apply<T> {
         using V = typename T::value_type;
         return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
     template <typename T>
-    inline auto atan2(T v, typename T::value_type w) noexcept -> concept_apply<T> {
+    inline auto atan2(T v, typename T::value_type w) noexcept -> check_concept_apply<T> {
         using V = typename T::value_type;
         return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
     template <typename T>
-    inline auto atan2(typename T::value_type v, T w) noexcept -> concept_apply<T> {
+    inline auto atan2(typename T::value_type v, T w) noexcept -> check_concept_apply<T> {
         using V = typename T::value_type;
         return apply(v, w, [](V f, V g){using std::atan2; return atan2(f, g);});
     }
 
     // hyperbolic
     template <typename T>
-    inline basic_rgb<T> cosh(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::cosh; return cosh(f);});
+    inline auto cosh(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::cosh; return cosh(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> sinh(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::sinh; return sinh(f);});
+    inline auto sinh(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::sinh; return sinh(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> tanh(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::tanh; return tanh(f);});
+    inline auto tanh(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::tanh; return tanh(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> acosh(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::acosh; return acosh(f);});
+    inline auto acosh(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::acosh; return acosh(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> asinh(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::asinh; return asinh(f);});
+    inline auto asinh(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::asinh; return asinh(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> atanh(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::atanh; return atanh(f);});
+    inline auto atanh(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::atanh; return atanh(f);});
     }
 
     // exponential and logarithmic
     template <typename T>
-    inline basic_rgb<T> exp(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::exp; return exp(f);});
+    inline auto exp(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::exp; return exp(f);});
+    }
+
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
+    inline auto frexp(T v, RHS<int, RHS_ARGS...> *exp) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, exp, [](V f, int *e){using std::frexp; return frexp(f, e);});
+    }
+
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
+    inline auto ldexp(T sig, RHS<int, RHS_ARGS...> exp) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(sig, exp, [](V f, int e){using std::ldexp; return ldexp(f, e);});
     }
 
     template <typename T>
-    inline basic_rgb<T> frexp(basic_rgb<T> v, basic_rgb<int> *exp) noexcept {
-        return apply(v, exp, [](T f, int *e){using std::frexp; return frexp(f, e);});
+    inline auto log(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::log; return log(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> ldexp(basic_rgb<T> sig, basic_rgb<int> exp) noexcept {
-        return apply(sig, exp, [](T f, int e){using std::ldexp; return ldexp(f, e);});
+    inline auto log10(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::log10; return log10(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> log(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::log; return log(f);});
+    inline auto modf(T v, T *intpart) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, intpart, [](V f, V *e){using std::modf; return modf(f, e);});
     }
 
     template <typename T>
-    inline basic_rgb<T> log10(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::log10; return log10(f);});
+    inline auto exp2(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::exp2; return exp2(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> modf(basic_rgb<T> v, basic_rgb<T> *intpart) noexcept {
-        return apply(v, intpart, [](T f, T *e){using std::modf; return modf(f, e);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> exp2(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::exp2; return exp2(f);});
-    }
-
-    template <typename T>
-    inline basic_rgb<T> expm1(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::expm1; return expm1(f);});
+    inline auto expm1(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::expm1; return expm1(f);});
     }
 
     template <typename V, typename ...R, template <typename...> class T>
@@ -330,35 +352,40 @@ namespace gaudy {
     }
 
     template <typename T>
-    inline basic_rgb<T> log1p(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::log1p; return log1p(f);});
+    inline auto log1p(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::log1p; return log1p(f);});
     }
 
     template <typename T>
-    inline basic_rgb<T> log2(basic_rgb<T> v) noexcept {
-        return apply(v, [](T f){using std::log2; return log2(f);});
-    }
-
-
-    template <typename T>
-    inline basic_rgb<T> scalbn (basic_rgb<T> v, int n) noexcept {
-        return apply(v, n, [](T f, int n){using std::scalbn; return scalbn(f, n);});
-    }
-    template <typename T>
-    inline basic_rgb<T> scalbn (basic_rgb<T> v, basic_rgb<int> n) noexcept {
-        return apply(v, n, [](T f, int n){using std::scalbn; return scalbn(f, n);});
+    inline auto log2(T v) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, [](V f){using std::log2; return log2(f);});
     }
 
 
     template <typename T>
-    inline basic_rgb<T> scalbln (basic_rgb<T> v, long n) noexcept {
-        return apply(v, n, [](T f, long n){using std::scalbln; return scalbln(f, n);});
+    inline auto scalbn (T v, int n) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, n, [](V f, int n){using std::scalbn; return scalbn(f, n);});
     }
-    template <typename T>
-    inline basic_rgb<T> scalbln (basic_rgb<T> v, basic_rgb<long> n) noexcept {
-        return apply(v, n, [](T f, long n){using std::scalbln; return scalbln(f, n);});
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
+    inline auto scalbn(T v, RHS<int, RHS_ARGS...> n) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, n, [](V f, int n){using std::scalbn; return scalbn(f, n);});
     }
 
+
+    template <typename T>
+    inline auto scalbln (T v, long n) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, n, [](V f, long n){using std::scalbln; return scalbln(f, n);});
+    }
+    template <typename T, typename ...RHS_ARGS, template <typename...> class RHS>
+    inline auto scalbln(T v, RHS<long, RHS_ARGS...> n) noexcept -> check_concept_apply<T> {
+        using V = typename T::value_type;
+        return apply(v, n, [](V f, long n){using std::scalbln; return scalbln(f, n);});
+    }
 
     // power
     template <typename T>
