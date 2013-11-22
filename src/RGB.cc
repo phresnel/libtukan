@@ -18,6 +18,7 @@ namespace gaudy {
 TEST_CASE("gaudy/RGB", "RGB tests")
 {
     using namespace gaudy;
+    using RGB = basic_rgb<float, sRGB>;
 
     SECTION("array interface") {
         REQUIRE(RGB(1,2,3)[0] == 1);
@@ -127,6 +128,7 @@ TEST_CASE("gaudy/RGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
         FAIL("float/double are not IEEE 754; IEEE 754 Tests skipped.");
 
     using namespace gaudy;
+    using RGB = basic_rgb<float, sRGB>;
 
     // infinity
     REQUIRE((RGB(1,2,3)/=RGB())  == (RGB(1/.0f, 1/.0f, 1/.0f)));
@@ -150,6 +152,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
 {
     using namespace gaudy;
     using namespace std;
+    using RGB = basic_rgb<float, sRGB>;
     const RGB v {0.6, 0.4, 0.8};
     const RGB w {0.9, 0.2, 0.7};
     const RGB x {1.9, 4, 8.7};

@@ -22,3 +22,4 @@
 ../SConstruct
 ../include/gaudy/traits/traits.hh
 ../include/gaudy/RGBSpace.hh
+../include/gaudy/RGB.inl.hh

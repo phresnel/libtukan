@@ -12,9 +12,9 @@ TEST_CASE("algorithm/lerp", "lerp tests")
 {
     using gaudy::lerp;
     using gaudy::lerp_sat;
-    using gaudy::RGB;
     using gaudy::Interval;
     using gaudy::interval;
+    using RGB = gaudy::basic_rgb<float, gaudy::sRGB>;
 
     SECTION("lerp(a,b, f)") {
         REQUIRE(lerp(1,2,  0.5) == 1.5);
