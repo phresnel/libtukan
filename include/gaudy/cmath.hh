@@ -6,7 +6,6 @@
 
 #include <cmath>
 #include "traits/traits.hh"
-#include "RGB.hh" // TODO: remove once generified
 
 namespace gaudy {
 
@@ -597,12 +596,12 @@ namespace gaudy {
         using V = ValueTypeOf<T>;
         return apply(x, y, [](V f, long double g){using std::nexttoward; return nexttoward(f, g);});
     }
-    // Note: The following overload does not use our 'basic_rgb<T>::value_type' pattern to prevent
+    // Note: The following overload does not use our 'LinearRGB<T>::value_type' pattern to prevent
     //       lookup upon the scalar type, but rather uses just 'T', because otherwise lookup
     //       would not be possible.
     /*
     // At the moment, disable the following overload. It is hard to implement if the right operand
-    // has template template parameters (as with the basic_rgb-type) and probably hard to use right
+    // has template template parameters (as with the LinearRGB-type) and probably hard to use right
     // for user. Worse is better for now.
     template <typename V, typename T,
               DisableIf<has_apply_interface<V>>...>

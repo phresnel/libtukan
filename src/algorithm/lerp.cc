@@ -2,7 +2,7 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/RGB.hh"
+#include "gaudy/LinearRGB.hh"
 #include "gaudy/algorithm/lerp.hh"
 #include "catch.hpp"
 #include <vector>
@@ -14,7 +14,7 @@ TEST_CASE("algorithm/lerp", "lerp tests")
     using gaudy::lerp_sat;
     using gaudy::Interval;
     using gaudy::interval;
-    using RGB = gaudy::basic_rgb<float, gaudy::sRGB>;
+    using RGB = gaudy::LinearRGB<float, gaudy::sRGB>;
 
     SECTION("lerp(a,b, f)") {
         REQUIRE(lerp(1,2,  0.5) == 1.5);
