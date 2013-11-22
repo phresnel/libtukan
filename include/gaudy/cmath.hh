@@ -148,8 +148,8 @@ namespace gaudy {
 
     template <typename T, EnableIf<has_apply_interface<T>>...> T nexttoward(T x, RebindValueType<long double, T> y) noexcept ;
     template <typename T, EnableIf<has_apply_interface<T>>...> T nexttoward(T x, long double y) noexcept ;
-    template <typename V, typename ...R, template <typename...> class T, DisableIf<has_apply_interface<V>>...>
-        T<V,R...> nexttoward(V x, T<long double,R...> y) noexcept;
+    //template <typename V, typename ...R, template <typename...> class T, DisableIf<has_apply_interface<V>>...>
+    //    T<V,R...> nexttoward(V x, T<long double,R...> y) noexcept;
     // NAN macro constant not implemented, because we would need to be able to overload macros.
 
     // -- min, max, difference ---------------------------------------------------------------------
@@ -600,11 +600,16 @@ namespace gaudy {
     // Note: The following overload does not use our 'basic_rgb<T>::value_type' pattern to prevent
     //       lookup upon the scalar type, but rather uses just 'T', because otherwise lookup
     //       would not be possible.
-    template <typename V, typename ...R, template <typename...> class T,
+    /*
+    // At the moment, disable the following overload. It is hard to implement if the right operand
+    // has template template parameters (as with the basic_rgb-type) and probably hard to use right
+    // for user. Worse is better for now.
+    template <typename V, typename T,
               DisableIf<has_apply_interface<V>>...>
     inline T<V,R...> nexttoward(V x, T<long double,R...> y) noexcept {
         return apply(x, y, [](V f, long double g){using std::nexttoward; return nexttoward(f, g);});
     }
+    */
 
     // Not implementing the NAN macro constant, because we would need to be able to overload macros.
 

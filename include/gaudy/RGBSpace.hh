@@ -36,42 +36,29 @@ namespace gaudy {
         constexpr RGBSpace& operator= (RGBSpace const &d) = delete;
 
         static constexpr
-        RGBSpace description_3(T rx, T ry, T rz,
-                               T gx, T gy, T gz,
-                               T bx, T by, T bz,
-                               T s) noexcept
+        RGBSpace from_xy_quadruple(T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw) noexcept
         {
-            return RGBSpace(rx, ry, rz,
-                            gx, gy, gz,
-                            bx, by, bz,
-                            s*(gy*bz - gz*by), s*(rz*by - ry*bz), s*(ry*gz - rz*gy),
-                            s*(gz*bx - gx*bz), s*(rx*bz - rz*bx), s*(rz*gx - rx*gz),
-                            s*(gx*by - gy*bx), s*(ry*bx - rx*by), s*(rx*gy - ry*gx));
+            return description_0(xr,yr, xg,yg, xb,yb, xw,yw,
+                                 1-(xr+yr), 1-(xg+yg), 1-(xb+yb), 1-(xw + yw));
         }
 
+    private:
         static constexpr
-        RGBSpace description_2(T rx, T ry, T rz,
-                               T gx, T gy, T gz,
-                               T bx, T by, T bz) noexcept
+        RGBSpace description_0(T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw,
+                               T zr, T zg, T zb, T zw) noexcept
         {
-            return description_3(rx, ry, rz,
-                                 gx, gy, gz,
-                                 bx, by, bz,
-                                 // determinant to build inverse
-                                 1 / (rx * (gy*bz - by*gz)
-                                     -ry * (gx*bz - bx*gz)
-                                     +rz * (gx*by - bx*gy)));
-        }
-        static constexpr
-        RGBSpace description_2(T rx, T ry, T rz,
-                               T gx, T gy, T gz,
-                               T bx, T by, T bz,
-                               T rw, T gw, T bw) noexcept
-        {
-            // xyz -> rgb matrix, correctly scaled to white
-            return description_3(rx/rw, ry/rw, rz/rw,
-                                 gx/gw, gy/gw, gz/gw,
-                                 bx/bw, by/bw, bz/bw);
+            return description_1(xw, yw, zw,
+                                 // xyz -> rgb matrix, before scaling to white.
+                                 (yg * zb) - (yb * zg),
+                                 (xb * zg) - (xg * zb),
+                                 (xg * yb) - (xb * yg),
+                                 (yb * zr) - (yr * zb),
+                                 (xr * zb) - (xb * zr),
+                                 (xb * yr) - (xr * yb),
+                                 (yr * zg) - (yg * zr),
+                                 (xg * zr) - (xr * zg),
+                                 (xr * yg) - (xg * yr)
+                                 );
         }
 
         static constexpr
@@ -91,38 +78,57 @@ namespace gaudy {
         }
 
         static constexpr
-        RGBSpace description_0(T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw,
-                               T zr, T zg, T zb, T zw) noexcept
+        RGBSpace description_2(T rx, T ry, T rz,
+                               T gx, T gy, T gz,
+                               T bx, T by, T bz,
+                               T rw, T gw, T bw) noexcept
         {
-            return description_1(xw, yw, zw,
-                                 // xyz -> rgb matrix, before scaling to white.
-                                 (yg * zb) - (yb * zg),
-                                 (xb * zg) - (xg * zb),
-                                 (xg * yb) - (xb * yg),
-                                 (yb * zr) - (yr * zb),
-                                 (xr * zb) - (xb * zr),
-                                 (xb * yr) - (xr * yb),
-                                 (yr * zg) - (yg * zr),
-                                 (xg * zr) - (xr * zg),
-                                 (xr * yg) - (xg * yr)
-                                 );
+            // xyz -> rgb matrix, correctly scaled to white
+            return description_3(rx/rw, ry/rw, rz/rw,
+                                 gx/gw, gy/gw, gz/gw,
+                                 bx/bw, by/bw, bz/bw);
         }
+
         static constexpr
-        RGBSpace from_xy_quadruple(T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw) noexcept
+        RGBSpace description_3(T rx, T ry, T rz,
+                               T gx, T gy, T gz,
+                               T bx, T by, T bz) noexcept
         {
-            return description_0(xr,yr, xg,yg, xb,yb, xw,yw,
-                                 1-(xr+yr), 1-(xg+yg), 1-(xb+yb), 1-(xw + yw));
+            return description_4(rx, ry, rz,
+                                 gx, gy, gz,
+                                 bx, by, bz,
+                                 // determinant to build inverse
+                                 1 / (rx * (gy*bz - by*gz)
+                                     -ry * (gx*bz - bx*gz)
+                                     +rz * (gx*by - bx*gy)));
+        }
+
+        static constexpr
+        RGBSpace description_4(T rx, T ry, T rz,
+                               T gx, T gy, T gz,
+                               T bx, T by, T bz,
+                               T s) noexcept
+        {
+            return RGBSpace(rx, ry, rz,
+                            gx, gy, gz,
+                            bx, by, bz,
+                            s*(gy*bz - gz*by), s*(rz*by - ry*bz), s*(ry*gz - rz*gy),
+                            s*(gz*bx - gx*bz), s*(rx*bz - rz*bx), s*(rz*gx - rx*gz),
+                            s*(gx*by - gy*bx), s*(ry*bx - rx*by), s*(rx*gy - ry*gx));
         }
     };
 }
 
 namespace gaudy {
-    template <typename T>
-    struct sRGB : RGBSpace<T> {
-        constexpr sRGB() noexcept : RGBSpace<T>(
-            RGBSpace<T>::from_xy_quadruple(0.64,0.33, 0.3,0.6, 0.15,0.06, 0.31271,0.32902))
-        {}
-    };
+    // sRGB
+    template <typename T> struct sRGB : RGBSpace<T> {
+     constexpr sRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::from_xy_quadruple(0.64,0.33,  0.3,0.6,   0.15,0.06,  0.31271,0.32902)) {} };
+
+    // Adobe RGB
+    template <typename T> struct AdobeRGB : RGBSpace<T> {
+     constexpr AdobeRGB() noexcept : AdobeRGB<T>(
+      RGBSpace<T>::from_xy_quadruple(0.64,0.33,  0.21,0.71, 0.15,0.06,  0.31271,0.32902)) {} };
 
 }
 

@@ -8,13 +8,12 @@
 
 #include <iostream>
 namespace gaudy {
-    template <typename T>
+    template <typename T, template <typename> class RGBSpace>
     inline
-    std::ostream& operator<< (std::ostream &os, basic_rgb<T> const &rhs) {
+    std::ostream& operator<< (std::ostream &os, basic_rgb<T, RGBSpace> const &rhs) {
         return os << "rgb{" << rhs.r << ";" << rhs.g << ";" << rhs.b << "}";
     }
 }
-
 
 TEST_CASE("gaudy/RGB", "RGB tests")
 {
@@ -187,7 +186,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(exp(v) == rel_equal(RGB(exp(v.r), exp(v.g), exp(v.b))));
 
         RGB sig;
-        basic_rgb<int> exp;
+        basic_rgb<int,sRGB> exp;
         sig = frexp(x, &exp);
         int exp_r, exp_g, exp_b;
         float sig_r = frexp(x.r, &exp_r);
@@ -222,7 +221,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
 
         REQUIRE (exp2(x)  == rel_equal(RGB(exp2(x.r),  exp2(x.g),  exp2(x.b))));
         REQUIRE (expm1(x) == rel_equal(RGB(expm1(x.r), expm1(x.g), expm1(x.b))));
-        REQUIRE (ilogb(x) == (basic_rgb<int>(ilogb(x.r), ilogb(x.g), ilogb(x.b))));
+        REQUIRE (ilogb(x) == (basic_rgb<int,sRGB>(ilogb(x.r), ilogb(x.g), ilogb(x.b))));
         REQUIRE (log1p(x) == rel_equal(RGB(log1p(x.r), log1p(x.g), log1p(x.b))));
         REQUIRE (log2(x)  == rel_equal(RGB(log2(x.r),  log2(x.g),  log2(x.b))));
 
@@ -230,17 +229,17 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE (scalbn(x,11)  == rel_equal(RGB(scalbn(x.r,11),  scalbn(x.g,11),  scalbn(x.b,11))));
         REQUIRE (scalbn(x,-2)  == rel_equal(RGB(scalbn(x.r,-2),  scalbn(x.g,-2),  scalbn(x.b,-2))));
 
-        REQUIRE (scalbn(w,basic_rgb<int>(2,3,11))   == rel_equal(RGB(scalbn(w.r,2),  scalbn(w.g,3),   scalbn(w.b,11))));
-        REQUIRE (scalbn(w,basic_rgb<int>(7,-3,0))   == rel_equal(RGB(scalbn(w.r,7),  scalbn(w.g,-3),  scalbn(w.b,0))));
-        REQUIRE (scalbn(w,basic_rgb<int>(12,17,-2)) == rel_equal(RGB(scalbn(w.r,12), scalbn(w.g,17),  scalbn(w.b,-2))));
+        REQUIRE (scalbn(w,basic_rgb<int,sRGB>(2,3,11))   == rel_equal(RGB(scalbn(w.r,2),  scalbn(w.g,3),   scalbn(w.b,11))));
+        REQUIRE (scalbn(w,basic_rgb<int,sRGB>(7,-3,0))   == rel_equal(RGB(scalbn(w.r,7),  scalbn(w.g,-3),  scalbn(w.b,0))));
+        REQUIRE (scalbn(w,basic_rgb<int,sRGB>(12,17,-2)) == rel_equal(RGB(scalbn(w.r,12), scalbn(w.g,17),  scalbn(w.b,-2))));
 
         REQUIRE (scalbln(x,2)   == rel_equal(RGB(scalbln(x.r,2),   scalbln(x.g,2),   scalbln(x.b,2))));
         REQUIRE (scalbln(x,11)  == rel_equal(RGB(scalbln(x.r,11),  scalbln(x.g,11),  scalbln(x.b,11))));
         REQUIRE (scalbln(x,-2)  == rel_equal(RGB(scalbln(x.r,-2),  scalbln(x.g,-2),  scalbln(x.b,-2))));
 
-        REQUIRE (scalbln(w,basic_rgb<long>(2,3,11))   == rel_equal(RGB(scalbln(w.r,2),  scalbln(w.g,3),   scalbln(w.b,11))));
-        REQUIRE (scalbln(w,basic_rgb<long>(7,-3,0))   == rel_equal(RGB(scalbln(w.r,7),  scalbln(w.g,-3),  scalbln(w.b,0))));
-        REQUIRE (scalbln(w,basic_rgb<long>(12,17,-2)) == rel_equal(RGB(scalbln(w.r,12), scalbln(w.g,17),  scalbln(w.b,-2))));;
+        REQUIRE (scalbln(w,basic_rgb<long,sRGB>(2,3,11))   == rel_equal(RGB(scalbln(w.r,2),  scalbln(w.g,3),   scalbln(w.b,11))));
+        REQUIRE (scalbln(w,basic_rgb<long,sRGB>(7,-3,0))   == rel_equal(RGB(scalbln(w.r,7),  scalbln(w.g,-3),  scalbln(w.b,0))));
+        REQUIRE (scalbln(w,basic_rgb<long,sRGB>(12,17,-2)) == rel_equal(RGB(scalbln(w.r,12), scalbln(w.g,17),  scalbln(w.b,-2))));;
     }
 
     SECTION("power functions") {
@@ -294,17 +293,17 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(trunc(-x) == rel_equal(RGB(trunc(-x.r), trunc(-x.g), trunc(-x.b))));
         REQUIRE(round(x)  == rel_equal(RGB(round(x.r),  round(x.g),  round(x.b))));
         REQUIRE(round(-x) == rel_equal(RGB(round(-x.r), round(-x.g), round(-x.b))));
-        REQUIRE(lround(x)  == (basic_rgb<long>{lround(x.r),  lround(x.g),  lround(x.b)}));
-        REQUIRE(lround(-x) == (basic_rgb<long>{lround(-x.r), lround(-x.g), lround(-x.b)}));
-        REQUIRE(llround(x)  == (basic_rgb<long long>{llround(x.r),  llround(x.g),  llround(x.b)}));
-        REQUIRE(llround(-x) == (basic_rgb<long long>{llround(-x.r), llround(-x.g), llround(-x.b)}));
+        REQUIRE(lround(x)  == (basic_rgb<long,sRGB>{lround(x.r),  lround(x.g),  lround(x.b)}));
+        REQUIRE(lround(-x) == (basic_rgb<long,sRGB>{lround(-x.r), lround(-x.g), lround(-x.b)}));
+        REQUIRE(llround(x)  == (basic_rgb<long long,sRGB>{llround(x.r),  llround(x.g),  llround(x.b)}));
+        REQUIRE(llround(-x) == (basic_rgb<long long,sRGB>{llround(-x.r), llround(-x.g), llround(-x.b)}));
 
         REQUIRE(rint(x)  == rel_equal(RGB(rint(x.r),  rint(x.g),  rint(x.b))));
         REQUIRE(rint(-x) == rel_equal(RGB(rint(-x.r), rint(-x.g), rint(-x.b))));
-        REQUIRE(lrint(x)  == (basic_rgb<long>{lrint(x.r),  lrint(x.g),  lrint(x.b)}));
-        REQUIRE(lrint(-x) == (basic_rgb<long>{lrint(-x.r), lrint(-x.g), lrint(-x.b)}));
-        REQUIRE(llrint(x)  == (basic_rgb<long long>{llrint(x.r),  llrint(x.g),  llrint(x.b)}));
-        REQUIRE(llrint(-x) == (basic_rgb<long long>{llrint(-x.r), llrint(-x.g), llrint(-x.b)}));
+        REQUIRE(lrint(x)  == (basic_rgb<long,sRGB>{lrint(x.r),  lrint(x.g),  lrint(x.b)}));
+        REQUIRE(lrint(-x) == (basic_rgb<long,sRGB>{lrint(-x.r), lrint(-x.g), lrint(-x.b)}));
+        REQUIRE(llrint(x)  == (basic_rgb<long long,sRGB>{llrint(x.r),  llrint(x.g),  llrint(x.b)}));
+        REQUIRE(llrint(-x) == (basic_rgb<long long,sRGB>{llrint(-x.r), llrint(-x.g), llrint(-x.b)}));
 
         REQUIRE(nearbyint(x)  == rel_equal(RGB(nearbyint(x.r),  nearbyint(x.g),  nearbyint(x.b))));
         REQUIRE(nearbyint(-x) == rel_equal(RGB(nearbyint(-x.r), nearbyint(-x.g), nearbyint(-x.b))));
@@ -315,7 +314,7 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         REQUIRE(remainder(c, w)== rel_equal(RGB(remainder(c,w.r),remainder(c,w.g),remainder(c,w.b))));
         REQUIRE(remainder(-x,c)== rel_equal(RGB(remainder(-x.r,c),remainder(-x.g,c),remainder(-x.b,c))));
 
-        basic_rgb<int> quot_rgb;
+        basic_rgb<int,sRGB> quot_rgb;
         int quot_r, quot_g, quot_b;
 
         RGB remquo_rgb = remquo(x,   w,   &quot_rgb);
@@ -323,14 +322,14 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
         float remquo_g = remquo(x.g, w.g, &quot_g);
         float remquo_b = remquo(x.b, w.b, &quot_b);
         REQUIRE(remquo_rgb == rel_equal(RGB(remquo_r,remquo_g,remquo_b)));
-        REQUIRE(  quot_rgb == basic_rgb<int>(quot_r, quot_g, quot_b));
+        REQUIRE(  quot_rgb == (basic_rgb<int,sRGB>(quot_r, quot_g, quot_b)));
 
         remquo_rgb = remquo(c, w,   &quot_rgb);
         remquo_r   = remquo(c, w.r, &quot_r);
         remquo_g   = remquo(c, w.g, &quot_g);
         remquo_b   = remquo(c, w.b, &quot_b);
         REQUIRE(remquo_rgb == rel_equal(RGB(remquo_r,remquo_g,remquo_b)));
-        REQUIRE(  quot_rgb == basic_rgb<int>(quot_r, quot_g, quot_b));
+        REQUIRE(  quot_rgb == (basic_rgb<int,sRGB>(quot_r, quot_g, quot_b)));
 
         remquo_rgb = remquo(x,   b, &quot_rgb);
         remquo_r   = remquo(x.r, b, &quot_r);
@@ -339,29 +338,30 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
 
         // NOTE: when chosing c=0.5 instead of b=11 for the test, it fails on at least one device.
         //       I am not sure how this is explained.
-        REQUIRE(  quot_rgb == basic_rgb<int>(quot_r, quot_g, quot_b));
+        REQUIRE(  quot_rgb == (basic_rgb<int,sRGB>(quot_r, quot_g, quot_b)));
         REQUIRE(remquo_rgb == rel_equal(RGB(remquo_r,remquo_g,remquo_b)));
     }
 
     SECTION("floating point manipulation") {
         REQUIRE(copysign(x,z) == rel_equal(RGB(copysign(x.r,z.r),copysign(x.g,z.g),copysign(x.b,z.b))));
-        REQUIRE(copysign(x,c) == rel_equal(RGB(copysign(x.r,c),  copysign(x.g,c),  copysign(x.b,c))));
-        REQUIRE(copysign(e,z) == rel_equal(RGB(copysign(e,z.r),  copysign(e,z.g),  copysign(e,z.b))));
+        REQUIRE(copysign(x,c) == rel_equal(RGB(copysign(x.r,c),  copysign(x.g,c),  copysign(x.b,c))));        
 
         REQUIRE(nextafter(x,z) == rel_equal(RGB(nextafter(x.r,z.r),nextafter(x.g,z.g),nextafter(x.b,z.b))));
-        REQUIRE(nextafter(x,c) == rel_equal(RGB(nextafter(x.r,c),  nextafter(x.g,c),  nextafter(x.b,c))));
-        REQUIRE(nextafter(d,z) == rel_equal(RGB(nextafter(d,z.r),  nextafter(d,z.g),  nextafter(d,z.b))));
+        REQUIRE(nextafter(x,c) == rel_equal(RGB(nextafter(x.r,c),  nextafter(x.g,c),  nextafter(x.b,c))));        
 
-        basic_rgb<long double> d {1.0l,-0.5l,-1.0l/0.0l};
+        basic_rgb<long double,sRGB> d {1.0l,-0.5l,-1.0l/0.0l};
         const long double e = -99999;
         REQUIRE(nexttoward(x,d) == rel_equal(RGB(nexttoward(x.r,d.r),nexttoward(x.g,d.g),nexttoward(x.b,d.b))));
         REQUIRE(nexttoward(x,c) == rel_equal(RGB(nexttoward(x.r,c),  nexttoward(x.g,c),  nexttoward(x.b,c))));
 
-        // TODO: replace below code with rel_equal once rel_equal works properly for basic_rgb<T!=float>.
+        /*
+        REQUIRE(nextafter(d,z) == rel_equal(RGB(nextafter(d,z.r),  nextafter(d,z.g),  nextafter(d,z.b))));
+        REQUIRE(copysign(e,z) == rel_equal(RGB(copysign(e,z.r),  copysign(e,z.g),  copysign(e,z.b))));
         const auto nt = nexttoward(e,d);
         REQUIRE(nt.r == Approx(nexttoward(e,d.r)));
         REQUIRE(nt.g == Approx(nexttoward(e,d.g)));
         REQUIRE(nt.b == Approx(nexttoward(e,d.b)));
+        */
     }
 
     SECTION("minimum, maximum, difference") {
@@ -396,6 +396,6 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
     }
 
     SECTION("type tests") {
-        REQUIRE((std::is_same<basic_rgb<int>, decltype(ilogb(RGB(1,2,3)))>::value));
+        REQUIRE((std::is_same<basic_rgb<int,sRGB>, decltype(ilogb(RGB(1,2,3)))>::value));
     }
 }
