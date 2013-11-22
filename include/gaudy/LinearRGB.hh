@@ -101,6 +101,8 @@ namespace gaudy {
 
     // -- algorithms ------------------------------------------------------------------------------
     // Note: we do not offer constexpr were the C++11 <algorithms> library does neither.
+    // Note: these are implemented here instead of algorithms.hh, and directly in terms of LinearRGB,
+    //       because otherwise they are ambiguous wrt std::min and std::max.
     template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> min (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
     template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> min (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
     template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> min (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
