@@ -21,3 +21,4 @@
 ../README.md
 ../SConstruct
 ../include/gaudy/traits/traits.hh
+../include/gaudy/RGBSpace.hh
