@@ -38,16 +38,19 @@ namespace gaudy {
         static constexpr
         RGBSpace from_xy_quadruple(T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw) noexcept
         {
-            return description_0(xr,yr, xg,yg, xb,yb, xw,yw,
-                                 1-(xr+yr), 1-(xg+yg), 1-(xb+yb), 1-(xw + yw));
+            return construct(xr,yr, xg,yg, xb,yb, xw,yw,
+                             1-(xr+yr), 1-(xg+yg), 1-(xb+yb), 1-(xw + yw));
         }
 
     private:
+
+        // The following is a transcription of Sunflow's color space constructor, except it was
+        // partitioned into several functions in order to allow a C++11 constexpr implementation.
         static constexpr
-        RGBSpace description_0(T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw,
-                               T zr, T zg, T zb, T zw) noexcept
+        RGBSpace construct (T xr, T yr, T xg, T yg, T xb, T yb, T xw, T yw,
+                            T zr, T zg, T zb, T zw) noexcept
         {
-            return description_1(xw, yw, zw,
+            return construct_1(xw, yw, zw,
                                  // xyz -> rgb matrix, before scaling to white.
                                  (yg * zb) - (yb * zg),
                                  (xb * zg) - (xg * zb),
@@ -62,12 +65,12 @@ namespace gaudy {
         }
 
         static constexpr
-        RGBSpace description_1 (T xw, T yw, T zw,
+        RGBSpace construct_1 (T xw, T yw, T zw,
                                 T rx, T ry, T rz,
                                 T gx, T gy, T gz,
                                 T bx, T by, T bz) noexcept
         {
-            return description_2 (rx, ry, rz,
+            return construct_2 (rx, ry, rz,
                                   gx, gy, gz,
                                   bx, by, bz,
                                   // White scaling factors. Dividing by yw scales the white
@@ -78,23 +81,23 @@ namespace gaudy {
         }
 
         static constexpr
-        RGBSpace description_2(T rx, T ry, T rz,
+        RGBSpace construct_2(T rx, T ry, T rz,
                                T gx, T gy, T gz,
                                T bx, T by, T bz,
                                T rw, T gw, T bw) noexcept
         {
             // xyz -> rgb matrix, correctly scaled to white
-            return description_3(rx/rw, ry/rw, rz/rw,
+            return construct_3(rx/rw, ry/rw, rz/rw,
                                  gx/gw, gy/gw, gz/gw,
                                  bx/bw, by/bw, bz/bw);
         }
 
         static constexpr
-        RGBSpace description_3(T rx, T ry, T rz,
+        RGBSpace construct_3(T rx, T ry, T rz,
                                T gx, T gy, T gz,
                                T bx, T by, T bz) noexcept
         {
-            return description_4(rx, ry, rz,
+            return construct_4(rx, ry, rz,
                                  gx, gy, gz,
                                  bx, by, bz,
                                  // determinant to build inverse
@@ -104,7 +107,7 @@ namespace gaudy {
         }
 
         static constexpr
-        RGBSpace description_4(T rx, T ry, T rz,
+        RGBSpace construct_4(T rx, T ry, T rz,
                                T gx, T gy, T gz,
                                T bx, T by, T bz,
                                T s) noexcept
