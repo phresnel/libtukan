@@ -130,7 +130,7 @@ namespace gaudy {
 
     // Adobe RGB
     template <typename T> struct AdobeRGB : RGBSpace<T> {
-     constexpr AdobeRGB() noexcept : AdobeRGB<T>(
+     constexpr AdobeRGB() noexcept : RGBSpace<T>(
       RGBSpace<T>::from_xy_quadruple(0.64,0.33,  0.21,0.71, 0.15,0.06,  0.31271,0.32902)) {} };
 
 }

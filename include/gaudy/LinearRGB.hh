@@ -11,6 +11,7 @@
 #include <cmath>
 #include <stdexcept>
 #include "RGBSpace.hh"
+#include "XYZ.hh"
 
 namespace gaudy {
 
@@ -36,6 +37,11 @@ namespace gaudy {
         constexpr LinearRGB() noexcept = default;
         constexpr LinearRGB(T r, T g, T b) noexcept : r(r), g(g), b(b) {}
         constexpr explicit LinearRGB(T f) noexcept  : r(f), g(f), b(f) {}
+
+
+        // Conversion.
+        constexpr explicit operator XYZ<T> () noexcept;
+        constexpr explicit LinearRGB (XYZ<T>) noexcept;
 
 
         // Assignment.

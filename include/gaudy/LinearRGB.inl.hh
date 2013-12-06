@@ -60,6 +60,26 @@ namespace gaudy {
     {
         return 3;
     }
+
+
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGB<T, RGBSpace>::operator XYZ<T> () noexcept
+    {
+        return {
+            r*RGBSpace<T>().xr + g*RGBSpace<T>().xg + b*RGBSpace<T>().xb,
+            r*RGBSpace<T>().yr + g*RGBSpace<T>().yg + b*RGBSpace<T>().yb,
+            r*RGBSpace<T>().zr + g*RGBSpace<T>().zg + b*RGBSpace<T>().zb
+        };
+    }
+
+
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGB<T, RGBSpace>::LinearRGB (XYZ<T> xyz) noexcept
+        : r(xyz.X*RGBSpace<T>().rx + xyz.Y*RGBSpace<T>().ry + xyz.Z*RGBSpace<T>().rz)
+        , g(xyz.X*RGBSpace<T>().gx + xyz.Y*RGBSpace<T>().gy + xyz.Z*RGBSpace<T>().gz)
+        , b(xyz.X*RGBSpace<T>().bx + xyz.Y*RGBSpace<T>().by + xyz.Z*RGBSpace<T>().bz)
+    {
+    }
 }
 
 
