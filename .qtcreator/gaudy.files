@@ -20,7 +20,9 @@
 ../SConstruct
 ../include/gaudy/traits/traits.hh
 ../include/gaudy/RGBSpace.hh
-
 ../include/gaudy/LinearRGB.inl.hh
 ../include/gaudy/LinearRGB.hh
+../include/gaudy/XYZ.inl.hh
+../include/gaudy/XYZ.hh
 ../src/LinearRGB.cc
+../src/RGBSpace.cc

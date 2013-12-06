@@ -11,6 +11,7 @@ gaudy = env.Program(target='unit_tests',
                             'src/Interval.cc',
                             'src/Spectrum.cc',
                             'src/LinearRGB.cc',
+                            'src/RGBSpace.cc',
                             'src/XYZ.cc',
                             'src/algorithm.cc',
                             'src/algorithm/lerp.cc'
