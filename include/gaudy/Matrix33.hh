@@ -43,6 +43,7 @@ namespace gaudy {
     template <typename T> constexpr Matrix33<T> operator* (T f, Matrix33<T> const &m) noexcept;
     template <typename T> constexpr Matrix33<T> operator* (Matrix33<T> const &m, Matrix33<T> const &n) noexcept;
     template <typename T> constexpr Matrix33<T> inverse (Matrix33<T> const &m) noexcept;
+    template <typename T> constexpr Matrix33<T> transpose (Matrix33<T> const &m) noexcept;
 }
 
 #include "Matrix33.inl.hh"

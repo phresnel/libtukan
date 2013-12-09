@@ -37,4 +37,8 @@ TEST_CASE("gaudy/Matrix33", "Matrix33 math ops correctness") {
     REQUIRE(inverse(Matrix33<float>{1,2,3,4,5,6,7,8,9})
             == Matrix33<float>(-inf, inf, -inf, inf, -inf, inf, -inf, inf, -inf)
            );
+
+    REQUIRE(transpose(a) == rel_equal(Matrix33<float>(1,4,7,
+                                                      2,5,0,
+                                                      3,6,9)));
 }

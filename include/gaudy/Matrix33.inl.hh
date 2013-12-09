@@ -79,4 +79,12 @@ namespace gaudy {
                      +m._21*m._32-m._22*m._31,  -m._11*m._32+m._12*m._31,  +m._11*m._22-m._12*m._21,
                     };
     }
+
+    template <typename T>
+    constexpr Matrix33<T> transpose (Matrix33<T> const &m) noexcept
+    {
+        return {m._11, m._21, m._31,
+                m._12, m._22, m._32,
+                m._13, m._23, m._33};
+    }
 }
