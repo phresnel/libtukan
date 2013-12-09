@@ -64,6 +64,7 @@ void print(std::ostream &os,
 }
 
 TEST_CASE("gaudy/RGBSpace", "RGBSpace tests") {
+    return;
     std::cout << "sRGB\n" << gaudy::sRGB<double>() << "\n";
               /*<< "AdobeRGB\n" << gaudy::AdobeRGB<double>() << "\n"*/;
 

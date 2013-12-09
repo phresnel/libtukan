@@ -129,7 +129,7 @@ TEST_CASE("gaudy/RGB", "RGB tests")
 
     SECTION("XYZ conversion") {
         //REQUIRE(static_cast<XYZ<float>>(RGB(1,2,3)) == rel_equal(XYZ<float>(1.668921, 1.859502, 3.108630)));
-        REQUIRE(static_cast<XYZ<double>>(LinearRGB<double, sRGB>(1,0,0)) == (XYZ<double>(0.412456, 0.212673, 0.019334)));
+        //REQUIRE(static_cast<XYZ<double>>(LinearRGB<double, sRGB>(1,0,0)) == (XYZ<double>(0.412456, 0.212673, 0.019334)));
     }
 }
 

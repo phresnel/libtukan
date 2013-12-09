@@ -26,3 +26,7 @@
 ../include/gaudy/XYZ.hh
 ../src/LinearRGB.cc
 ../src/RGBSpace.cc
+
+../include/gaudy/Matrix33.inl.hh
+../include/gaudy/Matrix33.hh
+../src/Matrix33.cc

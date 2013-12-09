@@ -18,7 +18,7 @@ namespace gaudy {
         bool rel_equal_helper(float lhs, float rhs, float max_rel_diff,
                               float diff)
         {
-            return diff <= ((rhs > lhs) ? rhs : lhs) * max_rel_diff;
+            return diff <= ((rhs>lhs ? rhs : lhs) * max_rel_diff);
         }
     }
 
@@ -29,9 +29,9 @@ namespace gaudy {
     {
         using std::fabs;
         // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
-        return detail::rel_equal_helper(fabs(lhs), fabs(rhs), max_rel_diff,
-                                        fabs(lhs - rhs)
-                                       );
+        return (fabs(lhs)<=max_rel_diff && fabs(rhs)<=max_rel_diff) // dirty fix for -0==0
+            || detail::rel_equal_helper(fabs(lhs), fabs(rhs), max_rel_diff,
+                                        fabs(lhs - rhs));
     }
 
     namespace detail {
@@ -67,14 +67,19 @@ namespace gaudy {
         };
     }
 
+    enum EpsilonFollows {
+        epsilon
+    };
+
     template <typename T>
     constexpr
     detail::RelEqualProxy<T> rel_equal (
         T const & rhs,
+        EpsilonFollows=epsilon,
         float max_rel_diff=std::numeric_limits<float>::epsilon()
     ) noexcept
     {
-        return {rhs, std::numeric_limits<float>::epsilon()};//max_rel_diff};
+        return {rhs, max_rel_diff};
     }
 }
 
