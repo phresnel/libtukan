@@ -2,6 +2,7 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 #include "gaudy/RGBSpace.hh"
+#include "gaudy/Matrix33.hh"
 #include "catch.hpp"
 
 namespace gaudy {
@@ -20,6 +21,15 @@ namespace gaudy {
                   << "{" << rhs.bx << ";" << rhs.by << ";" << rhs.bz << "}\n"
                   << "}"
                   << "}";
+    }
+
+
+    template <typename T>
+    std::ostream& operator<< (std::ostream &os, Matrix33<T> const &m) {
+        return os << std::fixed
+                  << "{(" << m._11 << "," << m._12 << "," << m._13 << "),"
+                  << "(" << m._21 << "," << m._22 << "," << m._23 << "),"
+                  << "(" << m._31 << "," << m._32 << "," << m._33 << ")}";
     }
 }
 
@@ -63,71 +73,84 @@ void print(std::ostream &os,
        << " " << a20 << " " << a21 << " " << a22 << ")";
 }
 
+void print_rel(std::ostream &os,
+           double a00, double a01, double a02,
+           double a10, double a11, double a12,
+           double a20, double a21, double a22,
+
+           double b00, double b01, double b02,
+           double b10, double b11, double b12,
+           double b20, double b21, double b22)
+{
+    os << "(" << (a00/b00) << " " << (a01/b01) << " " << (a02/b02) << "\n"
+       << " " << (a10/b10) << " " << (a11/b11) << " " << (a12/b12) << "\n"
+       << " " << (a20/b20) << " " << (a21/b21) << " " << (a22/b22) << ")";
+}
+
 TEST_CASE("gaudy/RGBSpace", "RGBSpace tests") {
-    return;
-    std::cout << "sRGB\n" << gaudy::sRGB<double>() << "\n";
-              /*<< "AdobeRGB\n" << gaudy::AdobeRGB<double>() << "\n"*/;
+
+    using gaudy::Matrix33;
+
+    /*std::cout << "sRGB\n" << gaudy::sRGB<double>() << "\n";
+              << "AdobeRGB\n" << gaudy::AdobeRGB<double>() << "\n"*/;
 
     const double x_r = 0.64, y_r=0.33;
     const double x_g = 0.3,  y_g=0.6;
     const double x_b = 0.15, y_b=0.06;
+    const double x_w = 0.31272, y_w = 0.32903; // From CIE 15:2004, 3rd Ed., "Colorimetry". For these values, out of which I found in the internet, the relative errors compared to Lindblooms matrices are smallest.
 
+    const double X_w = x_w/y_w;
+    const double Y_w = 1.00;
+    const double Z_w = (1 - x_w - y_w) / y_w;
 
-    const double X_r = x_r / y_r;
-    const double X_g = x_g / y_g;
-    const double X_b = x_b / y_b;
+    const Matrix33<double> M_{
+        /*X*/ x_r / y_r,              x_g / y_g,              x_b / y_b,
+        /*Y*/ 1,                      1,                      1,
+        /*Z*/ (1 - x_r - y_r) / y_r,  (1 - x_g - y_g) / y_g,  (1 - x_b - y_b) / y_b
+    };
 
-    const double Z_r = (1 - x_r - y_r) / y_r;
-    const double Z_g = (1 - x_g - y_g) / y_g;
-    const double Z_b = (1 - x_b - y_b) / y_b;
+    const Matrix33<double> invM_ = inverse(M_);
 
-    const double Y_r = 1;
-    const double Y_g = 1;
-    const double Y_b = 1;
-
-
-    const double XYZ_det = det(X_r, X_g, X_b,
-                               Y_r, Y_g, Y_b,
-                               Z_r, Z_g, Z_b);
-    const double XYZ_invdet = 1 / XYZ_det;
-
-
-    double invX_r, invX_g, invX_b,
-           invY_r, invY_g, invY_b,
-           invZ_r, invZ_g, invZ_b;
-
-    inv(X_r, X_g, X_b,
-        Y_r, Y_g, Y_b,
-        Z_r, Z_g, Z_b,
-        XYZ_invdet,
-
-        invX_r, invY_r, invZ_r,
-        invX_g, invY_g, invZ_g,
-        invX_b, invY_b, invZ_b);
-
-    const double X_w = .950429;
-    const double Y_w = 1.000;
-    const double Z_w = 1.088900;
-
-    const double S_r = invX_r*X_w  +  invX_g*Y_w  +  invX_b*Z_w;
-    const double S_g = invY_r*X_w  +  invY_g*Y_w  +  invY_b*Z_w;
-    const double S_b = invZ_r*X_w  +  invZ_g*Y_w  +  invZ_b*Z_w;
-    /*const double S_r = invX_r*X_w  +  invY_r*Y_w  +  invZ_r*Z_w;
-    const double S_g = invX_g*X_w  +  invY_g*Y_w  +  invZ_g*Z_w;
-    const double S_b = invX_b*X_w  +  invY_b*Y_w  +  invZ_b*Z_w;*/
+    const double S_r = invM_._11*X_w  +  invM_._12*Y_w  +  invM_._13*Z_w;
+    const double S_g = invM_._21*X_w  +  invM_._22*Y_w  +  invM_._23*Z_w;
+    const double S_b = invM_._31*X_w  +  invM_._32*Y_w  +  invM_._33*Z_w;
 
     std::cout << "S={" << S_r << "," << S_g << "," << S_b << "}\n";
-    std::cout << "e={" << (0.4124564/X_r) << "," << (0.3575761/X_g) << "," << (0.1804375/X_b) << "}\n";
-    //std::cout << (0.4124564/0.2126729) << "::" << (X_r/Y_r) << std::endl;
+    std::cout << "W={" << X_w << "," << Y_w << "," << Z_w << "}\n";
     std::cout << "----------\n";
-    /*print (std::cout,
-           X_r, X_g, X_b,
-           Y_r, Y_g, Y_b,
-           Z_r, Z_g, Z_b);
-    std::cout << "\n----------\n";*/
+
     print (std::cout,
-           S_r*X_r, S_g*X_g, S_b*X_b,
-           S_r*Y_r, S_g*Y_g, S_b*Y_b,
-           S_r*Z_r, S_g*Z_g, S_b*Z_b);
-    std::cout << "\n-------------\n";
+           S_r*M_._11, S_g*M_._12, S_b*M_._13,
+           S_r*M_._21, S_g*M_._22, S_b*M_._23,
+           S_r*M_._31, S_g*M_._32, S_b*M_._33);
+    std::cout << "\n-------------\nshould be:\n";
+    print (std::cout,
+           0.4124564,  0.3575761,  0.1804375,
+           0.2126729,  0.7151522,  0.0721750,
+           0.0193339,  0.1191920,  0.9503041);
+    std::cout << "\n-------------\nrel bruce:\n";
+
+    const Matrix33<double> M {
+        S_r*M_._11, S_g*M_._12, S_b*M_._13,
+        S_r*M_._21, S_g*M_._22, S_b*M_._23,
+        S_r*M_._31, S_g*M_._32, S_b*M_._33,
+    };
+    const Matrix33<double> iM = inverse(M);
+
+    print_rel (std::cout,
+           M._11, M._12, M._13,
+           M._21, M._22, M._23,
+           M._31, M._32, M._33,
+           0.4124564,  0.3575761,  0.1804375,
+           0.2126729,  0.7151522,  0.0721750,
+           0.0193339,  0.1191920,  0.9503041);
+    std::cout << std::endl;
+    print_rel (std::cout,
+           iM._11, iM._12, iM._13,
+           iM._21, iM._22, iM._23,
+           iM._31, iM._32, iM._33,
+           3.2404542, -1.5371385, -0.4985314,
+           -0.9692660,  1.8760108,  0.0415560,
+           0.0556434, -0.2040259,  1.0572252);
+    std::cout << std::endl;
 }
