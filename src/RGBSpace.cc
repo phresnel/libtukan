@@ -26,7 +26,7 @@ namespace gaudy {
 
     template <typename T>
     std::ostream& operator<< (std::ostream &os, Matrix33<T> const &m) {
-        return os << std::fixed
+        return os //<< std::fixed
                   << "{(" << m._11 << "," << m._12 << "," << m._13 << "),"
                   << "(" << m._21 << "," << m._22 << "," << m._23 << "),"
                   << "(" << m._31 << "," << m._32 << "," << m._33 << ")}";
@@ -97,11 +97,8 @@ TEST_CASE("gaudy/RGBSpace", "RGBSpace tests") {
     const double x_r = 0.64, y_r=0.33;
     const double x_g = 0.3,  y_g=0.6;
     const double x_b = 0.15, y_b=0.06;
-    const double x_w = 0.31272, y_w = 0.32903; // From CIE 15:2004, 3rd Ed., "Colorimetry". For these values, out of which I found in the internet, the relative errors compared to Lindblooms matrices are smallest.
 
-    const double X_w = x_w/y_w;
-    const double Y_w = 1.00;
-    const double Z_w = (1 - x_w - y_w) / y_w;
+    const double X_w = 0.95047, Y_w=1.00000, Z_w=1.08883; // pointed to by Mr Lindbloom upon email: http://www.brucelindbloom.com/index.html?Eqn_ChromAdapt.html
 
     const Matrix33<double> M_{
         /*X*/ x_r / y_r,              x_g / y_g,              x_b / y_b,
