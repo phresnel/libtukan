@@ -4,7 +4,7 @@
 #ifndef RGB_HH_INCLUDED_20131017
 #define RGB_HH_INCLUDED_20131017
 
-#include "rel_equal.hh"
+#include "algorithm/rel_equal.hh"
 #include "traits/traits.hh"
 #include <functional>
 #include <algorithm>

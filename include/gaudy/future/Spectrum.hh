@@ -4,13 +4,13 @@
 #ifndef SPECTRUM_HH_INCLUDED_20131017
 #define SPECTRUM_HH_INCLUDED_20131017
 
-#include "tuple.hh"
-#include "Nanometer.hh"
-#include "Interval.hh"
+#include "../tuple.hh"
+#include "../Nanometer.hh"
+#include "../Interval.hh"
 #include <valarray>
 #include <stdexcept>
 
-namespace gaudy {
+namespace gaudy { namespace future {
 
     //----------------------------------------------------------------------------------------------
     // SpectrumSample
@@ -86,6 +86,7 @@ namespace gaudy {
                           float max_rel_diff=std::numeric_limits<float>::epsilon()
                          ) noexcept
     {
+        using gaudy::rel_equal;
         return rel_equal(lhs.amplitude, rhs.amplitude, max_rel_diff)
             && rel_equal(lhs.wavelength, rhs.wavelength, max_rel_diff);
     }
@@ -241,6 +242,6 @@ namespace gaudy {
 
         return ret;
     }
-}
+} }
 
 #endif // SPECTRUM_HH_INCLUDED_20131017

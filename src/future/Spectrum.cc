@@ -2,7 +2,7 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/Spectrum.hh"
+#include "gaudy/future/Spectrum.hh"
 #include "catch.hpp"
 
 bool is_nan_or_infinity (float f) {
@@ -12,6 +12,7 @@ bool is_nan_or_infinity (float f) {
 TEST_CASE("gaudy/Spectrum", "Spectrum Tests")
 {
     using namespace gaudy;
+    using namespace gaudy::future;
 
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
     LinearInterpolator line(spec);

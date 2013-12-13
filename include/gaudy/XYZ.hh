@@ -4,7 +4,7 @@
 #ifndef XYZ_HH_INCLUDED_20131206
 #define XYZ_HH_INCLUDED_20131206
 
-#include "rel_equal.hh"
+#include "algorithm/rel_equal.hh"
 #include "traits/traits.hh"
 #include <functional>
 #include <algorithm>

@@ -1,8 +1,8 @@
 ../include/gaudy/Interval.hh
 ../include/gaudy/Nanometer.hh
 ../include/gaudy/optional.hh
-../include/gaudy/rel_equal.hh
-../include/gaudy/Spectrum.hh
+../include/gaudy/algorithm/rel_equal.hh
+../include/gaudy/future/Spectrum.hh
 ../include/gaudy/tuple.hh
 ../include/gaudy/cmath.hh
 ../include/gaudy/algorithm.hh
@@ -10,7 +10,7 @@
 ../src/Interval.cc
 ../src/Nanometer.cc
 ../src/XYZ.cc
-../src/Spectrum.cc
+../src/future/Spectrum.cc
 ../src/algorithm.cc
 ../src/algorithm/lerp.cc
 ../benchmarks/IndexingOperator.cc
@@ -30,3 +30,4 @@
 ../include/gaudy/Matrix33.inl.hh
 ../include/gaudy/Matrix33.hh
 ../src/Matrix33.cc
+../include/gaudy/future/README.md

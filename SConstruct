@@ -8,14 +8,14 @@ env = Environment(CPPPATH = ['.', 'bootstrapped/Catch/include/', 'include'],
 gaudy = env.Program(target='unit_tests',
                     source=['main.cc',
                             'src/Nanometer.cc',
-                            'src/Interval.cc',
-                            'src/Spectrum.cc',
+                            'src/Interval.cc',                            
                             'src/LinearRGB.cc',
                             'src/RGBSpace.cc',
                             'src/XYZ.cc',
                             'src/algorithm.cc',
                             'src/algorithm/lerp.cc',
-                            'src/Matrix33.cc'
+                            'src/Matrix33.cc',
+                            'src/future/Spectrum.cc',
                            ],
                     LIBS=['gomp']
                     )

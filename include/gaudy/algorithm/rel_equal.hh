@@ -11,8 +11,6 @@
 namespace gaudy {
 
     // TODO: This while thing needs to be reworked wrt doubles and arbitrary types (what with epsilon?)
-
-
     namespace detail {
         constexpr
         bool rel_equal_helper(float lhs, float rhs, float max_rel_diff,

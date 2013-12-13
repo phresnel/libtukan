@@ -5,7 +5,7 @@
 #define NANOMETER_HH_INCLUDED_20131017
 
 #include <limits>
-#include "rel_equal.hh"
+#include "algorithm/rel_equal.hh"
 
 namespace gaudy {
     //----------------------------------------------------------------------------------------------

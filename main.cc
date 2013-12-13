@@ -2,41 +2,7 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-
-#include "gaudy/Nanometer.hh"
-#include "gaudy/Interval.hh"
-#include "gaudy/Spectrum.hh"
-
-#include <vector>
-#include <valarray>
 #include <iostream>
-#include <stdexcept>
-
-
-namespace gaudy {
-    // TODO: test these
-
-    inline
-    std::ostream& operator<< (std::ostream &os, Nanometer const &nm) {
-        return os << static_cast<float>(nm) << "nm";
-    }
-
-    inline
-    std::ostream& operator<< (std::ostream &os, SpectrumSample const &ss) {
-        return os << ss.wavelength << ":" << ss.amplitude;
-    }
-
-    inline
-    std::ostream& operator<< (std::ostream &os, Spectrum const &spec) {
-        os << "spectrum{" << spec.lambda_min() << ".." << spec.lambda_max() << ", [";
-        if (!spec.empty())
-            os << spec[0];
-        for (size_t i=1; i!=spec.size(); ++i)
-            os << ", " << spec[i];
-        return os << "]}";
-    }
-}
-
 
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"

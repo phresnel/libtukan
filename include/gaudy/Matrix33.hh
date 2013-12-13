@@ -4,7 +4,7 @@
 #ifndef MATRIX33_HH_INCLUDED_20131209
 #define MATRIX33_HH_INCLUDED_20131209
 
-#include "rel_equal.hh"
+#include "algorithm/rel_equal.hh"
 
 namespace gaudy {
 
