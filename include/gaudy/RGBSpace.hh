@@ -11,7 +11,19 @@ namespace gaudy {
 
     namespace whitepoint {
         // TODO: with C++14, the whitepoints should be variable templates.
+
+        // Whitepoints from: http://www.brucelindbloom.com/index.html?Eqn_ChromAdapt.html
+        static constexpr XYZ<double> A   {1.09850, 1.00000, 0.35585};
+        static constexpr XYZ<double> B   {0.99072, 1.00000, 0.85223};
+        static constexpr XYZ<double> C   {0.98074, 1.00000, 1.18232};
+        static constexpr XYZ<double> D50 {0.96422, 1.00000, 0.82521};
+        static constexpr XYZ<double> D55 {0.95682, 1.00000, 0.92149};
         static constexpr XYZ<double> D65 {0.95047, 1.00000, 1.08883};
+        static constexpr XYZ<double> D75 {0.94972, 1.00000, 1.22638};
+        static constexpr XYZ<double> E   {1.00000, 1.00000, 1.00000};
+        static constexpr XYZ<double> F2  {0.99186, 1.00000, 0.67393};
+        static constexpr XYZ<double> F7  {0.95041, 1.00000, 1.08747};
+        static constexpr XYZ<double> F11 {1.00962, 1.00000, 0.64350};
     }
 
     template <typename T>
@@ -71,16 +83,85 @@ namespace gaudy {
 }
 
 namespace gaudy {
-    // sRGB
-    template <typename T> struct sRGB : RGBSpace<T> {
-     constexpr sRGB() noexcept : RGBSpace<T>(
-      RGBSpace<T>::FromXYTriple(0.64,0.33,  0.3,0.6,   0.15,0.06,  whitepoint::D65)) {} };
+    // Apple RGB
+    template <typename T> struct AppleRGB : RGBSpace<T> {
+     constexpr AppleRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6250,0.3400, 0.2800,0.5950, 0.1550,0.0700,  whitepoint::D65)) {} };
 
     // Adobe RGB
     template <typename T> struct AdobeRGB : RGBSpace<T> {
      constexpr AdobeRGB() noexcept : RGBSpace<T>(
       RGBSpace<T>::FromXYTriple(0.64,0.33,  0.21,0.71, 0.15,0.06,  whitepoint::D65)) {} };
 
+    // Best RGB
+    template <typename T> struct BestRGB : RGBSpace<T> {
+     constexpr BestRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.7347,0.2653, 0.2150,0.7750, 0.1300,0.0350, whitepoint::D50)) {} };
+
+    // Beta RGB
+    template <typename T> struct BetaRGB : RGBSpace<T> {
+     constexpr BetaRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6888,0.3112, 0.1986,0.7551, 0.1265,0.0352,  whitepoint::D50)) {} };
+
+    // Bruce RGB
+    template <typename T> struct BruceRGB : RGBSpace<T> {
+     constexpr BruceRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6400,0.3300, 0.2800,0.6500, 0.1500,0.0600,  whitepoint::D65)) {} };
+
+    // CIE RGB
+    template <typename T> struct CIERGB : RGBSpace<T> {
+     constexpr CIERGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.7350,0.2650, 0.2740,0.7170, 0.1670,0.0090,  whitepoint::E)) {} };
+
+    // Color Match RGB
+    template <typename T> struct ColorMatchRGB : RGBSpace<T> {
+     constexpr ColorMatchRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6300,0.3400, 0.2950,0.6050, 0.1500,0.0750,  whitepoint::D50)) {} };
+
+    // Don RGB 4
+    template <typename T> struct DonRGB4 : RGBSpace<T> {
+     constexpr DonRGB4() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6960,0.3000, 0.2150,0.7650, 0.1300,0.0350,  whitepoint::D50)) {} };
+
+    // ECI RGB v2
+    template <typename T> struct ECIRGBv2: RGBSpace<T> {
+     constexpr ECIRGBv2() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6700,0.3300, 0.2100,0.7100, 0.1400,0.0800, whitepoint::D50)) {} };
+
+    // Ekta Space PS5
+    template <typename T> struct EktaSpacePS5 : RGBSpace<T> {
+     constexpr EktaSpacePS5() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6950, 0.3050, 0.2600,0.7000, 0.1100, 0.0050, whitepoint::D50)) {} };
+
+    // NTSC RGB
+    template <typename T> struct NTSCRGB : RGBSpace<T> {
+     constexpr NTSCRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6700,0.3300, 0.2100,0.7100, 0.1400,0.0800, whitepoint::C)) {} };
+
+    // PAL/SECAM RGB
+    template <typename T> struct PALSECAMRGB : RGBSpace<T> {
+     constexpr PALSECAMRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6400,0.3300, 0.2900,0.6000, 0.1500,0.0600, whitepoint::D65)) {} };
+
+    // ProPhoto RGB
+    template <typename T> struct ProPhotoRGB : RGBSpace<T> {
+     constexpr ProPhotoRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.7347,0.2653, 0.1596,0.8404, 0.0366,0.0001, whitepoint::D50)) {} };
+
+    // SMPTE-C RGB
+    template <typename T> struct SMPTE_C : RGBSpace<T> {
+     constexpr SMPTE_C() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6300,0.3400, 0.3100,0.5950, 0.1550,0.0700, whitepoint::D65)) {} };
+
+    // sRGB
+    template <typename T> struct sRGB : RGBSpace<T> {
+     constexpr sRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.6400,0.3300, 0.3000,0.6000, 0.1500,0.0600, whitepoint::D65)) {} };
+
+    // Wide Gamut RGB
+    template <typename T> struct WideGamutRGB : RGBSpace<T> {
+     constexpr WideGamutRGB() noexcept : RGBSpace<T>(
+      RGBSpace<T>::FromXYTriple(0.7350,0.2650, 0.1150,0.8260, 0.1570,0.0180, whitepoint::D50)) {} };
 }
 
 #endif // RGBSPACE_HH_20131122
