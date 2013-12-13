@@ -66,18 +66,18 @@ namespace gaudy {
     constexpr LinearRGB<T, RGBSpace>::operator XYZ<T> () noexcept
     {
         return {
-            r*RGBSpace<T>().xr + g*RGBSpace<T>().xg + b*RGBSpace<T>().xb,
-            r*RGBSpace<T>().yr + g*RGBSpace<T>().yg + b*RGBSpace<T>().yb,
-            r*RGBSpace<T>().zr + g*RGBSpace<T>().zg + b*RGBSpace<T>().zb
+            r*RGBSpace<T>().rgb_to_xyz._11 + g*RGBSpace<T>().rgb_to_xyz._12 + b*RGBSpace<T>().rgb_to_xyz._13,
+            r*RGBSpace<T>().rgb_to_xyz._21 + g*RGBSpace<T>().rgb_to_xyz._22 + b*RGBSpace<T>().rgb_to_xyz._23,
+            r*RGBSpace<T>().rgb_to_xyz._31 + g*RGBSpace<T>().rgb_to_xyz._32 + b*RGBSpace<T>().rgb_to_xyz._33
         };
     }
 
 
     template <typename T, template <typename> class RGBSpace>
     constexpr LinearRGB<T, RGBSpace>::LinearRGB (XYZ<T> xyz) noexcept
-        : r(xyz.X*RGBSpace<T>().rx + xyz.Y*RGBSpace<T>().ry + xyz.Z*RGBSpace<T>().rz)
-        , g(xyz.X*RGBSpace<T>().gx + xyz.Y*RGBSpace<T>().gy + xyz.Z*RGBSpace<T>().gz)
-        , b(xyz.X*RGBSpace<T>().bx + xyz.Y*RGBSpace<T>().by + xyz.Z*RGBSpace<T>().bz)
+        : r(xyz.X*RGBSpace<T>().xyz_to_rgb._11 + xyz.Y*RGBSpace<T>().xyz_to_rgb._12 + xyz.Z*RGBSpace<T>().xyz_to_rgb._13)
+        , g(xyz.X*RGBSpace<T>().xyz_to_rgb._21 + xyz.Y*RGBSpace<T>().xyz_to_rgb._22 + xyz.Z*RGBSpace<T>().xyz_to_rgb._23)
+        , b(xyz.X*RGBSpace<T>().xyz_to_rgb._31 + xyz.Y*RGBSpace<T>().xyz_to_rgb._32 + xyz.Z*RGBSpace<T>().xyz_to_rgb._33)
     {
     }
 }
