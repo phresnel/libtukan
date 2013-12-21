@@ -87,7 +87,7 @@ TEST_CASE("gaudy/RGBSpace", "RGBSpace tests") {
                                                   { 2.7454669,-1.1358136,-0.4350269,
                                                    -0.9692660, 1.8760108, 0.0415560,
                                                     0.0112723,-0.1139754, 1.0132541},
-                                                   gaudy::epsilon, 0.0000025));
+                                                   gaudy::epsilon, 0.00001));
 
     REQUIRE(CIERGB<float>().rgb_to_xyz == rel_equal(Matrix33<float>
                                                   {  0.4887180,  0.3106803,  0.2006017,
