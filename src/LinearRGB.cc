@@ -127,26 +127,26 @@ TEST_CASE("gaudy/RGB", "RGB tests")
         REQUIRE(max(RGB(2,3,0), 1) == rel_equal(RGB(2,3,1)));
     }
 
-    SECTION("XYZ conversion, pt. 1") {
-        REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, AppleRGB>(-999,3.141,1000))
-                == rel_equal(XYZ<float>(-263.793217, -158.977776, 897.746594), gaudy::epsilon, 0.00001));
-        REQUIRE((static_cast<LinearRGB<float, AppleRGB>>(XYZ<float>(-263.793217, -158.977776, 897.746594)))
-                == rel_equal(LinearRGB<float, AppleRGB>(-999,3.141,1000), gaudy::epsilon, 0.00001));
+    SECTION("XYZ/RGB conversion (against Bruce Lindblooms color space calculator)") {
+        { LinearRGB<float, AppleRGB> rgb {-999,3.141,1000};
+          XYZ<float>                 xyz {-263.793217, -158.977776, 897.746594};
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.00001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.00001)); }
 
-        REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, AdobeRGB>(-999,3.141,1000))
-                == rel_equal(XYZ<float>(-387.386169, -219.834919, 964.323323), gaudy::epsilon, 0.00001));
-        REQUIRE((static_cast<LinearRGB<float, AdobeRGB>>(XYZ<float>(-387.386169, -219.834919, 964.323323)))
-                == rel_equal(LinearRGB<float, AdobeRGB>(-999,3.141,1000), gaudy::epsilon, 0.00001));
+        { LinearRGB<float, AdobeRGB> rgb {-999,3.141,1000};
+          XYZ<float>                 xyz {-387.386169, -219.834919, 964.323323};
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.00001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.00001)); }
 
-        REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, BestRGB>(-999,3.141,1000))
-                == rel_equal(XYZ<float>(-504.399919, -191.721543, 815.725661), gaudy::epsilon, 0.00001));
-        REQUIRE((static_cast<LinearRGB<float, BestRGB>>(XYZ<float>(-504.399919, -191.721543, 815.725661)))
-                == rel_equal(LinearRGB<float, BestRGB>(-999,3.141,1000), gaudy::epsilon, 0.001));
+        { LinearRGB<float, BestRGB>  rgb {-999,3.141,1000};
+          XYZ<float>                 xyz {-504.399919, -191.721543, 815.725661};
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.00001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.00001)); }
 
         // TODO: more tests
     }
 
-    SECTION("XYZ conversion, pt. 2") {
+    SECTION("XYZ conversion, linearity tests") {
         REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, sRGB>(1,0,0))
                 == rel_equal(XYZ<float>(0.412456, 0.212673, 0.019334), gaudy::epsilon, 0.00001));
         REQUIRE((static_cast<LinearRGB<float, sRGB>>(XYZ<float>(0.412456, 0.212673, 0.019334)))
@@ -399,10 +399,10 @@ TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
 
     SECTION("floating point manipulation") {
         REQUIRE(copysign(x,z) == rel_equal(RGB(copysign(x.r,z.r),copysign(x.g,z.g),copysign(x.b,z.b))));
-        REQUIRE(copysign(x,c) == rel_equal(RGB(copysign(x.r,c),  copysign(x.g,c),  copysign(x.b,c))));        
+        REQUIRE(copysign(x,c) == rel_equal(RGB(copysign(x.r,c),  copysign(x.g,c),  copysign(x.b,c))));
 
         REQUIRE(nextafter(x,z) == rel_equal(RGB(nextafter(x.r,z.r),nextafter(x.g,z.g),nextafter(x.b,z.b))));
-        REQUIRE(nextafter(x,c) == rel_equal(RGB(nextafter(x.r,c),  nextafter(x.g,c),  nextafter(x.b,c))));        
+        REQUIRE(nextafter(x,c) == rel_equal(RGB(nextafter(x.r,c),  nextafter(x.g,c),  nextafter(x.b,c))));
 
         LinearRGB<long double,sRGB> d {1.0l,-0.5l,-1.0l/0.0l};
         const long double e = -99999;
