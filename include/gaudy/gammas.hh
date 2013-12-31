@@ -39,6 +39,21 @@ namespace gaudy { namespace gamma { namespace detail {
         }
     };
 
+    // see also * http://www.brucelindbloom.com/
+    struct L {
+        constexpr double to_linear (double v) noexcept {
+            using std::pow;
+            return (v<=0.08) ? (100*v/903.3) // using actual CIE standard
+                             : pow((v+0.16)/1.16, 3.0);
+        }
+
+        constexpr double to_nonlinear (double v) noexcept {
+            using std::pow;
+            return (v<=0.008856) ? (v*9.033)
+                                 : 1.16*pow(v, 1/3.0) - 0.16;
+        }
+    };
+
 } } }
 
 
@@ -48,6 +63,7 @@ namespace gaudy { namespace gamma {
     static constexpr auto _1_8 = detail::simple_gamma(1.8);
     static constexpr auto _2_2 = detail::simple_gamma(2.2);
     static constexpr auto sRGB = detail::sRGB();
+    static constexpr auto L    = detail::L();
 
 } }
 

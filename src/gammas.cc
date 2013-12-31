@@ -89,5 +89,33 @@ TEST_CASE("gaudy/gammas", "gamma correction tests") {
         REQUIRE(g.to_linear(1.000000) == rel_equal(1.0, gaudy::epsilon, 0.0002));
     }
 
+    SECTION("L* gamma") {
+        // Using http://www.brucelindbloom.com/ColorCalculator.html (*)
+        // ((*) trick is to first convert a linear RGB into XYZ, and the latter then back to
+        //      non-linear RGB)
+        auto g = gaudy::gamma::L;
 
+        REQUIRE(g.to_nonlinear(0.000109) == rel_equal(0.001, gaudy::epsilon, 0.001));
+        REQUIRE(g.to_nonlinear(0.007750) == rel_equal(0.07, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_nonlinear(0.008856) == rel_equal(0.08, gaudy::epsilon, 0.0002)); // breakpoint
+        REQUIRE(g.to_nonlinear(0.010010) == rel_equal(0.09, gaudy::epsilon, 0.0002));
+
+        REQUIRE(g.to_nonlinear(0.1)  == rel_equal(0.378423, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_nonlinear(0.25) == rel_equal(0.570755, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_nonlinear(0.5)  == rel_equal(0.760692, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_nonlinear(0.75) == rel_equal(0.893930, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_nonlinear(1.0)  == rel_equal(1.000000, gaudy::epsilon, 0.0002));
+
+
+        REQUIRE(g.to_linear(0.001) == rel_equal(0.000109, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_linear(0.07)  == rel_equal(0.007750, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_linear(0.08)  == rel_equal(0.008856, gaudy::epsilon, 0.0002)); // breakpoint
+        REQUIRE(g.to_linear(0.09)  == rel_equal(0.010010, gaudy::epsilon, 0.0002));
+
+        REQUIRE(g.to_linear(0.378423) == rel_equal(0.1, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_linear(0.570755) == rel_equal(0.25, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_linear(0.760692) == rel_equal(0.5, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_linear(0.893930) == rel_equal(0.75, gaudy::epsilon, 0.0002));
+        REQUIRE(g.to_linear(1.000000) == rel_equal(1.0, gaudy::epsilon, 0.0002));
+    }
 }
