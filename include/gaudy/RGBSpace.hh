@@ -7,6 +7,7 @@
 #include "XYZ.hh"
 #include "Matrix33.hh"
 #include "whitepoints.hh"
+#include "gammas.hh"
 
 namespace gaudy {
 

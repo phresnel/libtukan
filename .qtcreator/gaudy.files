@@ -31,3 +31,7 @@
 ../include/gaudy/Matrix33.hh
 ../src/Matrix33.cc
 ../include/gaudy/future/README.md
+
+../include/gaudy/whitepoints.hh
+../include/gaudy/gammas.hh
+../src/gammas.cc
