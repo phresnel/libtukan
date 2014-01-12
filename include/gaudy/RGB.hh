@@ -5,6 +5,7 @@
 #define RGB_HH_INCLUDED_20140112
 
 #include "RGBSpace.hh"
+#include "LinearRGB.hh"
 #include "XYZ.hh"
 
 namespace gaudy {
@@ -26,6 +27,9 @@ namespace gaudy {
         // Conversion.
         constexpr explicit operator XYZ<T> () noexcept;
         constexpr explicit RGB (XYZ<T>) noexcept;
+
+        constexpr explicit operator LinearRGB<T, RGBSpace> () noexcept;
+        constexpr explicit RGB (LinearRGB<T, RGBSpace>) noexcept;
 
 
 
