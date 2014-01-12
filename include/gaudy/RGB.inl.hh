@@ -62,34 +62,16 @@ namespace gaudy {
     }
 
 
-    // TODO: refactor xyz-conversion wrt LinearRGB/RGB conversions
-    namespace detail {
-        template <typename T, template <typename> class RGBSpace>
-        constexpr XYZ<T> to_xyz (T r, T g, T b) noexcept
-        {
-            return {
-                r*RGBSpace<T>().rgb_to_xyz._11 + g*RGBSpace<T>().rgb_to_xyz._12 + b*RGBSpace<T>().rgb_to_xyz._13,
-                r*RGBSpace<T>().rgb_to_xyz._21 + g*RGBSpace<T>().rgb_to_xyz._22 + b*RGBSpace<T>().rgb_to_xyz._23,
-                r*RGBSpace<T>().rgb_to_xyz._31 + g*RGBSpace<T>().rgb_to_xyz._32 + b*RGBSpace<T>().rgb_to_xyz._33
-            };
-        }
-    }
-
     template <typename T, template <typename> class RGBSpace>
     constexpr RGB<T, RGBSpace>::operator XYZ<T> () noexcept
     {
-        using detail::to_xyz;
-        return to_xyz<T,RGBSpace>(static_cast<T>(RGBSpace<T>().gamma.to_linear(r)),
-                                  static_cast<T>(RGBSpace<T>().gamma.to_linear(g)),
-                                  static_cast<T>(RGBSpace<T>().gamma.to_linear(b)));
+        return static_cast<XYZ<T>> (static_cast<LinearRGB<T,RGBSpace>> (*this));
     }
 
 
     template <typename T, template <typename> class RGBSpace>
     constexpr RGB<T, RGBSpace>::RGB (XYZ<T> xyz) noexcept
-        : r(RGBSpace<T>().gamma.to_nonlinear(xyz.X*RGBSpace<T>().xyz_to_rgb._11 + xyz.Y*RGBSpace<T>().xyz_to_rgb._12 + xyz.Z*RGBSpace<T>().xyz_to_rgb._13))
-        , g(RGBSpace<T>().gamma.to_nonlinear(xyz.X*RGBSpace<T>().xyz_to_rgb._21 + xyz.Y*RGBSpace<T>().xyz_to_rgb._22 + xyz.Z*RGBSpace<T>().xyz_to_rgb._23))
-        , b(RGBSpace<T>().gamma.to_nonlinear(xyz.X*RGBSpace<T>().xyz_to_rgb._31 + xyz.Y*RGBSpace<T>().xyz_to_rgb._32 + xyz.Z*RGBSpace<T>().xyz_to_rgb._33))
+        : RGB(static_cast<LinearRGB<T,RGBSpace>> (xyz))
     {
     }
 
