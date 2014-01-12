@@ -21,6 +21,13 @@ namespace gaudy {
     //
     // About
     // -----
+    // LinearRGB represents a working color which you can add, subtract, multiply et cetera.
+    // The gamma value for a linear RGB is 1, even though the associated color space might have
+    // non-linear gamma. If you later want to write an image-file with proper non-linear RGB,
+    // like an sRGB file, you must first convert to (nonlinear) RGB, which is then gamma-corrected.
+    //
+    // Meta
+    // ----
     // Using -O3, benchmarks/IndexingOperator.cc shows that there is no performance difference
     // between indexing and direct member access with 'g++ (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3'.
     //---------------------------------------------------------------------------------------------
