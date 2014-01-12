@@ -22,9 +22,12 @@
 ../include/gaudy/RGBSpace.hh
 ../include/gaudy/LinearRGB.inl.hh
 ../include/gaudy/LinearRGB.hh
+../include/gaudy/RGB.hh
+../include/gaudy/RGB.inl.hh
 ../include/gaudy/XYZ.inl.hh
 ../include/gaudy/XYZ.hh
 ../src/LinearRGB.cc
+../src/RGB.cc
 ../src/RGBSpace.cc
 
 ../include/gaudy/Matrix33.inl.hh
@@ -35,3 +38,4 @@
 ../include/gaudy/whitepoints.hh
 ../include/gaudy/gammas.hh
 ../src/gammas.cc
+

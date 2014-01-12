@@ -21,7 +21,7 @@ namespace gaudy {
     }
 }
 
-TEST_CASE("gaudy/RGB", "RGB tests")
+TEST_CASE("gaudy/LinearRGB", "LinearRGB tests")
 {
     using namespace gaudy;
     using RGB = LinearRGB<float, sRGB>;
@@ -237,7 +237,7 @@ TEST_CASE("gaudy/RGB", "RGB tests")
     }
 }
 
-TEST_CASE("gaudy/RGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
+TEST_CASE("gaudy/LinearRGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
 {
     if (!std::numeric_limits<float>::is_iec559 || !std::numeric_limits<double>::is_iec559)
         FAIL("float/double are not IEEE 754; IEEE 754 Tests skipped.");
@@ -263,7 +263,7 @@ TEST_CASE("gaudy/RGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
     REQUIRE((RGB(0,0,0) *= (1/.0f)              ) != rel_equal(RGB(0,0,0)));
 }
 
-TEST_CASE("gaudy/RGB/cmath", "RGB cmath tests")
+TEST_CASE("gaudy/LinearRGB/cmath", "RGB cmath tests")
 {
     using namespace gaudy;
     using namespace std;
