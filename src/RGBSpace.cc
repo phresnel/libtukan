@@ -14,9 +14,9 @@ namespace gaudy {
                   << "(" << m._31 << "," << m._32 << "," << m._33 << ")}";
     }
 
-    template <typename T>
+    template <typename T, typename Gamma>
     inline
-    std::ostream& operator<< (std::ostream &os, RGBSpace<T> const &rhs) {
+    std::ostream& operator<< (std::ostream &os, RGBSpace<T, Gamma> const &rhs) {
         return os << "rgb-space{"
                   << "to-xyz{\n"
                   << rhs.rgb_to_xyz
