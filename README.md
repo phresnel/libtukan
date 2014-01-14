@@ -1,6 +1,8 @@
 #tukan
 ##_a C++ header-only color conversion- and computation-library_
 
+![Named after this wonderful creature!](meta/800px-Keel-billed_toucan_woodland.jpg)
+
 ##Features (Summary):
 * almost complete `<cmath>`-implementation for linear RGB
 * header only, no further dependencies except a C++11 compiler (or newer)
