@@ -99,7 +99,6 @@ TEST_CASE("algorithm/lerp", "lerp tests")
     SECTION("lerp_sat(RandomAccessIterator, RandomAccessIterator, f)") {
         using gaudy::lerp_sat;
         std::vector<int> vec = {1,2,3};
-        using Iter = std::list<int>::iterator;
         REQUIRE(lerp_sat(begin(vec), end(vec), 0.5) == 2);
         REQUIRE(lerp_sat(vec.begin(), vec.end(), 0.5) == 2);
 
@@ -113,7 +112,6 @@ TEST_CASE("algorithm/lerp", "lerp tests")
     SECTION("lerp_sat(range, f)") {
         using gaudy::lerp_sat;
         std::vector<int> vec = {1,2,3};
-        using Iter = std::list<int>::iterator;
         REQUIRE(lerp_sat(vec, 0.5) == 2);
 
         std::list<int> lst = {7,9};

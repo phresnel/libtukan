@@ -272,7 +272,7 @@ TEST_CASE("gaudy/LinearRGB/cmath", "RGB cmath tests")
     const RGB w {0.9, 0.2, 0.7};
     const RGB x {1.9, 4, 8.7};
     const RGB z {100.9, -1, -0.7};
-    const auto a = 2., b = 11., c = 0.5, d = -1.0/0.0, e = -99999.;
+    const auto a = 2., b = 11., c = 0.5;
 
     SECTION("trigonometric") {
         REQUIRE(sin(v)     == rel_equal(RGB(sin(v.r),       sin(v.g),        sin(v.b))));
@@ -468,7 +468,6 @@ TEST_CASE("gaudy/LinearRGB/cmath", "RGB cmath tests")
         REQUIRE(nextafter(x,c) == rel_equal(RGB(nextafter(x.r,c),  nextafter(x.g,c),  nextafter(x.b,c))));
 
         LinearRGB<long double,sRGB> d {1.0l,-0.5l,-1.0l/0.0l};
-        const long double e = -99999;
         REQUIRE(nexttoward(x,d) == rel_equal(RGB(nexttoward(x.r,d.r),nexttoward(x.g,d.g),nexttoward(x.b,d.b))));
         REQUIRE(nexttoward(x,c) == rel_equal(RGB(nexttoward(x.r,c),  nexttoward(x.g,c),  nexttoward(x.b,c))));
 

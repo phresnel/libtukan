@@ -56,7 +56,7 @@ namespace gaudy {
 
     namespace cmath_or_adl {
       using std::ilogb; template <typename T> using ilogb_type = decltype(ilogb(std::declval<T>()));
-    }    
+    }
 
     // -- trigonometric ----------------------------------------------------------------------------
     template <typename T, EnableIf<has_apply_interface<T>>...> T cos (T v) noexcept ;
@@ -191,7 +191,7 @@ namespace gaudy {
 
 
 
-namespace gaudy {    
+namespace gaudy {
     // trigonometric
     template <typename T, EnableIf<has_apply_interface<T>>...>
     inline T cos(T v) noexcept
@@ -517,7 +517,6 @@ namespace gaudy {
 
     template <typename T, EnableIf<has_apply_interface<T>>...>
     inline T nearbyint(T v) noexcept {
-        using V = ValueTypeOf<T>;
         return apply(v, [](ValueTypeOf<T> f){using std::nearbyint; return nearbyint(f);});
     }
 

@@ -154,7 +154,7 @@ TEST_CASE("gaudy/XYZ/cmath", "XYZ cmath tests")
     const XYZ<float> w {0.9, 0.2, 0.7};
     const XYZ<float> x {1.9, 4, 8.7};
     const XYZ<float> z {100.9, -1, -0.7};
-    const auto a = 2., b = 11., c = 0.5, d = -1.0/0.0, e = -99999.;
+    const auto a = 2., b = 11., c = 0.5;
 
     SECTION("trigonometric") {
         REQUIRE(sin(v)     == rel_equal(XYZ<float>(sin(v.X),       sin(v.Y),        sin(v.Z))));
@@ -350,7 +350,6 @@ TEST_CASE("gaudy/XYZ/cmath", "XYZ cmath tests")
         REQUIRE(nextafter(x,c) == rel_equal(XYZ<float>(nextafter(x.X,c),  nextafter(x.Y,c),  nextafter(x.Z,c))));
 
         XYZ<long double> d {1.0l,-0.5l,-1.0l/0.0l};
-        const long double e = -99999;
         REQUIRE(nexttoward(x,d) == rel_equal(XYZ<float>(nexttoward(x.X,d.X),nexttoward(x.Y,d.Y),nexttoward(x.Z,d.Z))));
         REQUIRE(nexttoward(x,c) == rel_equal(XYZ<float>(nexttoward(x.X,c),  nexttoward(x.Y,c),  nexttoward(x.Z,c))));
 
