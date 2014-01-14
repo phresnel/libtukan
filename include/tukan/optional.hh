@@ -6,7 +6,7 @@
 
 #include "boost/optional.hpp"
 
-namespace gaudy {
+namespace tukan {
     using boost::optional;
 }
 

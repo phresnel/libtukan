@@ -1,4 +1,4 @@
-#gaudy
+#tukan
 ##_a C++ header-only color conversion- and computation-library_
 
 ##Features (Summary):
@@ -57,7 +57,7 @@ Build/Test:
 
 ##License
 
-(C) 2013 Sebastian Mach (1983), the files contained in gaudy (C++ color 
+(C) 2013 Sebastian Mach (1983), the files contained in tukan (C++ color 
 conversion and computation library) are published under the terms of the GNU
 General Public License, Version 3 (a.k.a. GPLv3).
 

@@ -2,7 +2,7 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/LinearRGB.hh"
-#include "gaudy/algorithm.hh"
+#include "tukan/LinearRGB.hh"
+#include "tukan/algorithm.hh"
 #include "catch.hpp"
 

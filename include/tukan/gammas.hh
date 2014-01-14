@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-namespace gaudy { namespace gamma { namespace detail {
+namespace tukan { namespace gamma { namespace detail {
 
     struct simple_gamma {
         double gamma;
@@ -81,7 +81,7 @@ namespace gaudy { namespace gamma { namespace detail {
 } } }
 
 
-namespace gaudy { namespace gamma {
+namespace tukan { namespace gamma {
 
     static constexpr auto _1_0 = detail::simple_gamma(1.0);
     static constexpr auto _1_8 = detail::simple_gamma(1.8);

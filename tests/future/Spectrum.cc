@@ -2,17 +2,17 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/future/Spectrum.hh"
+#include "tukan/future/Spectrum.hh"
 #include "catch.hpp"
 
 bool is_nan_or_infinity (float f) {
     return (f != f) || (f==1.0f/0.0f) || (f==-1.0f/0.0f);
 }
 
-TEST_CASE("gaudy/Spectrum", "Spectrum Tests")
+TEST_CASE("tukan/Spectrum", "Spectrum Tests")
 {
-    using namespace gaudy;
-    using namespace gaudy::future;
+    using namespace tukan;
+    using namespace tukan::future;
 
     auto spec = Spectrum(400_nm, 800_nm, std::vector<float>({1, 2}));
     LinearInterpolator line(spec);

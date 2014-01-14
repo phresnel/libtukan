@@ -2,12 +2,12 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/LinearRGB.hh"
+#include "tukan/LinearRGB.hh"
 #include "catch.hpp"
 
 
 #include <iostream>
-namespace gaudy {
+namespace tukan {
     template <typename T, template <typename> class RGBSpace>
     inline
     std::ostream& operator<< (std::ostream &os, LinearRGB<T, RGBSpace> const &rhs) {
@@ -21,9 +21,9 @@ namespace gaudy {
     }
 }
 
-TEST_CASE("gaudy/LinearRGB", "LinearRGB tests")
+TEST_CASE("tukan/LinearRGB", "LinearRGB tests")
 {
-    using namespace gaudy;
+    using namespace tukan;
     using RGB = LinearRGB<float, sRGB>;
 
     SECTION("array interface") {
@@ -130,119 +130,119 @@ TEST_CASE("gaudy/LinearRGB", "LinearRGB tests")
     SECTION("XYZ/RGB conversion (against Bruce Lindblooms color space calculator)") {
         { LinearRGB<float, AppleRGB> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-263.793217, -158.977776, 897.746594};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, AdobeRGB> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-387.386169, -219.834919, 964.323323};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, BestRGB>  rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-504.399919, -191.721543, 815.725661};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, BetaRGB>  rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-551.651170, -267.943022, 784.636880};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, BruceRGB> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-277.421270, -163.182383, 971.650055};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, CIERGB>   rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-286.651709, -162.663778, 989.827225};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, ColorMatchRGB> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-373.857482, -205.557380, 668.284937};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, DonRGB4>  rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-519.420293, -242.230199, 799.861400};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, ECIRGBv2> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-513.056326, -240.359425, 757.584089};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, EktaSpacePS5> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-495.091524, -253.634555, 783.344970};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, NTSCRGB>  rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-405.391106, -182.290453, 1116.431941};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, PALSECAMRGB>  rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-250.806577, -148.272728, 919.336188};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, ProPhotoRGB> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-765.099278, -285.430536, 825.210000};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, SMPTE_C>  rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-200.416979, -123.455612, 939.784298};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, sRGB>     rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-230.483353, -138.038892, 931.363899};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
 
         { LinearRGB<float, WideGamutRGB> rgb {-999,3.141,1000};
           XYZ<float>                 xyz {-567.885614, -238.777336, 773.591371};
-          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, gaudy::epsilon, 0.0001));
-          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, gaudy::epsilon, 0.0001)); }
+          REQUIRE(static_cast<XYZ<float>>    (rgb)   == rel_equal(xyz, tukan::epsilon, 0.0001));
+          REQUIRE((static_cast<decltype(rgb)>(xyz))  == rel_equal(rgb, tukan::epsilon, 0.0001)); }
     }
 
     SECTION("XYZ conversion, linearity tests") {
         REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, sRGB>(1,0,0))
-                == rel_equal(XYZ<float>(0.412456, 0.212673, 0.019334), gaudy::epsilon, 0.00001));
+                == rel_equal(XYZ<float>(0.412456, 0.212673, 0.019334), tukan::epsilon, 0.00001));
         REQUIRE((static_cast<LinearRGB<float, sRGB>>(XYZ<float>(0.412456, 0.212673, 0.019334)))
-                == rel_equal(LinearRGB<float, sRGB>(1,0,0), gaudy::epsilon, 0.00001));
+                == rel_equal(LinearRGB<float, sRGB>(1,0,0), tukan::epsilon, 0.00001));
 
         REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, sRGB>(0,1,0))
-                == rel_equal(XYZ<float>(0.357576, 0.715152, 0.119192), gaudy::epsilon, 0.00001));
+                == rel_equal(XYZ<float>(0.357576, 0.715152, 0.119192), tukan::epsilon, 0.00001));
         REQUIRE((static_cast<LinearRGB<float, sRGB>>(XYZ<float>(0.357576, 0.715152, 0.119192)))
-                == rel_equal(LinearRGB<float, sRGB>(0,1,0), gaudy::epsilon, 0.00001));
+                == rel_equal(LinearRGB<float, sRGB>(0,1,0), tukan::epsilon, 0.00001));
 
         REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, sRGB>(0,0,10))
-                == rel_equal(XYZ<float>(1.804375, 0.721750, 9.503041), gaudy::epsilon, 0.00001));
+                == rel_equal(XYZ<float>(1.804375, 0.721750, 9.503041), tukan::epsilon, 0.00001));
         REQUIRE((static_cast<LinearRGB<float, sRGB>>(XYZ<float>(1.804375, 0.721750, 9.503041)))
-                == rel_equal(LinearRGB<float, sRGB>(0,0,10), gaudy::epsilon, 0.00001));
+                == rel_equal(LinearRGB<float, sRGB>(0,0,10), tukan::epsilon, 0.00001));
 
         REQUIRE(static_cast<XYZ<float>>(LinearRGB<float, sRGB>(-999,3.141,1000))
-                == rel_equal(XYZ<float>(-230.483353, -138.038892, 931.363899), gaudy::epsilon, 0.00001));
+                == rel_equal(XYZ<float>(-230.483353, -138.038892, 931.363899), tukan::epsilon, 0.00001));
         REQUIRE((static_cast<LinearRGB<float, sRGB>>(XYZ<float>(-230.483353, -138.038892, 931.363899)))
-                == rel_equal(LinearRGB<float, sRGB>(-999,3.141,1000), gaudy::epsilon, 0.00001));
+                == rel_equal(LinearRGB<float, sRGB>(-999,3.141,1000), tukan::epsilon, 0.00001));
 
         REQUIRE(static_cast<XYZ<float>>(10*LinearRGB<float, sRGB>(-999,3.141,1000))
-                == rel_equal(10*XYZ<float>(-230.483353, -138.038892, 931.363899), gaudy::epsilon, 0.00001));
+                == rel_equal(10*XYZ<float>(-230.483353, -138.038892, 931.363899), tukan::epsilon, 0.00001));
         REQUIRE((static_cast<LinearRGB<float, sRGB>>(10*XYZ<float>(-230.483353, -138.038892, 931.363899)))
-                == rel_equal(10*LinearRGB<float, sRGB>(-999,3.141,1000), gaudy::epsilon, 0.00001));
+                == rel_equal(10*LinearRGB<float, sRGB>(-999,3.141,1000), tukan::epsilon, 0.00001));
     }
 }
 
-TEST_CASE("gaudy/LinearRGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
+TEST_CASE("tukan/LinearRGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
 {
     if (!std::numeric_limits<float>::is_iec559 || !std::numeric_limits<double>::is_iec559)
         FAIL("float/double are not IEEE 754; IEEE 754 Tests skipped.");
 
-    using namespace gaudy;
+    using namespace tukan;
     using RGB = LinearRGB<float, sRGB>;
 
     // infinity
@@ -263,9 +263,9 @@ TEST_CASE("gaudy/LinearRGB/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance"
     REQUIRE((RGB(0,0,0) *= (1/.0f)              ) != rel_equal(RGB(0,0,0)));
 }
 
-TEST_CASE("gaudy/LinearRGB/cmath", "RGB cmath tests")
+TEST_CASE("tukan/LinearRGB/cmath", "RGB cmath tests")
 {
-    using namespace gaudy;
+    using namespace tukan;
     using namespace std;
     using RGB = LinearRGB<float, sRGB>;
     const RGB v {0.6, 0.4, 0.8};

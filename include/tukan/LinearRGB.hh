@@ -13,7 +13,7 @@
 #include "RGBSpace.hh"
 #include "XYZ.hh"
 
-namespace gaudy {
+namespace tukan {
 
     //---------------------------------------------------------------------------------------------
     // RGB

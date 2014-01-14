@@ -4,7 +4,7 @@
 #ifndef WHITEPOINTS_HH_INCLUDED_20131213
 #define WHITEPOINTS_HH_INCLUDED_20131213
 
-namespace gaudy { namespace whitepoint {
+namespace tukan { namespace whitepoint {
     // TODO: with C++14, the whitepoints should be variable templates.
     // Whitepoints from: http://www.brucelindbloom.com/index.html?Eqn_ChromAdapt.html
     static constexpr XYZ<double> A   {1.09850, 1.00000, 0.35585};

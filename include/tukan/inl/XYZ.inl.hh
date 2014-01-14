@@ -7,7 +7,7 @@
 
 
 // Member functions implementation.
-namespace gaudy {
+namespace tukan {
 
     template <typename T>
     T XYZ<T>::* const XYZ<T>::offsets_[3] =
@@ -64,7 +64,7 @@ namespace gaudy {
 
 
 
-namespace gaudy {
+namespace tukan {
 
     //---------------------------------------------------------------------------------------------
     // implementation
@@ -256,7 +256,7 @@ namespace gaudy {
 
 
 // "apply"-concept implementation.
-namespace gaudy {
+namespace tukan {
     namespace detail {
         // We have to overload the rebind_value_type-template because the general version does not
         // like template template arguments.

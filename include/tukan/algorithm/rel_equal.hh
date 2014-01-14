@@ -8,7 +8,7 @@
 #include <limits>
 #include <iosfwd>
 
-namespace gaudy {
+namespace tukan {
 
     // TODO: This while thing needs to be reworked wrt doubles and arbitrary types (what with epsilon?)
     namespace detail {
@@ -42,14 +42,14 @@ namespace gaudy {
             friend
             constexpr bool operator== (T const &lhs, RelEqualProxy const &rhs) noexcept
             {
-                using gaudy::rel_equal;
+                using tukan::rel_equal;
                 return rel_equal (lhs, rhs.val, rhs.max_rel_diff);
             }
 
             friend
             constexpr bool operator!= (T const &lhs, RelEqualProxy const &rhs) noexcept
             {
-                using gaudy::rel_equal;
+                using tukan::rel_equal;
                 return !(lhs == rhs);
             }
 

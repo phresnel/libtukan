@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-namespace gaudy {
+namespace tukan {
 
     //----------------------------------------------------------------------------------------------
     // Interval

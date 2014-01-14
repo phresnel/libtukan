@@ -2,13 +2,13 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/Interval.hh"
-#include "gaudy/Nanometer.hh"
+#include "tukan/Interval.hh"
+#include "tukan/Nanometer.hh"
 #include "catch.hpp"
 
-TEST_CASE("gaudy/Interval", "Interval tests")
+TEST_CASE("tukan/Interval", "Interval tests")
 {
-    using namespace gaudy;
+    using namespace tukan;
     REQUIRE_THROWS(Interval<float>(1,0));
     REQUIRE_NOTHROW(Interval<float>(1,1));
     REQUIRE_NOTHROW(Interval<float>(-1,1));

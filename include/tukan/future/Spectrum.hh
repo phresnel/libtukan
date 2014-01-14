@@ -10,7 +10,7 @@
 #include <valarray>
 #include <stdexcept>
 
-namespace gaudy { namespace future {
+namespace tukan { namespace future {
 
     //----------------------------------------------------------------------------------------------
     // SpectrumSample
@@ -86,7 +86,7 @@ namespace gaudy { namespace future {
                           float max_rel_diff=std::numeric_limits<float>::epsilon()
                          ) noexcept
     {
-        using gaudy::rel_equal;
+        using tukan::rel_equal;
         return rel_equal(lhs.amplitude, rhs.amplitude, max_rel_diff)
             && rel_equal(lhs.wavelength, rhs.wavelength, max_rel_diff);
     }

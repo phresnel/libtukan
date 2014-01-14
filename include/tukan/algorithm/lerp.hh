@@ -77,7 +77,7 @@
 
 
 
-namespace gaudy
+namespace tukan
 {
 
     template <typename L, typename R, typename F>
@@ -96,7 +96,7 @@ namespace gaudy
 
 
 
-namespace gaudy
+namespace tukan
 {
 
     template <typename L, typename R, typename F>

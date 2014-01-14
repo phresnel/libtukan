@@ -6,7 +6,7 @@
 
 #include <tuple>
 
-namespace gaudy {
+namespace tukan {
     using std::get;
     using std::tuple;
     using std::make_tuple;

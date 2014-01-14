@@ -2,9 +2,9 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 #include "catch.hpp"
-#include "gaudy/detail/Matrix33.hh"
+#include "tukan/detail/Matrix33.hh"
 
-namespace gaudy { namespace detail {
+namespace tukan { namespace detail {
     template <typename T>
     std::ostream& operator<< (std::ostream &os, Matrix33<T> const &m) {
         return os //<< std::fixed
@@ -14,10 +14,10 @@ namespace gaudy { namespace detail {
     }
 } }
 
-TEST_CASE("gaudy/Matrix33", "Matrix33 math ops correctness") {
-    using gaudy::detail::Matrix33;
-    using gaudy::rel_equal;
-    using gaudy::detail::rel_equal;
+TEST_CASE("tukan/Matrix33", "Matrix33 math ops correctness") {
+    using tukan::detail::Matrix33;
+    using tukan::rel_equal;
+    using tukan::detail::rel_equal;
 
     Matrix33<float> a {1,2,3,
                        4,5,6,
@@ -30,9 +30,9 @@ TEST_CASE("gaudy/Matrix33", "Matrix33 math ops correctness") {
     REQUIRE(a!=b);
     REQUIRE(!(a!=a));
     REQUIRE(!(a==b));
-    REQUIRE(determinant(a) == gaudy::rel_equal(-48.f));
-    REQUIRE(determinant(b) == gaudy::rel_equal(-1.f));
-    REQUIRE((a*inverse(a)) == rel_equal(Matrix33<float>(), gaudy::epsilon, 0.000001));
+    REQUIRE(determinant(a) == tukan::rel_equal(-48.f));
+    REQUIRE(determinant(b) == tukan::rel_equal(-1.f));
+    REQUIRE((a*inverse(a)) == rel_equal(Matrix33<float>(), tukan::epsilon, 0.000001));
     REQUIRE(((a*b)*inverse(b)) == rel_equal(a));
 
     float inf = 1.f / 0.f;

@@ -8,7 +8,7 @@
 #include "LinearRGB.hh"
 #include "XYZ.hh"
 
-namespace gaudy {
+namespace tukan {
 
     // -- structure -------------------------------------------------------------------------------
     template <typename T, template <typename> class RGBSpace>

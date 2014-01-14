@@ -7,7 +7,7 @@
 #include <cmath>
 #include "traits/traits.hh"
 
-namespace gaudy {
+namespace tukan {
 
     // -- <cmath> ---------------------------------------------------------------------------------
     //
@@ -191,7 +191,7 @@ namespace gaudy {
 
 
 
-namespace gaudy {
+namespace tukan {
     // trigonometric
     template <typename T, EnableIf<has_apply_interface<T>>...>
     inline T cos(T v) noexcept

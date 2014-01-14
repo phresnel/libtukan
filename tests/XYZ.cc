@@ -2,12 +2,12 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/XYZ.hh"
+#include "tukan/XYZ.hh"
 #include "catch.hpp"
 
 
 #include <iostream>
-namespace gaudy {
+namespace tukan {
     template <typename T>
     inline
     std::ostream& operator<< (std::ostream &os, XYZ<T> const &rhs) {
@@ -15,9 +15,9 @@ namespace gaudy {
     }
 }
 
-TEST_CASE("gaudy/XYZ", "XYZ tests")
+TEST_CASE("tukan/XYZ", "XYZ tests")
 {
-    using namespace gaudy;
+    using namespace tukan;
 
     SECTION("array interface") {
         REQUIRE(XYZ<float>(1,2,3)[0] == 1);
@@ -121,12 +121,12 @@ TEST_CASE("gaudy/XYZ", "XYZ tests")
     }
 }
 
-TEST_CASE("gaudy/XYZ/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
+TEST_CASE("tukan/XYZ/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
 {
     if (!std::numeric_limits<float>::is_iec559 || !std::numeric_limits<double>::is_iec559)
         FAIL("float/double are not IEEE 754; IEEE 754 Tests skipped.");
 
-    using namespace gaudy;
+    using namespace tukan;
 
     // infinity
     REQUIRE((XYZ<float>(1,2,3)/=XYZ<float>())  == (XYZ<float>(1/.0f, 1/.0f, 1/.0f)));
@@ -146,9 +146,9 @@ TEST_CASE("gaudy/XYZ/IEEE 754 NaNs and Infinities", "IEEE 754 Conformance")
     REQUIRE((XYZ<float>(0,0,0) *= (1/.0f)              ) != rel_equal(XYZ<float>(0,0,0)));
 }
 
-TEST_CASE("gaudy/XYZ/cmath", "XYZ cmath tests")
+TEST_CASE("tukan/XYZ/cmath", "XYZ cmath tests")
 {
-    using namespace gaudy;
+    using namespace tukan;
     using namespace std;
     const XYZ<float> v {0.6, 0.4, 0.8};
     const XYZ<float> w {0.9, 0.2, 0.7};

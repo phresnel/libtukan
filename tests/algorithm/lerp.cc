@@ -2,19 +2,19 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/LinearRGB.hh"
-#include "gaudy/algorithm/lerp.hh"
+#include "tukan/LinearRGB.hh"
+#include "tukan/algorithm/lerp.hh"
 #include "catch.hpp"
 #include <vector>
 #include <list>
 
 TEST_CASE("algorithm/lerp", "lerp tests")
 {
-    using gaudy::lerp;
-    using gaudy::lerp_sat;
-    using gaudy::Interval;
-    using gaudy::interval;
-    using RGB = gaudy::LinearRGB<float, gaudy::sRGB>;
+    using tukan::lerp;
+    using tukan::lerp_sat;
+    using tukan::Interval;
+    using tukan::interval;
+    using RGB = tukan::LinearRGB<float, tukan::sRGB>;
 
     SECTION("lerp(a,b, f)") {
         REQUIRE(lerp(1,2,  0.5) == 1.5);
@@ -97,7 +97,7 @@ TEST_CASE("algorithm/lerp", "lerp tests")
     }
 
     SECTION("lerp_sat(RandomAccessIterator, RandomAccessIterator, f)") {
-        using gaudy::lerp_sat;
+        using tukan::lerp_sat;
         std::vector<int> vec = {1,2,3};
         REQUIRE(lerp_sat(begin(vec), end(vec), 0.5) == 2);
         REQUIRE(lerp_sat(vec.begin(), vec.end(), 0.5) == 2);
@@ -110,7 +110,7 @@ TEST_CASE("algorithm/lerp", "lerp tests")
     }
 
     SECTION("lerp_sat(range, f)") {
-        using gaudy::lerp_sat;
+        using tukan::lerp_sat;
         std::vector<int> vec = {1,2,3};
         REQUIRE(lerp_sat(vec, 0.5) == 2);
 

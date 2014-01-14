@@ -3,13 +3,13 @@
 // See COPYING in the root-folder of the excygen project folder.
 
 
-namespace gaudy { namespace detail {
+namespace tukan { namespace detail {
     template <typename T>
     constexpr bool rel_equal (detail::Matrix33<T> const &m,
                               detail::Matrix33<T> const &n,
                               T e) noexcept
     {
-        using gaudy::rel_equal;
+        using tukan::rel_equal;
         return rel_equal(m._11,n._11,e) && rel_equal(m._12,n._12,e) && rel_equal(m._13,n._13,e)
             && rel_equal(m._21,n._21,e) && rel_equal(m._22,n._22,e) && rel_equal(m._23,n._23,e)
             && rel_equal(m._31,n._31,e) && rel_equal(m._32,n._32,e) && rel_equal(m._33,n._33,e);
@@ -17,7 +17,7 @@ namespace gaudy { namespace detail {
 } }
 
 
-namespace gaudy {  namespace detail {
+namespace tukan {  namespace detail {
     template <typename T>
     constexpr bool operator== (Matrix33<T> const &m, Matrix33<T> const &n) noexcept
     {

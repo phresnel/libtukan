@@ -11,7 +11,7 @@
 #include <cmath>
 #include <stdexcept>
 
-namespace gaudy {
+namespace tukan {
 
     //---------------------------------------------------------------------------------------------
     // XYZ

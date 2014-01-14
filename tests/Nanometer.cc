@@ -2,12 +2,12 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-#include "gaudy/Nanometer.hh"
+#include "tukan/Nanometer.hh"
 #include "catch.hpp"
 
-TEST_CASE("gaudy/Nanometer", "Nanometer tests")
+TEST_CASE("tukan/Nanometer", "Nanometer tests")
 {
-    using namespace gaudy;
+    using namespace tukan;
 
     REQUIRE(1_nm == 1_nm);
     REQUIRE(1_nm != 2_nm);

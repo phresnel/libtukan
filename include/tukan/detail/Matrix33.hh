@@ -6,7 +6,7 @@
 
 #include "../algorithm/rel_equal.hh"
 
-namespace gaudy { namespace detail {
+namespace tukan { namespace detail {
 
     template <typename T>
     struct Matrix33 {

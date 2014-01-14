@@ -7,7 +7,7 @@
 
 
 // Member functions implementation.
-namespace gaudy {
+namespace tukan {
 
     template <typename T, template <typename> class RGBSpace>
     T RGB<T, RGBSpace>::* const RGB<T, RGBSpace>::offsets_[3] =
@@ -95,7 +95,7 @@ namespace gaudy {
 
 
 
-namespace gaudy {
+namespace tukan {
 
     // relation
     template <typename T, template <typename> class RGBSpace>
