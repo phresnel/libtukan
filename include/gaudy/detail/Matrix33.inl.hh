@@ -2,7 +2,22 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 
-namespace gaudy {
+
+namespace gaudy { namespace detail {
+    template <typename T>
+    constexpr bool rel_equal (detail::Matrix33<T> const &m,
+                              detail::Matrix33<T> const &n,
+                              T e) noexcept
+    {
+        using gaudy::rel_equal;
+        return rel_equal(m._11,n._11,e) && rel_equal(m._12,n._12,e) && rel_equal(m._13,n._13,e)
+            && rel_equal(m._21,n._21,e) && rel_equal(m._22,n._22,e) && rel_equal(m._23,n._23,e)
+            && rel_equal(m._31,n._31,e) && rel_equal(m._32,n._32,e) && rel_equal(m._33,n._33,e);
+    }
+} }
+
+
+namespace gaudy {  namespace detail {
     template <typename T>
     constexpr bool operator== (Matrix33<T> const &m, Matrix33<T> const &n) noexcept
     {
@@ -15,14 +30,6 @@ namespace gaudy {
     constexpr bool operator!= (Matrix33<T> const &m, Matrix33<T> const &n) noexcept
     {
         return !(m==n);
-    }
-
-    template <typename T>
-    constexpr bool rel_equal (Matrix33<T> const &m, Matrix33<T> const &n, T e) noexcept
-    {
-        return rel_equal(m._11,n._11,e) && rel_equal(m._12,n._12,e) && rel_equal(m._13,n._13,e)
-            && rel_equal(m._21,n._21,e) && rel_equal(m._22,n._22,e) && rel_equal(m._23,n._23,e)
-            && rel_equal(m._31,n._31,e) && rel_equal(m._32,n._32,e) && rel_equal(m._33,n._33,e);
     }
 
     template <typename T>
@@ -87,4 +94,4 @@ namespace gaudy {
                 m._12, m._22, m._32,
                 m._13, m._23, m._33};
     }
-}
+} }

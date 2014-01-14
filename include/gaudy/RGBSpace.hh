@@ -5,19 +5,19 @@
 #define RGBSPACE_HH_20131122
 
 #include "XYZ.hh"
-#include "Matrix33.hh"
 #include "whitepoints.hh"
 #include "gammas.hh"
+#include "detail/Matrix33.hh"
 
 namespace gaudy {
 
     template <typename T, typename Gamma>
     struct RGBSpace {
-        Matrix33<T> rgb_to_xyz, xyz_to_rgb;
+        detail::Matrix33<T> rgb_to_xyz, xyz_to_rgb;
         Gamma gamma;
 
     protected:
-        constexpr RGBSpace(Matrix33<T> rgb_to_xyz, Gamma gamma) :
+        constexpr RGBSpace(detail::Matrix33<T> rgb_to_xyz, Gamma gamma) :
             rgb_to_xyz(rgb_to_xyz),
             xyz_to_rgb(inverse(rgb_to_xyz)),
             gamma(gamma)
@@ -42,13 +42,14 @@ namespace gaudy {
 
     private:
 
-        static constexpr RGBSpace lindbloom_method (Matrix33<T> M,
+        static constexpr RGBSpace lindbloom_method (detail::Matrix33<T> M,
                                                     XYZ<double> whitepoint, Gamma gamma) noexcept
         {
             return lindbloom_method_1(M, inverse(M), whitepoint, gamma);
         }
 
-        static constexpr RGBSpace lindbloom_method_1(Matrix33<T> M, Matrix33<T> invM,
+        static constexpr RGBSpace lindbloom_method_1(detail::Matrix33<T> M,
+                                                     detail::Matrix33<T> invM,
                                                      XYZ<double> whitepoint, Gamma gamma) noexcept
         {
             return lindbloom_method_2
@@ -61,7 +62,7 @@ namespace gaudy {
                    );
         }
 
-        static constexpr RGBSpace lindbloom_method_2(Matrix33<T> M,
+        static constexpr RGBSpace lindbloom_method_2(detail::Matrix33<T> M,
                                                      T S_r, T S_g, T S_b,
                                                      Gamma gamma) noexcept
         {

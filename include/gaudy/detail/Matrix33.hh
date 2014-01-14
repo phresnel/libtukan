@@ -4,9 +4,9 @@
 #ifndef MATRIX33_HH_INCLUDED_20131209
 #define MATRIX33_HH_INCLUDED_20131209
 
-#include "algorithm/rel_equal.hh"
+#include "../algorithm/rel_equal.hh"
 
-namespace gaudy {
+namespace gaudy { namespace detail {
 
     template <typename T>
     struct Matrix33 {
@@ -22,29 +22,22 @@ namespace gaudy {
           _21(_21), _22(_22), _23(_23),
           _31(_31), _32(_32), _33(_33)
         {}
-
-        /*
-        T operator() (int row, int col) const {
-            switch(row) {
-            case 0: switch(col) {case 0: return _11; case 1: return _12; case 2: return _13; }
-            case 1: switch(col) {case 0: return _21; case 1: return _22; case 2: return _23; }
-            case 2: switch(col) {case 0: return _31; case 1: return _32; case 2: return _33; }
-            }
-        }
-        */
     };
 
     template <typename T> constexpr bool operator== (Matrix33<T> const &m, Matrix33<T> const &n) noexcept;
     template <typename T> constexpr bool operator!= (Matrix33<T> const &m, Matrix33<T> const &n) noexcept;
-    template <typename T> constexpr bool rel_equal (Matrix33<T> const &lhs, Matrix33<T> const &rhs,
-                                                    T max_rel_diff=std::numeric_limits<T>::epsilon() ) noexcept;
     template <typename T> constexpr T determinant(Matrix33<T> const &m) noexcept;
     template <typename T> constexpr Matrix33<T> operator* (Matrix33<T> const &m, T f) noexcept;
     template <typename T> constexpr Matrix33<T> operator* (T f, Matrix33<T> const &m) noexcept;
     template <typename T> constexpr Matrix33<T> operator* (Matrix33<T> const &m, Matrix33<T> const &n) noexcept;
     template <typename T> constexpr Matrix33<T> inverse (Matrix33<T> const &m) noexcept;
     template <typename T> constexpr Matrix33<T> transpose (Matrix33<T> const &m) noexcept;
-}
+
+    template <typename T> constexpr bool rel_equal (detail::Matrix33<T> const &lhs,
+                                                    detail::Matrix33<T> const &rhs,
+                                                    T max_rel_diff=std::numeric_limits<T>::epsilon()
+                                                   ) noexcept;
+} }
 
 #include "Matrix33.inl.hh"
 

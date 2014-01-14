@@ -2,9 +2,9 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 #include "catch.hpp"
-#include "gaudy/Matrix33.hh"
+#include "gaudy/detail/Matrix33.hh"
 
-namespace gaudy {
+namespace gaudy { namespace detail {
     template <typename T>
     std::ostream& operator<< (std::ostream &os, Matrix33<T> const &m) {
         return os //<< std::fixed
@@ -12,10 +12,12 @@ namespace gaudy {
                   << "(" << m._21 << "," << m._22 << "," << m._23 << "),"
                   << "(" << m._31 << "," << m._32 << "," << m._33 << ")}";
     }
-}
+} }
 
 TEST_CASE("gaudy/Matrix33", "Matrix33 math ops correctness") {
-    using gaudy::Matrix33;
+    using gaudy::detail::Matrix33;
+    using gaudy::rel_equal;
+    using gaudy::detail::rel_equal;
 
     Matrix33<float> a {1,2,3,
                        4,5,6,

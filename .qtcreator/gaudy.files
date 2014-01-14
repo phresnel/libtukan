@@ -30,8 +30,8 @@
 ../tests/RGB.cc
 ../tests/RGBSpace.cc
 
-../include/gaudy/Matrix33.inl.hh
-../include/gaudy/Matrix33.hh
+../include/gaudy/detail/Matrix33.inl.hh
+../include/gaudy/detail/Matrix33.hh
 ../tests/Matrix33.cc
 ../include/gaudy/future/README.md
 

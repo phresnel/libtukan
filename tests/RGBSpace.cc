@@ -2,16 +2,18 @@
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
 #include "gaudy/RGBSpace.hh"
-#include "gaudy/Matrix33.hh"
 #include "catch.hpp"
 
 namespace gaudy {
-    template <typename T>
-    std::ostream& operator<< (std::ostream &os, Matrix33<T> const &m) {
-        return os //<< std::fixed
-                  << "{(" << m._11 << "," << m._12 << "," << m._13 << "),"
-                  << "(" << m._21 << "," << m._22 << "," << m._23 << "),"
-                  << "(" << m._31 << "," << m._32 << "," << m._33 << ")}";
+
+    namespace detail {
+        template <typename T>
+        std::ostream& operator<< (std::ostream &os, Matrix33<T> const &m) {
+            return os //<< std::fixed
+                      << "{(" << m._11 << "," << m._12 << "," << m._13 << "),"
+                      << "(" << m._21 << "," << m._22 << "," << m._23 << "),"
+                      << "(" << m._31 << "," << m._32 << "," << m._33 << ")}";
+        }
     }
 
     template <typename T, typename Gamma>
@@ -31,6 +33,7 @@ namespace gaudy {
 
 TEST_CASE("gaudy/RGBSpace", "RGBSpace tests") {
     using namespace gaudy;
+    using detail::Matrix33;
 
     // The following matrices are from Bruce Lindblooms site. Some epsilons are smaller,
     // some are larger. We should switch to double numbers and re-eval the epsilon.
