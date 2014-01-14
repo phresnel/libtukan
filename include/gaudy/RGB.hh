@@ -64,6 +64,6 @@ namespace gaudy {
 
 }
 
-#include "RGB.inl.hh"
+#include "inl/RGB.inl.hh"
 
 #endif // RGB_HH_INCLUDED_20140112

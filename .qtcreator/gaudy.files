@@ -20,11 +20,11 @@
 ../SConstruct
 ../include/gaudy/traits/traits.hh
 ../include/gaudy/RGBSpace.hh
-../include/gaudy/LinearRGB.inl.hh
+../include/gaudy/inl/LinearRGB.inl.hh
 ../include/gaudy/LinearRGB.hh
 ../include/gaudy/RGB.hh
-../include/gaudy/RGB.inl.hh
-../include/gaudy/XYZ.inl.hh
+../include/gaudy/inl/RGB.inl.hh
+../include/gaudy/inl/XYZ.inl.hh
 ../include/gaudy/XYZ.hh
 ../tests/LinearRGB.cc
 ../tests/RGB.cc

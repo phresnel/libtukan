@@ -4,7 +4,7 @@
 #ifndef SPECTRUM_HH_INCLUDED_20131017
 #define SPECTRUM_HH_INCLUDED_20131017
 
-#include "../tuple.hh"
+#include "../detail/tuple.hh"
 #include "../Nanometer.hh"
 #include "../Interval.hh"
 #include <valarray>

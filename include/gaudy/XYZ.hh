@@ -115,7 +115,7 @@ namespace gaudy {
 
 }
 
-#include "XYZ.inl.hh"
+#include "inl/XYZ.inl.hh"
 #include "cmath.hh"
 
 #endif // XYZ_HH_INCLUDED_20131206

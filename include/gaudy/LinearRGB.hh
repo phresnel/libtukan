@@ -126,7 +126,7 @@ namespace gaudy {
 
 }
 
-#include "LinearRGB.inl.hh"
+#include "inl/LinearRGB.inl.hh"
 #include "cmath.hh"
 
 #endif // LINEARRGB_HH_INCLUDED_20131017
