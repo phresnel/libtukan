@@ -7,15 +7,15 @@
 ../include/gaudy/cmath.hh
 ../include/gaudy/algorithm.hh
 ../include/gaudy/algorithm/lerp.hh
-../src/Interval.cc
-../src/Nanometer.cc
-../src/XYZ.cc
-../src/future/Spectrum.cc
-../src/algorithm.cc
-../src/algorithm/lerp.cc
+../tests/Interval.cc
+../tests/Nanometer.cc
+../tests/XYZ.cc
+../tests/future/Spectrum.cc
+../tests/algorithm.cc
+../tests/algorithm/lerp.cc
 ../benchmarks/IndexingOperator.cc
 ../bootstrap
-../main.cc
+../tests/main.cc
 ../README.md
 ../SConstruct
 ../include/gaudy/traits/traits.hh
@@ -26,16 +26,16 @@
 ../include/gaudy/RGB.inl.hh
 ../include/gaudy/XYZ.inl.hh
 ../include/gaudy/XYZ.hh
-../src/LinearRGB.cc
-../src/RGB.cc
-../src/RGBSpace.cc
+../tests/LinearRGB.cc
+../tests/RGB.cc
+../tests/RGBSpace.cc
 
 ../include/gaudy/Matrix33.inl.hh
 ../include/gaudy/Matrix33.hh
-../src/Matrix33.cc
+../tests/Matrix33.cc
 ../include/gaudy/future/README.md
 
 ../include/gaudy/whitepoints.hh
 ../include/gaudy/gammas.hh
-../src/gammas.cc
+../tests/gammas.cc
 
