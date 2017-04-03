@@ -1,28 +1,28 @@
-#tukan
-##_a C++ header-only color conversion- and computation-library_
+# tukan
+## _a C++ header-only color conversion- and computation-library_
 
 ![Named after this wonderful creature!](meta/800px-Keel-billed_toucan_woodland.jpg)
 
-##Features (Summary):
+## Features (Summary):
 * almost complete `<cmath>`-implementation for linear RGB
 * header only, no further dependencies except a C++11 compiler (or newer)
 * no macros (except include guards)
 
 
-###RGB features:
+### RGB features:
 * complete implementation of the __C++11 `<cmath>`__ header, with the following exceptions:
  * the macros `NAN`, `INFINITY`, `HUGE_VAL`, `HUGE_VALF`, `HUGE_VALL` are unimplemented (that's because macros cannot be overloaded)
  * the classification functions (`fpclassify`, `isfinite`, `isinf`, `isnan`, `isnormal`, `signbit`) and
    comparison functions (`isgreater`, `isgreaterequal`, `isless`, `islessequal`, `islessgreater`, `isunordered`)
 
 
-##Planned features:
+## Planned features:
 
 * almost lossless conversion of RGB colors to color spectrums (and back)
 * sRGB from and to RGB
 * HSV, CIE XYZ, YUV and all color spaces that exist (in the whole universe (and beyond))
 
-###RGB features:
+### RGB features:
 * complete `<cstdlib>` math functions implementation
 * `<numeric_limits>` implementation
 
@@ -31,7 +31,7 @@ More info later.
 
 -------------------------------------------------------------------------------
 
-##"Can I participate?"
+## "Can I participate?"
 
 Yes. But beware that we strive for complete unit test coverage (I would assist
 with that). And all algorithms need citations (in the longer term).
@@ -57,7 +57,7 @@ Build/Test:
 
 -------------------------------------------------------------------------------
 
-##License
+## License
 
 (C) 2013 Sebastian Mach (1983), the files contained in tukan (C++ color 
 conversion and computation library) are published under the terms of the GNU
