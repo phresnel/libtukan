@@ -12,12 +12,12 @@ namespace tukan { namespace gamma { namespace detail {
         double gamma;
         constexpr simple_gamma (double gamma) noexcept : gamma(gamma) {}
 
-        constexpr double to_linear (double v) noexcept {
+        double to_linear (double v) noexcept {
             using std::pow; using std::fabs;
             return (v<0?-1:1) * pow(fabs(v), gamma);
         }
 
-        constexpr double to_nonlinear (double v) noexcept {
+        double to_nonlinear (double v) noexcept {
             using std::pow; using std::fabs;
             return (v<0?-1:1) * pow(fabs(v), 1./gamma);
         }
