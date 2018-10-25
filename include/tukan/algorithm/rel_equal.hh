@@ -1,84 +1,132 @@
 // (C) 2013 Sebastian Mach (1983), this file is published under the terms of the
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
-#ifndef REL_EQUAL_HH_INCLUDED_20131017
-#define REL_EQUAL_HH_INCLUDED_20131017
+#ifndef LINEARRGB_HH_INCLUDED_20131017
+#define LINEARRGB_HH_INCLUDED_20131017
 
+#include "algorithm/rel_equal.hh"
+#include "traits/traits.hh"
+#include <functional>
+#include <algorithm>
 #include <cmath>
-#include <limits>
-#include <iosfwd>
+#include <stdexcept>
+#include "RGBSpace.hh"
+#include "XYZ.hh"
 
 namespace tukan {
 
-    // TODO: This while thing needs to be reworked wrt doubles and arbitrary types (what with epsilon?)
-    namespace detail {
-        constexpr
-        bool rel_equal_helper(float lhs, float rhs, float max_rel_diff,
-                              float diff)
-        {
-            return diff <= ((rhs>lhs ? rhs : lhs) * max_rel_diff);
-        }
-    }
+    //---------------------------------------------------------------------------------------------
+    // RGB
+    // ---
+    //
+    // About
+    // -----
+    // LinearRGB represents a working color which you can add, subtract, multiply et cetera.
+    // The gamma value for a linear RGB is 1, even though the associated color space might have
+    // non-linear gamma. If you later want to write an image-file with proper non-linear RGB,
+    // like an sRGB file, you must first convert to (nonlinear) RGB, which is then gamma-corrected.
+    //
+    // Meta
+    // ----
+    // Using -O3, benchmarks/IndexingOperator.cc shows that there is no performance difference
+    // between indexing and direct member access with 'g++ (Ubuntu/Linaro 4.7.3-1ubuntu1) 4.7.3'.
+    //---------------------------------------------------------------------------------------------
 
-    constexpr
-    bool rel_equal (float lhs, float rhs,
-                    float max_rel_diff=std::numeric_limits<float>::epsilon()
-                   ) noexcept
-    {
-        using std::fabs;
-        // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
-        return (fabs(lhs)<=max_rel_diff && fabs(rhs)<=max_rel_diff) // dirty fix for -0==0
-            || detail::rel_equal_helper(fabs(lhs), fabs(rhs), max_rel_diff,
-                                        fabs(lhs - rhs));
-    }
+    // -- structure -------------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace>
+    struct LinearRGB {
 
-    namespace detail {
-        template <typename T>
-        struct RelEqualProxy {
-            constexpr RelEqualProxy (T const & val, float max_rel_diff)
-                : val(val), max_rel_diff(max_rel_diff)
-            {}
+        // Data.
+        T r=T(0), g=T(0), b=T(0);
 
-            friend
-            constexpr bool operator== (T const &lhs, RelEqualProxy const &rhs) noexcept
-            {
-                using tukan::rel_equal;
-                return rel_equal (lhs, rhs.val, rhs.max_rel_diff);
-            }
 
-            friend
-            constexpr bool operator!= (T const &lhs, RelEqualProxy const &rhs) noexcept
-            {
-                using tukan::rel_equal;
-                return !(lhs == rhs);
-            }
+        // Construction.
+        constexpr LinearRGB() noexcept = default;
+        constexpr LinearRGB(T r, T g, T b) noexcept : r(r), g(g), b(b) {}
+        constexpr explicit LinearRGB(T f) noexcept  : r(f), g(f), b(f) {}
 
-            friend
-            std::ostream& operator<< (std::ostream &os, RelEqualProxy const &p)
-            {
-                return os << p.val;
-            }
 
-        private:
-            T const &val;
-            float max_rel_diff;
-        };
-    }
+        // Conversion.
+        constexpr explicit operator XYZ<T> () noexcept;
+        constexpr explicit LinearRGB (XYZ<T>) noexcept;
 
-    enum EpsilonFollows {
-        epsilon
+
+        // Assignment.
+        LinearRGB& operator+= (LinearRGB rhs) noexcept;
+        LinearRGB& operator-= (LinearRGB rhs) noexcept;
+        LinearRGB& operator*= (LinearRGB rhs) noexcept;
+        LinearRGB& operator/= (LinearRGB rhs) noexcept;
+
+        LinearRGB& operator+= (T rhs) noexcept;
+        LinearRGB& operator-= (T rhs) noexcept;
+        LinearRGB& operator*= (T rhs) noexcept;
+        LinearRGB& operator/= (T rhs) noexcept;
+
+
+        // Array interface.
+        constexpr T  at         (size_t idx) const ;
+        constexpr T  operator[] (size_t idx) const noexcept;
+        T& at         (size_t idx) ;
+        T& operator[] (size_t idx) noexcept;
+
+        constexpr size_t size() const noexcept ; // Always "3".
+
+
+        // Meta.
+        using value_type = T;
+        template <typename N> using rebind_value_type = LinearRGB<N, RGBSpace>;
+
+
+    private:
+        static T LinearRGB::* const offsets_[3];
     };
 
-    template <typename T>
-    constexpr
-    detail::RelEqualProxy<T> rel_equal (
-        T const & rhs,
-        EpsilonFollows=epsilon,
-        float max_rel_diff=std::numeric_limits<float>::epsilon()
-    ) noexcept
-    {
-        return {rhs, max_rel_diff};
-    }
+
+    template <typename T, template <typename> class RGBSpace>
+    constexpr size_t size(LinearRGB<T, RGBSpace> const &v) noexcept { return v.size(); }
+
+
+    // -- relation --------------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace> constexpr bool operator== (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr bool operator!= (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr bool rel_equal (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs,
+                                                    T max_rel_diff=std::numeric_limits<T>::epsilon() ) noexcept;
+
+    // -- sign ------------------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator- (LinearRGB<T, RGBSpace> rhs) noexcept { return {-rhs.r, -rhs.g, -rhs.b}; }
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator+ (LinearRGB<T, RGBSpace> rhs) noexcept { return rhs; }
+
+    // -- arithmetics -----------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator+ (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator- (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator* (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator/ (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator+ (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator- (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator* (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator/ (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
+
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator+ (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator- (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator* (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGB<T, RGBSpace> operator/ (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+
+    // -- algorithms ------------------------------------------------------------------------------
+    // Note: we do not offer constexpr were the C++11 <algorithms> library does neither.
+    // Note: these are implemented here instead of algorithms.hh, and directly in terms of LinearRGB,
+    //       because otherwise they are ambiguous wrt std::min and std::max.
+    template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> min (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> min (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> min (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
+
+    template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> max (LinearRGB<T, RGBSpace> lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> max (typename LinearRGB<T, RGBSpace>::value_type lhs, LinearRGB<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> LinearRGB<T, RGBSpace> max (LinearRGB<T, RGBSpace> lhs, typename LinearRGB<T, RGBSpace>::value_type rhs) noexcept;
+
 }
 
-#endif // REL_EQUAL_HH_INCLUDED_20131017
+#include "inl/LinearRGB.inl.hh"
+#include "cmath.hh"
+
+#endif // LINEARRGB_HH_INCLUDED_20131017
