@@ -37,7 +37,7 @@ namespace tukan {
     struct LinearRGB {
 
         // Data.
-        T r=0, g=0, b=0;
+        T r=T(0), g=T(0), b=T(0);
 
 
         // Construction.
