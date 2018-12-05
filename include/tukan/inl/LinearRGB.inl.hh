@@ -10,7 +10,6 @@
 namespace tukan {
 
     template <typename T, template <typename> class RGBSpace>
-    static
     T LinearRGB<T, RGBSpace>::* const LinearRGB<T, RGBSpace>::offsets_[3] =
     {
         &LinearRGB<T, RGBSpace>::r,
