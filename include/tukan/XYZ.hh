@@ -28,7 +28,7 @@ namespace tukan {
     struct XYZ {
 
         // Data.
-        T X=0, Y=0, Z=0;
+        T X=T(0), Y=T(0), Z=T(0);
 
 
         // Construction.
