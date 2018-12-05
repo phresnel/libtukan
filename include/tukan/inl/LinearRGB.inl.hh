@@ -1,8 +1,8 @@
 // (C) 2013 Sebastian Mach (1983), this file is published under the terms of the
 // GNU General Public License, Version 3 (a.k.a. GPLv3).
 // See COPYING in the root-folder of the excygen project folder.
-#ifndef RGB_INL_HH_20131122
-#define RGB_INL_HH_20131122
+#ifndef LINEARRGB_INL_HH_20131122
+#define LINEARRGB_INL_HH_20131122
 
 
 
@@ -10,6 +10,7 @@
 namespace tukan {
 
     template <typename T, template <typename> class RGBSpace>
+    static
     T LinearRGB<T, RGBSpace>::* const LinearRGB<T, RGBSpace>::offsets_[3] =
     {
         &LinearRGB<T, RGBSpace>::r,
@@ -414,4 +415,4 @@ namespace tukan {
     // Using LinearRGB::value_type prevents type deduction on the scalar argument.
 }
 
-#endif // RGB_INL_HH_20131122
+#endif // LINEARRGB_INL_HH_20131122
