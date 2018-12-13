@@ -48,6 +48,19 @@ namespace tukan {
         // TODO: Find a meaningful conversion. Probably it'll be a plain old
         //       function/ctor, like 'auto col = LinearRGBA::FromXYZ(xyz, 1.0)'
 
+
+        // Assignment.
+        LinearRGBA& operator+= (LinearRGBA rhs) noexcept;
+        LinearRGBA& operator-= (LinearRGBA rhs) noexcept;
+        LinearRGBA& operator*= (LinearRGBA rhs) noexcept;
+        LinearRGBA& operator/= (LinearRGBA rhs) noexcept;
+
+        LinearRGBA& operator+= (T rhs) noexcept;
+        LinearRGBA& operator-= (T rhs) noexcept;
+        LinearRGBA& operator*= (T rhs) noexcept;
+        LinearRGBA& operator/= (T rhs) noexcept;
+
+
         // Array interface.
         constexpr T  at         (size_t idx) const ;
         constexpr T  operator[] (size_t idx) const noexcept;
@@ -76,6 +89,27 @@ namespace tukan {
     template <typename T, template <typename> class RGBSpace> constexpr bool operator!= (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
     template <typename T, template <typename> class RGBSpace> constexpr bool rel_equal  (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs,
                                                     T max_rel_diff=std::numeric_limits<T>::epsilon() ) noexcept;
+
+
+    // -- sign ------------------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator- (LinearRGBA<T, RGBSpace> rhs) noexcept { return {-rhs.r, -rhs.g, -rhs.b}; }
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator+ (LinearRGBA<T, RGBSpace> rhs) noexcept { return rhs; }
+
+    // -- arithmetics -----------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator+ (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator- (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator* (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator/ (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator+ (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator- (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator* (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator/ (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept;
+
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator+ (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator- (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator* (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
+    template <typename T, template <typename> class RGBSpace> constexpr LinearRGBA<T, RGBSpace> operator/ (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept;
 
     // -- algorithms ------------------------------------------------------------------------------
     // Note: we do not offer constexpr were the C++11 <algorithms> library does neither.

@@ -70,6 +70,78 @@ namespace tukan {
     //---------------------------------------------------------------------------------------------
     // implementation
     //---------------------------------------------------------------------------------------------
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator+= (LinearRGBA<T, RGBSpace> rhs) noexcept {
+        r += rhs.r;
+        g += rhs.g;
+        b += rhs.b;
+        a += rhs.a;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator-= (LinearRGBA<T, RGBSpace> rhs) noexcept {
+        r -= rhs.r;
+        g -= rhs.g;
+        b -= rhs.b;
+        a -= rhs.a;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator*= (LinearRGBA<T, RGBSpace> rhs) noexcept {
+        r *= rhs.r;
+        g *= rhs.g;
+        b *= rhs.b;
+        a *= rhs.a;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator/= (LinearRGBA<T, RGBSpace> rhs) noexcept {
+        r /= rhs.r;
+        g /= rhs.g;
+        b /= rhs.b;
+        a /= rhs.a;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator+= (T rhs) noexcept {
+        r += rhs;
+        g += rhs;
+        b += rhs;
+        a += rhs;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator-= (T rhs) noexcept {
+        r -= rhs;
+        g -= rhs;
+        b -= rhs;
+        a -= rhs;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator*= (T rhs) noexcept {
+        r *= rhs;
+        g *= rhs;
+        b *= rhs;
+        a *= rhs;
+        return *this;
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    inline LinearRGBA<T, RGBSpace>& LinearRGBA<T, RGBSpace>::operator/= (T rhs) noexcept {
+        r /= rhs;
+        g /= rhs;
+        b /= rhs;
+        a /= rhs;
+        return *this;
+    }
+
 
     // relation
     template <typename T, template <typename> class RGBSpace>
@@ -90,9 +162,6 @@ namespace tukan {
         ;
     }
 
-
-    // arithmetics
-
     //------------------------------------------------------------------------------------------------------------------
     // Note: There is no single clear definition on how to perform arithmetics on RGBA.
     //
@@ -111,6 +180,58 @@ namespace tukan {
     //
     // TODO: Implement combination operations, but it's probably best to not do so as arithmetics overloads.
     //------------------------------------------------------------------------------------------------------------------
+
+    // arithmetics
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator+ (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs.r+rhs.r, lhs.g+rhs.g, lhs.b+rhs.b, lhs.a+rhs.a};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator- (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs.r-rhs.r, lhs.g-rhs.g, lhs.b-rhs.b, lhs.a-rhs.a};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator* (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs.r*rhs.r, lhs.g*rhs.g, lhs.b*rhs.b, lhs.a*rhs.a};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator/ (LinearRGBA<T, RGBSpace> lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs.r/rhs.r, lhs.g/rhs.g, lhs.b/rhs.b, lhs.a/rhs.a};
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator+ (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept {
+        return {lhs.r+rhs, lhs.g+rhs, lhs.b+rhs, lhs.a+rhs};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator- (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept {
+        return {lhs.r-rhs, lhs.g-rhs, lhs.b-rhs, lhs.a-rhs};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator* (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept {
+        return {lhs.r*rhs, lhs.g*rhs, lhs.b*rhs, lhs.a*rhs};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator/ (LinearRGBA<T, RGBSpace> lhs, typename LinearRGBA<T, RGBSpace>::value_type rhs) noexcept {
+        return {lhs.r/rhs, lhs.g/rhs, lhs.b/rhs, lhs.a/rhs};
+    }
+
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator+ (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs+rhs.r, lhs+rhs.g, lhs+rhs.b, lhs+rhs.a};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator- (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs-rhs.r, lhs-rhs.g, lhs-rhs.b, lhs-rhs.a};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator* (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs*rhs.r, lhs*rhs.g, lhs*rhs.b, lhs*rhs.a};
+    }
+    template <typename T, template <typename> class RGBSpace>
+    constexpr LinearRGBA<T, RGBSpace> operator/ (typename LinearRGBA<T, RGBSpace>::value_type lhs, LinearRGBA<T, RGBSpace> rhs) noexcept {
+        return {lhs/rhs.r, lhs/rhs.g, lhs/rhs.b, lhs/rhs.a};
+    }
 
     // algorithms
     template <typename T, template <typename> class RGBSpace>
