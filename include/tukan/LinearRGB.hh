@@ -41,7 +41,7 @@ namespace tukan {
 
 
         // Construction.
-        constexpr LinearRGB() noexcept = default;
+        constexpr LinearRGB() noexcept : r(T(0)), g(T(0)), b(T(0)) {}
         constexpr LinearRGB(T r, T g, T b) noexcept : r(r), g(g), b(b) {}
         constexpr explicit LinearRGB(T f) noexcept  : r(f), g(f), b(f) {}
 
