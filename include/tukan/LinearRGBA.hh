@@ -40,7 +40,7 @@ namespace tukan {
 
 
         // Construction.
-        constexpr LinearRGBA() noexcept = default;
+        constexpr LinearRGBA() noexcept : r(T(0)), g(T(0)), b(T(0)), a(T(0)) {}
         constexpr LinearRGBA(T r, T g, T b, T alpha) noexcept : r(r), g(g), b(b), a(alpha) {}
 
 
