@@ -10,7 +10,7 @@ namespace tukan { namespace gamma { namespace detail {
 
     struct simple_gamma {
         double gamma;
-        constexpr simple_gamma (double gamma) noexcept : gamma(gamma) {}
+        simple_gamma (double gamma) noexcept : gamma(gamma) {}
 
         double to_linear (double v) noexcept {
             using std::pow; using std::fabs;
@@ -27,24 +27,24 @@ namespace tukan { namespace gamma { namespace detail {
     //          * http://en.wikipedia.org/wiki/SRGB
     struct sRGB {
 
-        constexpr double to_linear (double v) noexcept {
+        double to_linear (double v) noexcept {
             using std::fabs;
             return (v<0?-1:1) * to_linear_impl(fabs(v));
         }
 
-        constexpr double to_nonlinear (double v) noexcept {
+        double to_nonlinear (double v) noexcept {
             using std::fabs;
             return (v<0?-1:1) * to_nonlinear_impl(fabs(v));
         }
 
     private:
-        constexpr double to_linear_impl (double v) noexcept {
+        double to_linear_impl (double v) noexcept {
             using std::pow;
             return (v<=0.04045) ? (v/12.92)
                                 : pow((v+0.055)/1.055, 2.4);
         }
 
-        constexpr double to_nonlinear_impl (double v) noexcept {
+        double to_nonlinear_impl (double v) noexcept {
             using std::pow;
             return (v<=0.0031308) ? (v*12.92)
                                   : 1.055*pow(v, 1/2.4) - 0.055;
@@ -54,24 +54,24 @@ namespace tukan { namespace gamma { namespace detail {
     // see also * http://www.brucelindbloom.com/
     struct L {
 
-        constexpr double to_linear (double v) noexcept {
+        double to_linear (double v) noexcept {
             using std::fabs;
             return (v<0?-1:1) * to_linear_impl(fabs(v));
         }
 
-        constexpr double to_nonlinear (double v) noexcept {
+        double to_nonlinear (double v) noexcept {
             using std::fabs;
             return (v<0?-1:1) * to_nonlinear_impl(fabs(v));
         }
 
     private:
-        constexpr double to_linear_impl (double v) noexcept {
+        double to_linear_impl (double v) noexcept {
             using std::pow;
             return (v<=0.08) ? (100*v/903.3) // using actual CIE standard
                              : pow((v+0.16)/1.16, 3.0);
         }
 
-        constexpr double to_nonlinear_impl (double v) noexcept {
+        double to_nonlinear_impl (double v) noexcept {
             using std::pow;
             return (v<=0.008856) ? (v*9.033)
                                  : 1.16*pow(v, 1/3.0) - 0.16;
@@ -83,11 +83,11 @@ namespace tukan { namespace gamma { namespace detail {
 
 namespace tukan { namespace gamma {
 
-    static constexpr auto _1_0 = detail::simple_gamma(1.0);
-    static constexpr auto _1_8 = detail::simple_gamma(1.8);
-    static constexpr auto _2_2 = detail::simple_gamma(2.2);
-    static constexpr auto sRGB = detail::sRGB();
-    static constexpr auto L    = detail::L();
+    static inline auto _1_0 = detail::simple_gamma(1.0);
+    static inline auto _1_8 = detail::simple_gamma(1.8);
+    static inline auto _2_2 = detail::simple_gamma(2.2);
+    static inline auto sRGB = detail::sRGB();
+    static inline auto L    = detail::L();
 
 } }
 
